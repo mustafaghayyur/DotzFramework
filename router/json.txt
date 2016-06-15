@@ -1,0 +1,16 @@
+{
+	"appURL":"localhost/router",
+        "controllersDirectory":"controllers",
+        "controllerBased":"true",
+        "ErrorPage":"404error.php",
+	"customRules":{
+		"first-URI":{
+			"controller":"Pages",
+			"method":"MyFirstPage"
+		}
+	},
+	"restResources":{
+		"people":"PeoplesResources",
+		"secondRESTURI":"2ndControllerName"
+	}
+}
