@@ -9,6 +9,8 @@ A nifty library to help you build MVC apps quickly.
 
 3) Open up router/jsonn.txt and modify the settings there as needed.
 
+4) Be sure to copy over the .htaccess to your app's root folder!
+
 # json.txt Settings
 
 - appURL: your full http:// url for the app.
