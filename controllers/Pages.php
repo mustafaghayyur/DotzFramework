@@ -2,8 +2,8 @@
 
 class Pages {
 
-	public function myFirstPage(){
-		echo "Hello 2 World";
+	public function myFirstPage($test=''){
+		echo "Hello 2 World ".$test;
 	}
         
 }

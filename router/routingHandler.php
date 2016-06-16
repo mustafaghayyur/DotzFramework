@@ -49,8 +49,10 @@ class RoutingHandler {
 
 			//Call the controller
 			$controller = new $this->controller_call[0];
-                        $controller->{$this->controller_call[1]}();			
-		
+                        
+                        $args = (empty($this->controller_call[2])) ? array() : $this->controller_call[2];
+                        call_user_func_array(array($controller, $this->controller_call[1]), $args);			
+                        		
 		}else{
 			include($this->config->ErrorPage);
 		}
@@ -60,8 +62,11 @@ class RoutingHandler {
 	public function check_controller_call($uri){
 		$res = $this->check_class_and_method_callable($uri[0], $uri[1]);
                 
-                if(count($this->uri) > 2){
-                    $args = array_shift(array_shift($this->uri));
+                if(count($uri) > 2){
+                    $args = $uri;
+                    unset($args[0]);
+                    unset($args[1]);
+                    $args = array_values($args);
                 }
                 
 		return ($res) ? array($uri[0], $uri[1], $args) : null;
@@ -73,8 +78,10 @@ class RoutingHandler {
                 
                 $specialchrs = strpbrk($uri[0], "#$%^&*()+=[]';,./{}|:<>?~");
                 
-                if(count($this->uri) > 1){
-                    $args = array_shift($this->uri);
+                if(count($uri) > 1){
+                    $args = $uri;
+                    unset($args[0]);
+                    $args = array_values($args);
                 }
                 
 		return ($res && !$specialchrs) ? array($this->config->customRules->{$uri[0]}->controller, $this->config->customRules->{$uri[0]}->method, $args) : null;
@@ -88,8 +95,10 @@ class RoutingHandler {
                 
                 $specialchrs = strpbrk($uri[0], "#$%^&*()+=[]';,./{}|:<>?~");
                 
-                if(count($this->uri) > 1){
-                    $args = array_shift($this->uri);
+                if(count($uri) > 1){
+                    $args = $uri;
+                    unset($args[0]);
+                    $args = array_values($args);
                 }
                 
 		return ($res && !$specialchrs) ? array($c, $m, $args) : null;

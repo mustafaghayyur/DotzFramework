@@ -2,8 +2,8 @@
 
 class PeoplesResources {
 
-	public function get_resource(){
-		echo "Hello 1 World";
+	public function get_resource($test=''){
+		echo "Hello 1 World ".$test;
 	}
         
         public function post_resource(){
