@@ -4,7 +4,9 @@ A nifty library to help you build MVC apps quickly.
 
 # Installation Instructions
 1) Copy/Paste code from index.php to the index.php file on your application. 
+
 2) Modify $routerDirectory value in this code to match where you have positioned the router directory in your application setup.
+
 3) Open up router/jsonn.txt and modify the settings there as needed.
 
 # json.txt Settings
