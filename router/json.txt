@@ -4,13 +4,13 @@
         "controllerBased":"true",
         "ErrorPage":"404error.php",
 	"customRules":{
-		"first-URI":{
+		"name-for-custom-URI":{
 			"controller":"Pages",
 			"method":"MyFirstPage"
 		}
 	},
 	"restResources":{
-		"people":"PeoplesResources",
-		"secondRESTURI":"2ndControllerName"
+		"uri-for-resource":"ControllerNameForResource",
+                "people":"PeoplesResources"
 	}
 }

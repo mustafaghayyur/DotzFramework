@@ -19,5 +19,13 @@ A nifty library to help you build MVC apps quickly.
 - ErrorPage: the html file containing your 404 Error Page when a user reaches a url not defined.
 
 - customRules: Follow the pattern already laid out in the sample json.txt to create more custom URLs. All custom URLs can have only one uri element (i.e. no 'sometext/othertext' URIs should be defined).
+-- Start by defining the slug the user would enter in the URL to reach this page
+-- Then in a json Object define the 'controller' name and 'method' name that will render the page for this custom URI
+Custom URLs are handy when you need them for SEO purposes or quick user-access
 
-- restResources: Follow the pattern already laid out in  the sample json.txt to create more custom URLs. All custom URLs can have only one URI element (i.e. no 'sometext/othertext' URIs should be defined).
+- restResources: Follow the pattern already laid out in  the sample json.txt to create more custom URLs for your RESTful resources. All RESTful Resource URLs can have only one URI element (i.e. no 'sometext/othertext' URIs should be defined).
+-- Start by defining the slug the user would enter in the URL to reach this RESTful resource. eg. www.yoursite.com/people -> in this example 'people' is the name/slug/uri that you are defining 
+-- Then as a value pair for this restResource define the controller name which will carry all the methods to access all the HTTP methods for this resource.
+
+
+**Please note: Sample controllers are provided to show how this library would function.**
