@@ -1,6 +1,7 @@
 <?php 
+use DotzFramework\Core\Controller;
 
-class PeoplesResources {
+class PeoplesResources extends Controller {
 
 	public function get_resource($test=''){
 		echo "Hello 1 World ".$test;

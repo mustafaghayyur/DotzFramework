@@ -1,7 +1,7 @@
 <?php
-namespace Core;
+namespace DotzFramework\Core;
 
-use Utilities\FileIO;
+use DotzFramework\Utilities\FileIO;
 
 class Configurations{
 

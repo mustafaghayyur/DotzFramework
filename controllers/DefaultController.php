@@ -1,8 +1,10 @@
 <?php
 
-class DefaultController {
+use DotzFramework\Core\Controller;
 
-	public function myFirstPage($test=''){
+class DefaultController extends Controller{
+
+	public function index($test=''){
 		echo "Hello 2 World ".$test;
 	}
 

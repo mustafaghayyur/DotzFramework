@@ -1,5 +1,5 @@
 <?php
-namespace Utilities;
+namespace DotzFramework\Utilities;
 
 use Symfony\Component\HttpFoundation\Request;
 

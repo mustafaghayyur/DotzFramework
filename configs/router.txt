@@ -1,6 +1,5 @@
 {
     "controllersDirectory":"controllers",
-    "controllerBased":"true",
 	"customRules":{
 		"name-for-custom-URI":{
 			"controller":"Pages",
@@ -11,6 +10,12 @@
 		"uri-for-resource":"ControllerNameForResource",
                 "people":"PeoplesResources"
 	},
-    "NotFoundController":"DefaultController",
-    "NotFoundMethod":"notFound"
+    "default":{
+    	"controller":"DefaultController",
+        "method":"index"
+    },
+    "notFound":{
+    	"controller":"DefaultController",
+        "method":"notFound"
+    }
 }

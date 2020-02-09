@@ -4,8 +4,8 @@ error_reporting(E_ALL & ~E_NOTICE);
 require __DIR__ . '/vendor/autoload.php';
 
 use Pimple\Container;
-use WDRouter\RoutingHandler;
-use Core\Configurations;
+use DotzFramework\Core\Router;
+use DotzFramework\Core\Configurations;
 
 $container = new Container();
 
@@ -14,7 +14,7 @@ $container['configs'] = function($c){
 						};
 
 $container['router'] = function($c){
-							return new RoutingHandler($c['configs']->props);
+							return new Router($c['configs']->props);
 						};
 
 try{

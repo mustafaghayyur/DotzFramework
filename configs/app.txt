@@ -1,3 +1,4 @@
 {
-	"appURL":"localhost/router"
+	"appSystemPath":"/Applications/MAMP/htdocs/WDRouterLibrary",
+	"appURL":"localhost/WDRouterLibrary"
 }
