@@ -1,8 +1,6 @@
 {
-	"appURL":"localhost/router",
-        "controllersDirectory":"controllers",
-        "controllerBased":"true",
-        "ErrorPage":"404error.php",
+    "controllersDirectory":"controllers",
+    "controllerBased":"true",
 	"customRules":{
 		"name-for-custom-URI":{
 			"controller":"Pages",
@@ -12,5 +10,7 @@
 	"restResources":{
 		"uri-for-resource":"ControllerNameForResource",
                 "people":"PeoplesResources"
-	}
+	},
+    "NotFoundController":"DefaultController",
+    "NotFoundMethod":"notFound"
 }
