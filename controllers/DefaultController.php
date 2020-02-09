@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-class Default {
+class DefaultController {
 
 	public function myFirstPage($test=''){
 		echo "Hello 2 World ".$test;

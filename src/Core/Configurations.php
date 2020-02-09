@@ -3,24 +3,28 @@ namespace Core;
 
 use Utilities\FileIO;
 
-class Configurations(){
+class Configurations{
+
+	public $props;
 	
-	protected function __construct($path){
+	public function __construct($path){
+
+		$this->props = new \stdClass();
 
 		$files = scandir($path);
 
 		if(is_array($files)){
-			$this->files = [];
 
 			foreach ($files as $file) {
-				$this->files[] = $path .'/'. $file;
-				$this->values = $this->loadFile($path .'/'. $file);
+				$fParts = explode('.', $file);
+				
+				// This is a file. Add it to the files bucket and extract.
+				if(isset($fParts[1]) && !empty($fParts[0]) && !empty($fParts[1])){
+					$this->props->{$fParts[0]} = $this->loadFile($path .'/'. $file);
+				}
+				
 			}
 		}
-
-
-
-
 	}
 
 	public function loadFile($file){
@@ -34,7 +38,7 @@ class Configurations(){
 
 		}else{
 
-			return false;
+			return new \stdClass();
 		
 		}
 	}

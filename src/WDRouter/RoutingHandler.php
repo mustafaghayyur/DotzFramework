@@ -20,8 +20,7 @@ class RoutingHandler {
 	 * Sets the configs for this router.
 	 */
 	public function __construct($configs){
-		
-		$this->configs = $configs->get(['app', 'router']);
+		$this->configs = $configs;
 	}
 
 	/**
@@ -29,7 +28,7 @@ class RoutingHandler {
 	 */
 	public function do(){
 
-		if(!self::checkRouterSettings()){
+		if(!$this->checkRouterSettings()){
 			throw new Exception("Router configurations are not correct.");
 		}
 
@@ -39,17 +38,17 @@ class RoutingHandler {
 		// $controller->$method and their $arguments to be called by the router
 		$controller = null;
                 
-		if(isset($this->configs->restResources->{$uri[0]}) && empty($controller)){
+		if(isset($this->configs->router->restResources->{$uri[0]}) && empty($controller)){
 			// It's a REST resource...
 			$controller = $this->checkRestResource($uri);
 		}
                 
-		if(isset($this->configs->customRules->{$uri[0]}) && empty($controller)){
+		if(isset($this->configs->router->customRules->{$uri[0]}) && empty($controller)){
 			// It's a custom URL defined in the router configs.
 			$controller = $this->checkCustomRules($uri);
 		}
 
-		if($this->configs->controllerBased && empty($controller)){
+		if($this->configs->router->controllerBased && empty($controller)){
 			// None of the above. 
 			// Try loading a controller/method combination for the provided URI
 			$controller = $this->checkControllerCall($uri);
@@ -73,11 +72,11 @@ class RoutingHandler {
 		}else{
 			// Could not find an appropriate controller/method combination. 
 			// Load error page, as defined in the configs
-			$cObj = new $this->configs->NotFoundController;
-			$m = $this->configs->NotFoundMethod;
+			$cObj = $this->checkClassAndMethodCallable($this->configs->router->NotFoundController, $this->configs->router->NotFoundMethod);
+
 
 			// Call the Not Found controller, and pass the $uri to it as an argument.
-			call_user_func_array($cObj, $m, $uri);
+			call_user_func_array([$cObj, $this->configs->router->NotFoundMethod], [$uri]);
 		}
 
 	}
@@ -106,7 +105,7 @@ class RoutingHandler {
 	 */
 	public function checkCustomRules($uri){
 		
-		$res = $this->checkClassAndMethodCallable($this->configs->customRules->{$uri[0]}->controller, $this->configs->customRules->{$uri[0]}->method);
+		$res = $this->checkClassAndMethodCallable($this->configs->router->customRules->{$uri[0]}->controller, $this->configs->router->customRules->{$uri[0]}->method);
                 
         $specialchrs = strpbrk($uri[0], "#$%^&*()+=[]';,./{}|:<>?~");
         
@@ -116,7 +115,7 @@ class RoutingHandler {
             $args = array_values($args);
         }
                 
-		return ($res && !$specialchrs) ? array($this->configs->customRules->{$uri[0]}->controller, $this->configs->customRules->{$uri[0]}->method, $args) : null;
+		return ($res && !$specialchrs) ? array($this->configs->router->customRules->{$uri[0]}->controller, $this->configs->router->customRules->{$uri[0]}->method, $args) : null;
 	}
 
 	/**
@@ -127,7 +126,7 @@ class RoutingHandler {
 	 * method exists.
 	 */
 	public function checkRestResource($uri){
-		$c = $this->configs->restResources->{$uri[0]};
+		$c = $this->configs->router->restResources->{$uri[0]};
 
 		$httpmethodOk = strpbrk($_SERVER['REQUEST_METHOD'], "#$%^&*()+=[]';,./{}|:<>?~");
 		$m = (!$httpmethodOk) ? strtolower($_SERVER['REQUEST_METHOD'].'_resource') : null;
@@ -151,14 +150,14 @@ class RoutingHandler {
 	 */
 	private function checkClassAndMethodCallable($class, $method){
 		
-		if(!@include($this->configs->controllersDirectory.'/'.$class.".php")) return false;
+		if(!@include($this->configs->router->controllersDirectory.'/'.$class.".php")) return false;
 
 		// Check to see if controller exists
 		if(class_exists($class)){
 			// Check if method is callable
 			$t = new $class();
 			if(method_exists($t, $method)){
-                return true;
+                return $t;
 			}
 		}
 
@@ -168,11 +167,13 @@ class RoutingHandler {
 	/**
 	 * Checks to see if esssential settings are defined in json.txt
 	 */
-	public static function checkRouterSettings(){
-	    if(isset($this->configs->appURL)
-	            && isset($this->configs->controllersDirectory)
-	            && isset($this->configs->controllerBased)
-	            && isset($this->configs->ErrorPage)){
+	public function checkRouterSettings(){
+	    
+	    if(isset($this->configs->app->appURL)
+	            && isset($this->configs->router->controllersDirectory)
+	            && isset($this->configs->router->controllerBased)
+	            && isset($this->configs->router->NotFoundController)
+	           	&& isset($this->configs->router->NotFoundMethod)){
 	        return true;
 	    }
 	}
@@ -193,12 +194,12 @@ class RoutingHandler {
 	    
 	    $fullURI = $rqst->object->server->get('REQUEST_URI');
 	    
-	    if(strpos($this->configs->appURL, $host) !== 0){
+	    if(strpos($this->configs->router->appURL, $host) !== 0){
 	        return false;
 	    }
 	    
 	    // We want to exclude this from the final array returned by this function...
-	    $appURI = trim(substr($this->configs->appURL, strlen($host)), '/');
+	    $appURI = trim(substr($this->configs->router->appURL, strlen($host)), '/');
 	    
 	    // Get the URI that relates to routing within the app...
 	    $uri = trim(

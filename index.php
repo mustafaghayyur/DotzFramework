@@ -14,7 +14,7 @@ $container['configs'] = function($c){
 						};
 
 $container['router'] = function($c){
-							return new RoutingHandler($c['configs']);
+							return new RoutingHandler($c['configs']->props);
 						};
 
 try{
