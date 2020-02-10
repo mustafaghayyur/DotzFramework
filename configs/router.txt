@@ -2,13 +2,13 @@
     "controllersDirectory":"controllers",
 	"customRules":{
 		"name-for-custom-URI":{
-			"controller":"Pages",
-			"method":"MyFirstPage"
+			"controller":"PagesController",
+			"method":"MyFirstPageController"
 		}
 	},
 	"restResources":{
 		"uri-for-resource":"ControllerNameForResource",
-                "people":"PeoplesResources"
+        "people":"PeoplesResources"
 	},
     "default":{
     	"controller":"DefaultController",

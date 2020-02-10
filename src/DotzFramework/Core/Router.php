@@ -34,12 +34,16 @@ class Router {
 
 		// If there are no uri elements, load the default page.
 		if(is_array($uri) && empty($uri[0])){
+			
 			$cObj = $this->checkClassAndMethodCallable(
 				$this->configs->router->default->controller, 
 				$this->configs->router->default->method
 			);
-			//var_dump($cObj);die();
-			call_user_func_array([$cObj, $this->configs->router->default->method], []);
+
+			$controller = [ $cObj, 
+							$this->configs->router->default->method, 
+							[] ];
+
 		}
 
 		// Is it a REST resource?
@@ -84,7 +88,9 @@ class Router {
      * by the client/user.
      */
 	public function checkControllerCall($uri){
-		$cObj = $this->checkClassAndMethodCallable($uri[0], $uri[1]);
+		
+		$class = ucfirst($uri[0]) .'Controller';
+		$cObj = $this->checkClassAndMethodCallable($class, $uri[1]);
 		
 		$args = []; 
 
@@ -107,6 +113,7 @@ class Router {
 	public function checkCustomRules($uri){
 		
 		$customRule = $this->configs->router->customRules->{$uri[0]};
+
 		$cObj = $this->checkClassAndMethodCallable($customRule->controller, $customRule->method);
 
         $args = []; 
@@ -130,9 +137,9 @@ class Router {
 	 * method exists.
 	 */
 	public function checkRestResource($uri){
-		
+
 		$c = $this->configs->router->restResources->{$uri[0]};
-		$m = $_SERVER['REQUEST_METHOD'];
+		$m = SymfonyRequest::get()->object->getMethod();
 		
 		$httpMethodIssues = strpbrk($m, "#$%^&*()+=[]';,./{}|:<>?~");
 		$m = (!$httpMethodIssues) ? strtolower($m.'_resource') : null;
@@ -147,7 +154,7 @@ class Router {
 			}
 		}
 		
-		return ($cObj) ? array($c, $m, $args) : null;
+		return ($cObj) ? [$cObj, $m, $args] : null;
 	
 	}
 
@@ -155,8 +162,7 @@ class Router {
 	 * A helper function. Should be in the helpers.php file.
 	 */
 	private function checkClassAndMethodCallable($class, $method){
-		
-		$class = ucfirst($class) .'Controller';
+
 		$file = $this->configs->app->appSystemPath .'/'. 
 				$this->configs->router->controllersDirectory .'/'.
 				$class.'.php';
@@ -233,13 +239,14 @@ class Router {
 		    		), 
 	    		'/');
 	    
-	    $arr = explode('/', $uri);
+	    $pathArr = explode('?', $uri);
+	    $arr = explode('/', $pathArr[0]);
 	    
 	    foreach ($arr as $k => $value) {
 	        preg_match('#([A-Za-z1-9_-])+#', $value, $matches);
 	        $arr[$k] = $matches[0];
 	    }
-	    
+
 	    return $arr;
 	}
 
