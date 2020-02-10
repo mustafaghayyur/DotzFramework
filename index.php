@@ -1,15 +1,30 @@
 <?php 
+error_reporting(E_ALL & ~E_NOTICE);
 
-//set this to the directory path where router files are stored.
-$routerDirectory = 'router';
-        
-require_once($routerDirectory.'/routingHandler.php');
-use \router\RoutingHandler;
+require __DIR__ . '/vendor/autoload.php';
+
+use Pimple\Container;
+use DotzFramework\Core\Router;
+use DotzFramework\Core\Configurations;
+
+$container = new Container();
+
+$container['configs'] = function($c){
+							return new Configurations(__DIR__ . '/configs');
+						};
+
+$container['router'] = function($c){
+							return new Router($c['configs']->props);
+						};
 
 try{
-    $router = new RoutingHandler($routerDirectory);
+    
+    $container['router']->do();
+
 }catch (Exception $e){
-    echo "Router Exception: ". $e->getMessage().'<br/>';
+
+    echo "Exception: ". $e->getMessage().'<br/>';
+
 }
 
 

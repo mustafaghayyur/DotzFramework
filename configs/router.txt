@@ -1,0 +1,21 @@
+{
+    "controllersDirectory":"src/App/controllers",
+	"customRules":{
+		"name-for-custom-URI":{
+			"controller":"PagesController",
+			"method":"MyFirstPageController"
+		}
+	},
+	"restResources":{
+		"uri-for-resource":"ControllerNameForResource",
+        "people":"PeoplesResources"
+	},
+    "default":{
+    	"controller":"DefaultController",
+        "method":"index"
+    },
+    "notFound":{
+    	"controller":"DefaultController",
+        "method":"notFound"
+    }
+}
