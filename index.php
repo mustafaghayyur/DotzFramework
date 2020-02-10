@@ -4,8 +4,8 @@ error_reporting(E_ALL & ~E_NOTICE);
 require __DIR__ . '/vendor/autoload.php';
 
 use Pimple\Container;
-use DotzFramework\Core\Router;
 use DotzFramework\Core\Configurations;
+use DotzFramework\Core\Router;
 
 $container = new Container();
 
