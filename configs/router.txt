@@ -1,5 +1,5 @@
 {
-    "controllersDirectory":"controllers",
+    "controllersDirectory":"src/App/controllers",
 	"customRules":{
 		"name-for-custom-URI":{
 			"controller":"PagesController",

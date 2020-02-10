@@ -3,19 +3,19 @@ use DotzFramework\Core\Controller;
 
 class PeoplesResources extends Controller {
 
-	public function get_resource($test=''){
+	public function getResource($test=''){
 		echo "Hello 1 World ".$test;
 	}
         
-        public function post_resource(){
+        public function postResource(){
 		echo "Hello 2 World!!";
 	}
         
-        public function put_resource(){
+        public function putResource(){
 		echo "Hello 3 World!!";
 	}
         
-        public function delete_resource(){
+        public function deleteResource(){
 		echo "Hello 3 World!!";
 	}
         
