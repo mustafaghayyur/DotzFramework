@@ -21,7 +21,7 @@ class Router {
 	public function do(){
 
 		if(!$this->areConfigsDefined()){
-			throw new Exception("Router configurations are not correct.");
+			throw new Exception("Router configurations are not correct. (Make sure your config files don't have any json errors.)");
 		}
 
 		$uri = $this->getUri();
@@ -31,27 +31,31 @@ class Router {
 		$controller = null;
 
 		// If there are no uri elements, load the default page.
-		if(is_array($uri) && empty($uri[0])){
+		if(empty($uri[0])){
 			
 			$cObj = $this->instantiateClass(
 				$this->configs->router->default->controller, 
 				$this->configs->router->default->method
 			);
 
-			$controller = [ $cObj, 
-							$this->configs->router->default->method, 
-							[] ];
+			if(!$cObj){
+				throw new Exception('Could not load Default page.');
+			}
 
+			$controller = [ $cObj, $this->configs->router->default->method, [] ];
+
+		}
+        
+		// Is it a custom URL defined in the router configs?
+		if(empty($controller)
+			&& isset($this->configs->router->customRules->{$uri[0]})){
+			$controller = $this->tryCustomRulesCall($uri);
 		}
 
 		// Is it a REST resource?
-		if(isset($this->configs->router->restResources->{$uri[0]}) && empty($controller)){
+		if(empty($controller)
+			&& isset($this->configs->router->restResources->{$uri[0]})){
 			$controller = $this->tryRestResourceCall($uri);
-		}
-                
-		// Is it a custom URL defined in the router configs?
-		if(isset($this->configs->router->customRules->{$uri[0]}) && empty($controller)){
-			$controller = $this->tryCustomRulesCall($uri);
 		}
 
 		// If no luck yet; try using the first two URI elelemnts as a
@@ -60,7 +64,7 @@ class Router {
 			$controller = $this->trySimpleControllerCall($uri);
 		}
 
-		// If a controller is found call it, or call the Not Found Page
+		// If a controller is found call it; or call the Not Found Page
 		if($controller){ 
 			
 			call_user_func_array([$controller[0], $controller[1]], $controller[2]);			
@@ -72,6 +76,10 @@ class Router {
 				$this->configs->router->notFound->method
 			);
 
+			if(!$cObj){
+				throw new Exception('Could not load Not Found page.');
+			}
+
 			// Pass the $uri array to it as an argument.
 			call_user_func_array([$cObj, $this->configs->router->notFound->method], [$uri]);
 		}
@@ -79,8 +87,8 @@ class Router {
 	}
 
 	/**
-	 * Tries to fetch the ControllerClass->method combination for the RESTful 
-	 * resource.
+	 * Tries to fetch the ControllerClass->method combination for the 
+	 * RESTful resource.
 	 */
 	public function tryRestResourceCall($uri){
 
@@ -105,8 +113,8 @@ class Router {
 	}
 
 	/**
-	 * Tries to fetch the ControllerClass->method combination for the custom URI provided 
-	 * by the user. 
+	 * Tries to fetch the ControllerClass->method combination for the
+	 * custom URI provided by the user. 
 	 */
 	public function tryCustomRulesCall($uri){
 		
@@ -122,14 +130,12 @@ class Router {
 			}
 		}
 
-		return 	($cObj) ? 
-					[$cObj, $customRule->method, $args] : 
-					null;
+		return 	($cObj) ? [$cObj, $customRule->method, $args] : null;
 	}
 
     /**
-     * Tries to fetch the ConrtollerClass->method combination based on the first two
-     * URI elements determined by this::getUri() method.
+     * Tries to fetch the ConrtollerClass->method combination based on
+     * the first two URI elements determined by this::getUri() method.
      */
 	public function trySimpleControllerCall($uri){
 		
@@ -196,10 +202,8 @@ class Router {
 	}
 
 	/**
-	 * Determine the URI elelments that relate to a path in the App as defined by
-	 * configuration settings. Also filters for non-safe characters in the uri.
-	 *
-	 * Returns an array of URI elements that relate to routing within this app.
+	 * Returns an array of URI elements that relate to routing 
+	 * within this app.
 	 */
 	public function getUri(){
 	    
@@ -212,7 +216,7 @@ class Router {
 	    $fullURI = $rqst->object->server->get('REQUEST_URI');
 	    
 	    if(strpos($this->configs->app->appURL, $host) !== 0){
-	        throw new Exception('The appURL property was not configured correctly for this app.');
+	        throw new Exception('The appURL config property does not match the HTTP Host this app is running on.');
 	    }
 
 	    // If this app was not installed in the root directory of
@@ -235,8 +239,14 @@ class Router {
 		    		), 
 	    		'/');
 	    
+	    // Get rid of the query string, explode path into an array
+	    // and clean each element before sending to router.
 	    $pathArr = explode('?', $uri);
 	    $arr = explode('/', $pathArr[0]);
+
+	    if(!is_array($arr)){
+	    	return [];
+	    }
 	    
 	    foreach ($arr as $k => $value) {
 	        preg_match('#([A-Za-z1-9_-])+#', $value, $matches);

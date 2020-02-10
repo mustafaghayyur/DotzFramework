@@ -1,21 +1,29 @@
 {
-    "controllersDirectory":"src/App/controllers",
+	"_instructions":"controllersDirectory should include the system path from the ROOT OF THIS APPLICATION to where the controllers will be defined.",
+	"controllersDirectory":"src/App/controllers",
+
+	"_instructions":"Any custom URLs you wish to define should be configured in customRules definition below.",
 	"customRules":{
-		"name-for-custom-URI":{
+		"uri-for-custom-page":{
 			"controller":"PagesController",
-			"method":"MyFirstPageController"
+			"method":"helloWorld"
 		}
 	},
+
+	"_instructions":"REST Controllers should be defined in restResources object below:",
 	"restResources":{
-		"uri-for-resource":"ControllerNameForResource",
-        "people":"PeoplesResources"
+		"uri-for-resource":"ControllerNameForResource"
 	},
-    "default":{
-    	"controller":"DefaultController",
-        "method":"index"
-    },
-    "notFound":{
-    	"controller":"DefaultController",
-        "method":"notFound"
-    }
+
+	"_instructions":"Add the controller class name and method for the homepage below:",
+	"default":{
+		"controller":"DefaultController",
+		"method":"index"
+	},
+
+	"_instructions":"Add the controller class name and method for the 404 error page below:",
+	"notFound":{
+		"controller":"DefaultController",
+		"method":"notFound"
+	}
 }
