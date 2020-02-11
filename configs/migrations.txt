@@ -1,0 +1,10 @@
+{
+	"nameSpace":"Migrations",
+	"tableName":"doctrine_migration_versions",
+	"colName":"version",
+	"colLength":14,
+	"executedAtColName":"executed_at",
+	"migrationsDirectory":"migrations",
+	"allOrNothing":true,
+	"checkDatabasePlatform":true
+}

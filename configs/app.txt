@@ -1,4 +1,6 @@
 {
+	"appName":"Web Dotz",
+
 	"_instructions":"appSystemPath is the full server file system path where this app is installed. Please exclude trailing slashes.",
 	"appSystemPath":"/Applications/MAMP/htdocs/WDRouterLibrary",
 

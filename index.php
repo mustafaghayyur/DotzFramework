@@ -3,23 +3,15 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Pimple\Container;
-use DotzFramework\Core\Configurations;
+use DotzFramework\Core\Dotz;
 use DotzFramework\Core\Router;
 
-$container = new Container();
-
-$container['configs'] = function($c){
-							return new Configurations(__DIR__ . '/configs');
-						};
-
-$container['router'] = function($c){
-							return new Router($c['configs']->props);
-						};
+$dotz = Dotz::get(__DIR__ . '/configs');
 
 try{
     
-    $container['router']->do();
+    $r = new Router($dotz->container['configs']->props);
+    $r->do();
 
 }catch (Exception $e){
 

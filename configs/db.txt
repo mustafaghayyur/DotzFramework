@@ -1,0 +1,7 @@
+{
+	"name":"test",
+	"user":"root",
+	"password":"mal123",
+	"host":"127.0.0.1",
+	"driver":"pdo_mysql"
+}

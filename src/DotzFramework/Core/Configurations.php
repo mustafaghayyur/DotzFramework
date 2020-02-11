@@ -25,6 +25,7 @@ class Configurations{
 				
 			}
 		}
+
 	}
 
 	public function loadFile($file){

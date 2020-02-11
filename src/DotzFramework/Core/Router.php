@@ -2,7 +2,8 @@
 namespace DotzFramework\Core;
 
 use \Exception;
-use DotzFramework\Utilities\SymfonyRequest;
+use DotzFramework\Core\Dotz;
+use Pimple\Container;
 
 class Router {
 
@@ -79,11 +80,84 @@ class Router {
 			if(!$cObj){
 				throw new Exception('Could not load Not Found page.');
 			}
-
 			// Pass the $uri array to it as an argument.
 			call_user_func_array([$cObj, $this->configs->router->notFound->method], [$uri]);
 		}
 
+	}
+
+	/**
+	* Checks to see if required configurations are defined.
+	*/
+	public function areConfigsDefined(){
+
+		if(isset($this->configs->app->appURL)
+			&& isset($this->configs->router->controllersDirectory)
+			&& isset($this->configs->router->default) 
+			&& is_object($this->configs->router->default)
+			&& isset($this->configs->router->notFound) 
+			&& is_object($this->configs->router->notFound)){
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	* Returns an array of URI elements that relate to routing 
+	* within this app.
+	*/
+	public function getUri(){
+
+		$dotz = Dotz::get();
+		$host = trim(
+					$dotz->container['request']->server->get('HTTP_HOST'), 
+					'www.'
+					);
+
+		$fullURI = $dotz->container['request']->server->get('REQUEST_URI');
+
+		if(strpos($this->configs->app->appURL, $host) !== 0){
+			throw new Exception('The appURL config property does not match the HTTP Host this app is running on.');
+		}
+
+		// If this app was not installed in the root directory of
+		// the domain, the $appURI would carry the path to where it
+		// is running from.
+		$appURI = trim(
+						substr(
+							$this->configs->app->appURL, 
+							strlen($host)
+						), 
+						'/'
+					);
+
+		// Get the URI that relates to routing within the app...
+		// In other words; the URI without the $appURI defined above.
+		$uri = trim(
+					substr(
+						trim($fullURI, '/'), 
+						strlen($appURI)
+					), 
+					'/'
+				);
+
+		// Get rid of the query string, explode path into an array
+		// and clean each element before sending to router.
+		$pathArr = explode('?', $uri);
+		$arr = explode('/', $pathArr[0]);
+
+		if(!is_array($arr)){
+			return [];
+		}
+
+		foreach ($arr as $k => $value) {
+			preg_match('#([A-Za-z1-9_-])+#', $value, $matches);
+			$arr[$k] = $matches[0];
+		}
+
+		return $arr;
 	}
 
 	/**
@@ -93,7 +167,8 @@ class Router {
 	public function tryRestResourceCall($uri){
 
 		$c = $this->configs->router->restResources->{$uri[0]};
-		$m = SymfonyRequest::get()->object->getMethod();
+		$dotz = Dotz::get();
+		$m = $dotz->container['request']->getMethod();
 
 		$httpMethodIssues = strpbrk($m, "#$%^&*()+=[]';,./{}|:<>?~");
 		$m = (!$httpMethodIssues) ? strtolower($m) . 'Resource' : null;
@@ -164,7 +239,12 @@ class Router {
 				trim($this->configs->router->controllersDirectory, '/') .'/'.
 				$class.'.php';
 
-		if(!@include($file)) {
+		if(!include_once($file)) {
+			
+			if(file_exists($file)){
+				throw new Exception('[ Router Error ] Could not load Controller file: '.$class.'.php when file exists.');
+			}
+
 			return false;
 		}
 
@@ -181,80 +261,6 @@ class Router {
 		}
 
 		return false;
-	}
-
-	/**
-	* Checks to see if required configurations are defined.
-	*/
-	public function areConfigsDefined(){
-
-		if(isset($this->configs->app->appURL)
-			&& isset($this->configs->router->controllersDirectory)
-			&& isset($this->configs->router->default) 
-			&& is_object($this->configs->router->default)
-			&& isset($this->configs->router->notFound) 
-			&& is_object($this->configs->router->notFound)){
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	* Returns an array of URI elements that relate to routing 
-	* within this app.
-	*/
-	public function getUri(){
-
-		$rqst = SymfonyRequest::get();
-		$host = trim(
-					$rqst->object->server->get('HTTP_HOST'), 
-					'www.'
-					);
-
-		$fullURI = $rqst->object->server->get('REQUEST_URI');
-
-		if(strpos($this->configs->app->appURL, $host) !== 0){
-			throw new Exception('The appURL config property does not match the HTTP Host this app is running on.');
-		}
-
-		// If this app was not installed in the root directory of
-		// the domain, the $appURI would carry the path to where it
-		// is running from.
-		$appURI = trim(
-						substr(
-							$this->configs->app->appURL, 
-							strlen($host)
-						), 
-						'/'
-					);
-
-		// Get the URI that relates to routing within the app...
-		// In other words; the URI without the $appURI defined above.
-		$uri = trim(
-					substr(
-						trim($fullURI, '/'), 
-						strlen($appURI)
-					), 
-					'/'
-				);
-
-		// Get rid of the query string, explode path into an array
-		// and clean each element before sending to router.
-		$pathArr = explode('?', $uri);
-		$arr = explode('/', $pathArr[0]);
-
-		if(!is_array($arr)){
-			return [];
-		}
-
-		foreach ($arr as $k => $value) {
-			preg_match('#([A-Za-z1-9_-])+#', $value, $matches);
-			$arr[$k] = $matches[0];
-		}
-
-		return $arr;
 	}
 
 }
