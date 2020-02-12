@@ -3,7 +3,6 @@ namespace DotzFramework\Core;
 
 use \Exception;
 use DotzFramework\Core\Dotz;
-use Pimple\Container;
 
 class Router {
 

@@ -19,10 +19,6 @@ class Dotz {
 									return new Configurations($configsLocation);
 								};
 
-		$this->container['router'] = function($c){
-									
-								};
-
 		$this->container['request'] = function($c){
 									return new Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
 								};
