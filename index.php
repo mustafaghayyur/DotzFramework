@@ -6,7 +6,7 @@ require __DIR__ . '/vendor/autoload.php';
 use DotzFramework\Core\Dotz;
 use DotzFramework\Core\Router;
 
-$dotz = Dotz::get(__DIR__ . '/configs');
+$dotz = Dotz::get();
 
 try{
     

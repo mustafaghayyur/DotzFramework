@@ -2,8 +2,6 @@
 namespace DotzFramework\Core;
 
 use Pimple\Container;
-use DotzFramework\Core\Configurations;
-use Symfony\Component\HttpFoundation\Request;
 
 class Dotz {
 
@@ -11,20 +9,30 @@ class Dotz {
 
 	public $container;
 
-	protected function __construct($configsLocation){
+	protected function __construct(){
 
 		$this->container = new Container();
-
-		$this->container['configs'] = function($c) use($configsLocation){
-									return new Configurations($configsLocation);
-								};
-
-		$this->container['request'] = function($c){
-									return new Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
-								};
+		$this->load('configs');
+		$this->load('request');
 
 	} 
 
+	public function load($key, $functionDefinition = false){
+		
+		if(!isset($this->container[$key])){
+			
+			$functionDefinition = (!$functionDefinition) ? \ModulesDefinitions::fetch($key) : $functionDefinition;
+			$this->container[$key] = $functionDefinition;
+		
+		}
+		
+		return $this->container[$key];
+	}
+
+	/**
+	 * Retrieves the stored instance of this Class (Dotz()).
+	 * A Singleton pattern.
+	 */
 	public static function get($configsLocation = null){
 
 		if(empty(self::$instance)){

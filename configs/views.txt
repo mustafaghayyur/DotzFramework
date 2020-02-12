@@ -1,0 +1,6 @@
+{
+
+	"_instructions":"directory holds the path to the view HTML files.",
+	"directory":"/Applications/MAMP/htdocs/WDRouterLibrary/src/App/Views"
+
+}
