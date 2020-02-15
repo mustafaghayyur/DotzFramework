@@ -29,7 +29,10 @@ class View{
 		}
 
 		if(!self::dataOk($data)){
-			throw new \Exception('Data sent to View::load() not formatted correctly.');
+			$data = [
+				'error' => 'Data passed to View was not formatted correctly. All data should be keyed with a string identifier.',
+				'data' => $data
+			];
 		}
 
 		$path = trim($path, '/') .'/';

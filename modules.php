@@ -14,13 +14,22 @@ class ModulesDefinitions {
 		
 		$mods = [];
 
-		$mods['configs'] = function($c) use($configsLocation){ 
-								return new Core\Configurations(__DIR__ . '/configs'); 
-							};
+		$mods['configs'] = function($c){ 
+			return new Core\Configurations(__DIR__ . '/configs'); 
+		};
 
 		$mods['request'] = function($c){
-									return new Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
-								};
+			return new Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
+		};
+
+		$mods['view'] = function($c){
+			return new Core\View();
+		};
+
+		$mods['db'] = function($c){
+			return new Core\DB();
+		};
+
 		/**
 		 * =============================================================
 		 * 			^ DO NOT MODIFY ANYTHING ABOVE THIS LINE ^
@@ -53,6 +62,12 @@ class ModulesDefinitions {
 		 *   $dotz->container['unique_key']->{any property/method this module has.}();
 		 * 
 		 */
+		
+		// Your application may have more than one data sources
+		// requiring additional instances of an appropirate Model class
+		$mods['model'] = function($c){
+			return new Core\MySQLModel();
+		};
 
 
 

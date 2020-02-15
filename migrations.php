@@ -2,7 +2,10 @@
 // Used by Doctrine Migrations
 
 /**
- * Use the folloing bin file to run migrations on cli: 
+ * Doctrine Migrations Documentation:
+ * https://www.doctrine-project.org/projects/doctrine-migrations/en/2.2/reference/introduction.html#introduction 
+ * 
+ * Use the following bin file to run migrations on cli: 
  * ./vendor/bin/doctrine-migrations <command>
  */
  

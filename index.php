@@ -15,7 +15,7 @@ try{
 
 }catch (Exception $e){
 
-    echo "Exception: ". $e->getMessage().'<br/>';
+    Dotz::get()->load('view')->sendToJson(["Exception:" => $e->getMessage()]);
 
 }
 

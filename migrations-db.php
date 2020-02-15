@@ -12,5 +12,5 @@ return [
     'user' => $conf->db->user,
     'password' => $conf->db->password,
     'host' => $conf->db->host,
-    'driver' => $conf->db->driver
+    'driver' => $conf->db->driverDoctrine
 ];
