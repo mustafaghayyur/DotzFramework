@@ -1,7 +1,4 @@
 {
-	"_instructions":"controllersDirectory should include the system path from the ROOT OF THIS APPLICATION to where the controllers will be defined.",
-	"controllersDirectory":"src/App/controllers",
-
 	"_instructions":"Any custom URLs you wish to define should be configured in customRules definition below.",
 	"customRules":{
 		"uri-for-custom-page":{

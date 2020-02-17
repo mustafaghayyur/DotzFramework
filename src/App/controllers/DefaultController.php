@@ -6,27 +6,19 @@ class DefaultController extends Controller{
 
 	public function index($test=''){
 		
-		$data = $this->model->query(
+		$data = $this->query->execute(
 			'SELECT * FROM tweets WHERE id = ?;', 
 			[2]
 		);
 
-		$this->view->load('home', null, $data[0]);
+		$this->view->load('/home', $data[0]);
 	}
 
 	public function stored($test=''){
 		
-		$this->model->saveQuery(
-			'first', 
-			'SELECT * FROM tweets WHERE id = ?;'
-		);
+		$data = $this->query->execute( $this->query->fetchQuery('Tweets', 'get'), [2] );
 
-		$data = $this->model->query(
-			'first', 
-			[2]
-		);
-
-		$this->view->load('home', null, $data[0]);
+		$this->view->load('/home', $data[0]);
 	}
 
 	public function notFound($uriArray){

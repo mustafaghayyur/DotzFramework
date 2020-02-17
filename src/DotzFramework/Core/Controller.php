@@ -9,7 +9,7 @@ class Controller{
 
 	public function __construct(){
 		$this->view = Dotz::get()->load('view');
-		$this->model = Dotz::get()->load('model');
+		$this->query = Dotz::get()->load('query');
 	}
 
 }

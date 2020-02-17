@@ -91,7 +91,7 @@ class Router {
 	public function areConfigsDefined(){
 
 		if(isset($this->configs->app->appURL)
-			&& isset($this->configs->router->controllersDirectory)
+			&& isset($this->configs->controllers->directory)
 			&& isset($this->configs->router->default) 
 			&& is_object($this->configs->router->default)
 			&& isset($this->configs->router->notFound) 
@@ -234,8 +234,7 @@ class Router {
 	*/
 	private function instantiateClass($class, $method){
 
-		$file = '/'. trim($this->configs->app->appSystemPath, '/') .'/'.
-				trim($this->configs->router->controllersDirectory, '/') .'/'.
+		$file = '/'. trim($this->configs->controllers->directory, '/') .'/'.
 				$class.'.php';
 
 		if(!include_once($file)) {

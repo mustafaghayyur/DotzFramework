@@ -1,0 +1,7 @@
+{
+
+	"_instructions":"directory holds the path to the models.",
+	"directory":"/Applications/MAMP/htdocs/WDRouterLibrary/src/App/Models",
+
+	"namespace":"App\\Models"
+}

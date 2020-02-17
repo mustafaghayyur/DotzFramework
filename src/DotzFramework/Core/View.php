@@ -23,20 +23,13 @@ class View{
 	 * 
 	 * `  Views::load('employee_list', '', [ 'employees' => $employees ]);`
 	 */
-	public function load($view, $path = '', $data){
+	public function load($view, $dotz = null){
 		if(!$this->viewsConfigsOk()){
 			throw new \Exception('Views configurations not set correctly.');
 		}
 
-		if(!self::dataOk($data)){
-			$data = [
-				'error' => 'Data passed to View was not formatted correctly. All data should be keyed with a string identifier.',
-				'data' => $data
-			];
-		}
-
-		$path = trim($path, '/') .'/';
-		$file = $this->configs->views->directory .'/'. $path . $view .'.php';
+		$path = trim($view, '/');
+		$file = $this->configs->views->directory .'/'. $path .'.php';
 
 		if(!file_exists($file)){
 			throw new \Exception('View not found in View::load().');			
@@ -73,7 +66,20 @@ class View{
 	}
 
 	protected static function dataOk($data){
-		return \DotzFramework\Utilities\FormBuilder::isValidArray($data);
+				
+		if(is_array($data)){
+			$keys = array_keys($data);
+
+			foreach ($keys as $key) {
+				if(is_int($key)){
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 }

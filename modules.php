@@ -27,7 +27,16 @@ class ModulesDefinitions {
 		};
 
 		$mods['db'] = function($c){
-			return new Core\DB();
+			// If you needed to instantiate a custom PDO connection, you would pass
+			// $overwrite = true as a parameter to Core\DB(). Then assign the 
+			// appropriate value to DB::$connection appropriately in your app, like so:
+			// 
+			//   $dotz = Dotz::get();
+			//   $dotz->container['db']->connection = \PDO($dns, $user, $pass);
+			// 
+			// This will configure the right database to your controller and models
+			// as well.
+			return new Core\DB($overwrite = false);
 		};
 
 		/**
@@ -65,8 +74,8 @@ class ModulesDefinitions {
 		
 		// Your application may have more than one data sources
 		// requiring additional instances of an appropirate Model class
-		$mods['model'] = function($c){
-			return new Core\MySQLModel();
+		$mods['query'] = function($c){
+			return new Core\MySQLQuery();
 		};
 
 

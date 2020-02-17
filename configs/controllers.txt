@@ -1,0 +1,6 @@
+{
+
+	"_instructions":"directory holds the path to the Controllers.",
+	"directory":"/Applications/MAMP/htdocs/WDRouterLibrary/src/App/Controllers"
+
+}
