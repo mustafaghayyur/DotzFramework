@@ -6,102 +6,81 @@
 	<body>
 		<h1>Form:</h1>
 		
-		<?php echo $dotz->form->open(['attr'=>[
-						'name'=>'test_form', 
-						'id'=>'test', 
-						'method'=>'POST', 
-						'action'=>'index.php'
-					]]);?>
+		<?php echo $dotz->form->open('test','POST','/');?>
 
 			<div>
-				<?php echo $dotz->form->input(['label'=>'Name',
-					'attr'=>[
-						'name'=>'name',
-						'class'=>'nameField'
-					]]);?>
+				<?php echo $dotz->form->input('name', 'Name:');?>
 			</div>
 			<div>
-				<?php echo $dotz->form->input(['label'=>'Email',
-					'attr'=>[
-						'name'=>'email',
-						'class'=>'emailField'
-					]]);?>
+				<?php echo $dotz->form->input('email', 'Email:');?>
 			</div>
 			<div>
-				<?php echo $dotz->form->input(['label'=>'Disabled',
-					'attr'=>[
-						'name'=>'disabled',
-						'class'=>'needsField',
-						'type'=>'checkbox',
-						'value'=>'disabled'
-					]]);?>
-				<?php echo $dotz->form->input(['label'=>'Indeginous',
-					'attr'=>[
-						'name'=>'indeginous',
-						'class'=>'needsField',
-						'type'=>'checkbox',
-						'value'=>'indeginous',
-						'checked'=>'checked'
-					]]);?>
-				<?php echo $dotz->form->input(['label'=>'Minority',
-					'attr'=>[
-						'name'=>'minority',
-						'class'=>'needsField',
-						'type'=>'checkbox',
-						'value'=>'minority'
-					]]);?>
+				<?php echo $dotz->form->input(
+					'citizen', 
+					'Citizen?', 
+					[
+						'type'=>'checkbox'
+					]
+				);?>
+				<?php echo $dotz->form->input(
+					'relocate', 
+					'Need to Relocate?', 
+					[
+						'type'=>'checkbox'
+					]
+				);?>
 			</div>
+			<div>Gender:</div>
 			<div>
-				<?php echo $dotz->form->input(['label'=>'Male',
-					'attr'=>[
-						'name'=>'gender',
-						'class'=>'emailField',
-						'type'=>'radio',
+				<?php echo $dotz->form->input(
+					'gender', 
+					'Male:', 
+					[
 						'value'=>'male',
-						'checked'=>'checked'
-					]]);?>
-				<?php echo $dotz->form->input(['label'=>'Female',
-					'attr'=>[
-						'name'=>'gender',
-						'class'=>'emailField',
-						'type'=>'radio',
-						'value'=>'female'
-					]]);?>
+						'type'=>'radio'
+					]
+				);?>
+				<?php echo $dotz->form->input(
+					'gender', 
+					'Female:', 
+					[
+						'value'=>'female',
+						'type'=>'radio'
+					]
+				);?>
 			</div>
 			<div>
-				<?php echo $dotz->form->select(['label'=>'City',
-					'attr'=>[
-						'name'=>'city',
-						'class'=>'cityField'
-					],
-					'options'=>[
-						'mississauga'=>[
-							'attr'=>[ 'value'=>'Mississauga' ],
-							'displayText'=>'Mississauga'
-						],
-						'toronto'=>[
-							'attr'=>[ 'value'=>'Toronto' ],
-							'displayText'=>'Toronto'
-						]
-					]]);?>
+				<?php echo $dotz->form->select(
+					'city', 
+					[ 
+						'oakville'=>'Oakville', 
+						'brampton'=>'Brampton', 
+						'milton'=>'Milton', 
+						'burlington'=>'Burlington', 
+						'mississauga'=>'Mississauga', 
+						'toronto'=>'Toronto' 
+					], 
+					'City:',
+					[
+						'default' => 'toronto'
+					]
+				);?>
 			</div>
 			<div>
-				<?php echo $dotz->form->textarea(['label'=>'Message',
-					'text'=>'Hello world',
-					'attr' => [
-						'name'=>'message',
-						'id'=>'messageField',
-						'rows'=>'4',
-						'col'=>'3'
-					]], false);?>
+				<?php echo $dotz->form->textarea(
+					'message', 
+					'I beleive I can make a real impact in this role by...'
+				);?>
 			</div>
 			<div>
-				<?php echo $dotz->form->input(['attr'=>[
-						'name'=>'submit',
-						'class'=>'submitBtn',
-						'type'=>'submit',
-						'value'=>'Submit'
-					]], false);?>
+				<?php echo $dotz->form->input(
+					'submit', 
+					null, 
+					[
+						'value'=>'Send',
+						'type'=>'submit'
+					]
+				);?>
 			</div>
 
 		<?php echo $dotz->form->close();?>

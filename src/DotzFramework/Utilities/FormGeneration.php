@@ -5,12 +5,21 @@ use DotzFramework\Core\Dotz;
 
 class FormGeneration{
 	
-	public function open($attributes){
-		$html = '<!-- Could not generate form opening tag -->';
+	public function open($name, $method, $action, $attributes = array()){
 
-		if(is_array($attributes) && isset($attributes['attr'])){
+		$default = [
+			'name' => $name, 
+			'id' => $name.'Form',
+			'class' => $name.'Form',
+			'method' => $method, 
+			'action' => $action
+		];
+
+		$attr = array_merge($default, $attributes);
+
+		if(is_array($attr) && isset($attr)){
 			$html = '<form';
-			$html .= self::generateAttributesString($attributes['attr']);
+			$html .= self::generateAttributesString($attr);
 			$html .= ">\n";	
 		}
 		
@@ -20,81 +29,114 @@ class FormGeneration{
 	/**
 	 * Generates HTML for a specified $field definition.
 	 */
-	public function input($field, $generateLabel = true){
+	public function input($name, $label = null, $attributes = []){
 
-		$html = '<!-- Could not fetch field: '. $field .' -->';
+		$default = [
+			'name' => $name, 
+			'class' => $name.'InputField'
+		];
 
-		if(is_array($field)){
-			$html = '';
-
-			if($generateLabel && !empty($field['label'])){
-				$html = '<label for="'.$field['attr']['name'].'" >'.$field['label'].': </label>';
-			}
-
-			$html .= '<input';
-			$html .= self::generateAttributesString($field['attr']);
-			$html .= " />\n";
+		if(strtolower($attributes['type']) === 'submit'){
+			$default['value'] = 'submit';
 		}
+
+		if(strtolower($attributes['type']) === 'checkbox'){
+			$default['value'] = $name;
+		}
+
+		$attr = array_merge($default, $attributes);
+
+		$html = '';
+
+		if(!empty($label)){
+			$html = '<label for="'.$attr['name'].'" >'.$label.' </label>';
+		}
+
+		$html .= '<input';
+		$html .= self::generateAttributesString($attr);
+		$html .= " />\n";
+		
+		return $html;
+	}
+
+	public function textarea($name, $initialText = '', $label = null, $attributes =[]){
+
+		$default = [
+			'name' => $name, 
+			'class' => $name.'TextField',
+			'rows'=>'',
+			'col'=>''
+		];
+
+		$attr = array_merge($default, $attributes);
+
+		$html = '';
+
+		if(!empty($label)){
+			$html = '<label for="'.$attr['name'].'" >'.$label.' </label>';
+		}
+
+		$html .= '<textarea';
+		$html .= self::generateAttributesString($attr);
+		$html .= '>';
+		$html .= $initialText;
+		$html .= "</textarea>\n";
 
 		return $html;
 	}
 
-	public function textarea($field, $generateLabel = true){
 
-		$html = '<!-- Could not fetch field: '. $field .' -->';
+	public function select($name, $options = [], $label = null, $settings = []){
 
-		if(is_array($field)){
-			$html = '';
+		$default = [
+			'name' => $name,
+			'class' => $name.'SelectField'
+		];
 
-			if($generateLabel && !empty($field['label'])){
-				$html = '<label for="'.$field['attr']['name'].'" >'.$field['label'].': </label>';
-			}
+		$selectAttributes = (isset($settings['attr']) 
+			&& is_array($settings['attr'])) 
+				? $settings['attr']
+				: [];
 
-			$html .= '<textarea';
-			$html .= self::generateAttributesString($field['attr']);
-			$html .= '>';
-			$html .= isset($field['text']) ? $field['text'] : '';
-			$html .= "</textarea>\n";
+		$attr = array_merge($default, $selectAttributes);
+
+		$html = '';
+		$label = (empty($label)) ? '' : $label;
+
+		if(!empty($label)){
+			$label = '<label for="'.$attr['name'].'" >'.$label.' </label>';
 		}
 
-		return $html;
-	}
+		$openingTag = '<select';
+		$openingTag .= self::generateAttributesString($attr);
+		$openingTag .= '>';
 
+		$optionsOutput = '';
+		foreach ($options as $key => $text) {
+			
+			$optionAttributes = ( isset($settings['options'][$key]['attr']) 
+				&& is_array($settings['options'][$key]['attr']) ) 
+					? $settings['options'][$key]['attr']
+					: [];
 
-	public function select($field, $generateLabel = true){
-
-		$html = '<!-- Could not fetch field: '. $field .' -->';
-
-		if(isset($field['attr']) && is_array($field['attr'])){
-			if(isset($field['options']) && is_array($field['options'])){
-				$html = '';
-				$label = '';
-
-				if($generateLabel && !empty($field['label'])){
-					$label = '<label for="'.$field['attr']['name'].'" >'.$field['label'].': </label>';
-				}
-
-				$openingTag = '<select';
-				$openingTag .= self::generateAttributesString($field['attr']);
-				$openingTag .= '>';
-
-				$options = '';
-				foreach ($field['options'] as $key => $optionArray) {
-					
-					$option = '<option';
-					$option .= self::generateAttributesString($optionArray['attr']);
-					$option .= '>';
-					$option .= $optionArray['displayText'];
-					$option .= "</option>\n";
-
-					$options .= $option;
-				}
-
-				$closingTag = '</select>';
-
-				$html = $label ."\n". $openingTag ."\n". $options . $closingTag ."\n";
+			$a = array_merge([ 'value' => $key ], $optionAttributes);
+			
+			if(isset($settings['default']) && $key == $settings['default']){
+				$a['selected'] = 'selected';
 			}
+			
+			$option = '<option';
+			$option .= self::generateAttributesString($a);
+			$option .= ' '. $default .'>';
+			$option .= $text;
+			$option .= "</option>\n";
+
+			$optionsOutput .= $option;
 		}
+
+		$closingTag = '</select>';
+
+		$html = $label ."\n". $openingTag ."\n". $optionsOutput . $closingTag ."\n";
 
 		return $html;
 	}
