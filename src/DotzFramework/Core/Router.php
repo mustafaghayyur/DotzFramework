@@ -21,7 +21,7 @@ class Router {
 	public function do(){
 
 		if(!$this->areConfigsDefined()){
-			throw new Exception("Router configurations are not correct. (Make sure your config files don't have any json errors.)");
+			throw new Exception("[ Router Error ] Router configurations are not correct. (Make sure your config files don't have any json errors.)");
 		}
 
 		$uri = $this->getUri();
@@ -39,7 +39,7 @@ class Router {
 					);
 
 			if(!$cObj){
-				throw new Exception('Could not load Default page.');
+				throw new Exception('[ Router Error ] Could not load Default page.');
 			}
 
 			$controller = [ $cObj, $this->configs->router->default->method, [] ];
@@ -77,7 +77,7 @@ class Router {
 					);
 
 			if(!$cObj){
-				throw new Exception('Could not load Not Found page.');
+				throw new Exception('[ Router Error ] Could not load Not Found page.');
 			}
 			// Pass the $uri array to it as an argument.
 			call_user_func_array([$cObj, $this->configs->router->notFound->method], [$uri]);
@@ -118,7 +118,7 @@ class Router {
 		$fullURI = $dotz->container['request']->server->get('REQUEST_URI');
 
 		if(strpos($this->configs->app->appURL, $host) !== 0){
-			throw new Exception('The appURL config property does not match the HTTP Host this app is running on.');
+			throw new Exception('[ Router Error ] The appURL config property does not match the HTTP Host this app is running on.');
 		}
 
 		// If this app was not installed in the root directory of
@@ -237,13 +237,10 @@ class Router {
 		$file = '/'. trim($this->configs->controllers->directory, '/') .'/'.
 				$class.'.php';
 
-		if(!include_once($file)) {
-			
-			if(file_exists($file)){
+		if(file_exists($file)){
+			if(!include_once($file)) {
 				throw new Exception('[ Router Error ] Could not load Controller file: '.$class.'.php when file exists.');
 			}
-
-			return false;
 		}
 
 		// Check to see if controller exists

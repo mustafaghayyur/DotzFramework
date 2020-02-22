@@ -8,32 +8,11 @@ class DefaultController extends Controller{
 		
 		$data = [ 'name' => 'Mustafa Ghayyur' ];
 
-		$this->view->load('/home', $data);
-	}
-
-	public function query($test=''){
-		
-		$data = $this->query->execute(
-			'SELECT * FROM tweets WHERE id = ?;', 
-			[2]
-		);
-
-		$this->view->load('/tweet', $data[0]);
-	}
-
-	public function querytwo($test=''){
-		
-		$data = $this->query->execute( 
-			$this->query->fetchQuery('Tweets', 'get'), 
-			[2] 
-		);
-
-		$this->view->load('/tweet', $data[0]);
+		$this->view->load('home', $data);
 	}
 
 	public function notFound($uriArray){
-		echo "Page not found:";
-		var_dump($uriArray);
+		$this->view->sendToJson(['msg'=>'Page not found.', 'uri_array:'=>$uriArray]);
 	}
         
 }

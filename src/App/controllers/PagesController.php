@@ -4,9 +4,9 @@ use DotzFramework\Modules\Form;
 
 class PagesController extends Controller{
 
-	public function customPage($args = [], $id = null, $name = null){
+	public function customPage($arg1 = null, $arg2 = null, $arg3 = null){
 		echo "This is a custom url dummy page.";
-		var_dump($args, $id, $name);
+		var_dump($arg1, $arg2, $arg3);
 	}
 
 	public function form(){
@@ -37,5 +37,26 @@ class PagesController extends Controller{
 
 		$this->view->load('form', $obj);
 	}
+
+	public function query( $id='1' ){
+		
+		$data = $this->query->execute(
+			'SELECT * FROM example_table WHERE id = ?;', 
+			[$id]
+		);
+
+		$this->view->load('query', $data[0]);
+	}
+
+	public function querytwo( $id='1' ){
+		
+		$data = $this->query->execute( 
+			$this->query->fetchQuery('Example', 'get'), 
+			[$id] 
+		);
+
+		$this->view->load('query', $data[0]);
+	}
+
         
 }
