@@ -5,6 +5,7 @@
 	</head>
 	<body>
 		<h1>Welcome to the Dotz Framework</h1>
-		<p>Hello <?php echo $dotz['name'];?>.</p>
+		<h3>Tweet:</h3>
+		<p><?php echo $dotz['tweet'];?>.</p>
 	</body>
 </html>

@@ -6,83 +6,33 @@
 	<body>
 		<h1>Form:</h1>
 		
-		<?php echo $dotz->form->open('test','POST','/');?>
+		<?php $dotz->form->open('test','POST','/');?>
 
 			<div>
-				<?php echo $dotz->form->input('name', 'Name:');?>
+				<?php $dotz->form->textfield('name', 'Name:');?>
 			</div>
 			<div>
-				<?php echo $dotz->form->input('email', 'Email:');?>
+				<?php $dotz->form->textfield('email', 'Email:');?>
 			</div>
 			<div>
-				<?php echo $dotz->form->input(
-					'citizen', 
-					'Citizen?', 
-					[
-						'type'=>'checkbox'
-					]
-				);?>
-				<?php echo $dotz->form->input(
-					'relocate', 
-					'Need to Relocate?', 
-					[
-						'type'=>'checkbox'
-					]
-				);?>
+				<?php $dotz->form->checkbox('citizen', 'Citizen?');?>
+				<?php $dotz->form->checkbox('relocate', 'Need to Relocate?');?>
 			</div>
 			<div>Gender:</div>
 			<div>
-				<?php echo $dotz->form->input(
-					'gender', 
-					'Male:', 
-					[
-						'value'=>'male',
-						'type'=>'radio'
-					]
-				);?>
-				<?php echo $dotz->form->input(
-					'gender', 
-					'Female:', 
-					[
-						'value'=>'female',
-						'type'=>'radio'
-					]
-				);?>
+				<?php $dotz->form->radiobutton('gender', 'male', 'Male:');?>
+				<?php $dotz->form->radiobutton('gender', 'female', 'Female:');?>
 			</div>
 			<div>
-				<?php echo $dotz->form->select(
-					'city', 
-					[ 
-						'oakville'=>'Oakville', 
-						'brampton'=>'Brampton', 
-						'milton'=>'Milton', 
-						'burlington'=>'Burlington', 
-						'mississauga'=>'Mississauga', 
-						'toronto'=>'Toronto' 
-					], 
-					'City:',
-					[
-						'default' => 'toronto'
-					]
-				);?>
+				<?php $dotz->form->select('city', $dotz->data['cities'], 'City:', 'toronto');?>
 			</div>
 			<div>
-				<?php echo $dotz->form->textarea(
-					'message', 
-					'I beleive I can make a real impact in this role by...'
-				);?>
+				<?php $dotz->form->textarea('message', 'Personal Comments:');?>
 			</div>
 			<div>
-				<?php echo $dotz->form->input(
-					'submit', 
-					null, 
-					[
-						'value'=>'Send',
-						'type'=>'submit'
-					]
-				);?>
+				<?php $dotz->form->button('submit', 'Send');?>
 			</div>
 
-		<?php echo $dotz->form->close();?>
+		<?php $dotz->form->close();?>
 	</body>
 </html>

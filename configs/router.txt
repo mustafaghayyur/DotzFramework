@@ -3,7 +3,7 @@
 	"customRules":{
 		"uri-for-custom-page":{
 			"controller":"PagesController",
-			"method":"helloWorld"
+			"method":"customPage"
 		}
 	},
 

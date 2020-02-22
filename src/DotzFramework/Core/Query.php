@@ -30,6 +30,9 @@ class Query {
 
 	}
 
+	/**
+	 * Fetches query from application's defined Models.
+	 */
 	public function fetchQuery($model, $key) {
 
 		if(isset($this->models[$model])){
