@@ -1,34 +1,12 @@
 <?php
-namespace DotzFramework\Modules;
+namespace DotzFramework\Modules\Form;
 
-class Form {
-
-	/**
-	 * Holds data to bind with the form.
-	 */
-	public $data;
-
-	/**
-	 * Binds given data to this instance of Form(). 
-	 * All provided values passed correctly will be populated
-	 * in the generated form.
-	 */
-	public function bind($data){
-		
-		// Unset the data for recurring calls to this method.
-		$this->data = [];
-
-		if(is_array($data)){
-			$this->data = $data;
-		}else{
-			$this->data = (array)$data;
-		}
-	}
+class FormGenerator {
 
 	/**
 	 * Generates the opening html form tag.
 	 */
-	public function getOpen($attributes = []){
+	public static function getOpen($attributes = []){
 
 		$default = [
 			'name' => $attributes['name'], 
@@ -52,58 +30,58 @@ class Form {
 	/**
 	 * Wrapper function to get the input field type="text"
 	 */
-	public function getTextfield($attributes = []){
+	public static function getTextfield($attributes = []){
 		
 		$attributes['type'] = 'text';
-		return $this->input($attributes);
+		return self::getInput($attributes);
 	}
 
 	/**
 	 * Wrapper function to get the input field type="checkbox"
 	 */
-	public function getCheckbox($attributes = []){
+	public static function getCheckbox($attributes = []){
 		
 		$name = $attributes['name'];
 		$attributes['type'] = 'checkbox';
 		$attributes['value'] = isset($attributes['value']) ? $attributes['value'] : $attributes['name'];
 
-		if(isset($this->data[$name]) && $this->data[$name] == $attributes['name']){
+		if(isset($attributes['systemBoundValue']) && $attributes['systemBoundValue'] == $attributes['name']){
 			$attributes['checked'] = 'checked';
 		}
 
-		return $this->input($attributes);
+		return self::getInput($attributes);
 	}
 
 	/**
 	 * Wrapper function to get the input field type="radio"
 	 */
-	public function getRadiobutton($attributes = []){
+	public static function getRadiobutton($attributes = []){
 
 		$name = $attributes['name'];
 		$attributes['type'] = 'radio';
 
-		if(isset($this->data[$name]) && $this->data[$name] == $attributes['value']){
+		if(isset($attributes['systemBoundValue']) && $attributes['systemBoundValue'] == $attributes['value']){
 			$attributes['checked'] = 'checked';
 		}
 
-		return $this->input($attributes);
+		return self::getInput($attributes);
 	}
 
 	/**
 	 * Wrapper function to get the input field type="button"
 	 */
-	public function getButton($attributes = []){
+	public static function getButton($attributes = []){
 		
 		$attributes['type'] = (isset($attributes['type'])) ? $attributes['type'] : 'submit';
 		$attributes['value'] = (isset($attributes['value'])) ? $attributes['value'] : 'Submit';
 
-		return $this->input($attributes);
+		return self::getInput($attributes);
 	}
 
 	/**
 	 * Generates HTML for a specified input field.
 	 */
-	public function input($attributes = []){
+	public static function getInput($attributes = []){
 
 		$name = $attributes['name'];
 
@@ -112,12 +90,12 @@ class Form {
 			'class' => $name.'InputField'
 		];
 
-		if(isset($this->data[$name])){
-			$default['value'] = $this->data[$name];
-		}
-
 		$attr = array_merge($default, $attributes);
 
+		if(isset($attributes['systemBoundValue'])){
+			$attr['value'] = $attributes['systemBoundValue'];
+		}
+		
 		$html = '';
 
 		if(!empty($attributes['label'])){
@@ -134,7 +112,7 @@ class Form {
 	/**
 	 * Generates the html for a textarea field
 	 */
-	public function getTextarea($attributes =[]){
+	public static function getTextarea($attributes =[]){
 
 		$name = $attributes['name'];
 
@@ -148,8 +126,8 @@ class Form {
 		$attr = array_merge($default, $attributes);
 
 		$initialText = '';
-		if(isset($this->data[$name])){
-			$initialText = $this->data[$name];
+		if(isset($attributes['systemBoundValue'])){
+			$initialText = $attributes['systemBoundValue'];
 		}
 
 		$html = '';
@@ -170,7 +148,7 @@ class Form {
 	/**
 	 * Generates the HTML for a slect input field
 	 */
-	public function getSelect($settings = []){
+	public static function getSelect($settings = []){
 
 		$name = $settings['name'];
 
@@ -186,8 +164,8 @@ class Form {
 
 		$attr = array_merge($default, $selectAttributes);
 
-		if(isset($this->data[$name])){
-			$settings['selected'] = $this->data[$name];
+		if(isset($settings['systemBoundValue'])){
+			$settings['selected'] = $settings['systemBoundValue'];
 		}else{
 			$settings['selected'] = isset($settings['default']) ? $settings['default'] : null;
 		}
@@ -240,46 +218,8 @@ class Form {
 	/**
 	 * Generates the closing tag for a html form.
 	 */
-	public function getClose($data = ''){
-		return '</form '. $data .">\n";
-	}
-
-	/**
-	 * The following few methods are wrapper functions to allow for
-	 * quick printing of the HTML form elements onto the screen.
-	 */
-	
-	//public function open($name, $method, $action, $attributes = array()){
-	public function open($name){
-		return new Element($name, $this, 'getOpen');
-	}
-
-	public function textfield($name){
-		return new Element($name, $this, 'getTextfield');
-	}
-
-	public function checkbox($name){
-		return new Element($name, $this, 'getCheckbox');
-	}
-
-	public function radiobutton($name){
-		return new Element($name, $this, 'getRadiobutton');
-	}
-
-	public function button($name){
-		return new Element($name, $this, 'getButton');
-	}	
-
-	public function textarea($name){
-		return new Element($name, $this, 'getTextarea');
-	}
-
-	public function select($name){
-		return new Element($name, $this, 'getSelect');
-	}
-
-	public function close(){
-		return new Element(null, $this, 'getClose');
+	public static function getClose($attributes){
+		return '</form '. $attributes['data'] .">\n";
 	}
 
 	/**
@@ -293,77 +233,6 @@ class Form {
 		}
 
 		return $str;
-	}
-
-}
-
-class Element {
-
-	public $obj;
-
-	public $requiredParams;
-
-	public $form;
-
-	public $callback;
-
-	public function __construct($n, $form, $funcName){
-		$this->obj = [ 'name' => $n ];
-		$this->form = $form;
-		$this->callback = $funcName;
-	}
-
-	public function show(){
-		echo $this->form->{$this->callback}((array)$this->obj);
-	}
-
-	public function get(){
-		return $this->form->{$this->callback}((array)$this->obj);
-	}
-
-	public function method($m){
-		$this->obj['method'] = $m;
-		return $this;
-	}
-
-	public function action($a){
-		$this->obj['action'] = $a;
-		return $this;
-	}
-
-	public function value($v){
-		$this->obj['value'] = $v;
-		return $this;
-	}
-
-	public function label($l){
-		$this->obj['label'] = $l;
-		return $this;
-	}
-
-	public function type($t){
-		$this->obj['type'] = $t;
-		return $this;
-	}
-
-	public function options($o){
-		$this->obj['options'] = $o;
-		return $this;
-	}
-
-	public function option($key, $value){
-		$this->obj['options'][$key] = $value;
-		return $this;
-	}
-
-	public function default($k){
-		$this->obj['default'] = $k;
-		return $this;
-	}
-
-	public function data($d){
-		$this->obj['data'] = $d;
-		return $this;
 	}
 
 }

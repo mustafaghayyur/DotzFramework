@@ -1,6 +1,6 @@
 <?php 
 use DotzFramework\Core\Controller;
-use DotzFramework\Modules\Form;
+use DotzFramework\Modules\Form\Form;
 
 class PagesController extends Controller{
 
@@ -15,7 +15,7 @@ class PagesController extends Controller{
 			'name'=>'Mustafa', 
 			'email'=>'mustafa@domain.com',
 			'city'=>'mississauga', 
-			'relocate'=>'relocate', 
+			'citizen'=>'citizen', 
 			'gender'=>'male',
 			'message'=>'I wish to join this project.'
 		];

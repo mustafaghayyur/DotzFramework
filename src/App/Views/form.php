@@ -28,6 +28,14 @@
 				<?php $dotz->form->select('city')->label('City:')->options($dotz->data['cities'])->default('toronto')->show();?>
 			</div>
 			<div>
+				<?php $dotz->form->select('test')
+					->label('Test:')
+					->option('test', 'Test')
+					->option('test2', 'Test Two')
+					->default('test2')
+					->show();?>
+			</div>
+			<div>
 				<?php $dotz->form->textarea('message')->label('Personal Comments:')->show();?>
 			</div>
 			<div>
