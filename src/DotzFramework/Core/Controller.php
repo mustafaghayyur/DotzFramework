@@ -5,7 +5,7 @@ class Controller{
 
 	public $view;
 	
-	public $model;
+	public $query;
 
 	public function __construct(){
 		$this->view = Dotz::get()->load('view');

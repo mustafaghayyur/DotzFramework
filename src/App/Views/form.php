@@ -9,25 +9,27 @@
 		<?php $dotz->form->open('test','POST','/');?>
 
 			<div>
-				<?php $dotz->form->textfield('name', 'Name:');?>
+				<?php $dotz->form->textfield('Name:', 'name');?>
 			</div>
 			<div>
-				<?php $dotz->form->textfield('email', 'Email:');?>
+				<?php $dotz->form->textfield('Email:', 'email');?>
 			</div>
 			<div>
-				<?php $dotz->form->checkbox('citizen', 'Citizen?');?>
-				<?php $dotz->form->checkbox('relocate', 'Need to Relocate?');?>
+				<?php $dotz->form->checkbox('Citizen?', 'citizen');?>
+				<?php $dotz->form->checkbox('Need to Relocate?', 'relocate');?>
 			</div>
 			<div>Gender:</div>
 			<div>
-				<?php $dotz->form->radiobutton('gender', 'male', 'Male:');?>
-				<?php $dotz->form->radiobutton('gender', 'female', 'Female:');?>
+				<?php //$dotz->form->radiobutton('Male:', 'gender', 'male');?>
+				<?php $dotz->form->radiobutton('gender')->value('male')->label('Male:')->show();?>
+				<?php //$dotz->form->radiobutton('Female:', 'gender', 'female');?>
 			</div>
 			<div>
-				<?php $dotz->form->select('city', $dotz->data['cities'], 'City:', 'toronto');?>
+				<?php //$dotz->form->select('City:', 'city', $dotz->data['cities'], 'toronto');?>
+				<?php $dotz->form->select('city')->label('City:')->options($dotz->data['cities'])->default('toronto')->show();?>
 			</div>
 			<div>
-				<?php $dotz->form->textarea('message', 'Personal Comments:');?>
+				<?php $dotz->form->textarea('Personal Comments:', 'message');?>
 			</div>
 			<div>
 				<?php $dotz->form->button('submit', 'Send');?>

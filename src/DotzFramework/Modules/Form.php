@@ -28,14 +28,15 @@ class Form {
 	/**
 	 * Generates the opening html form tag.
 	 */
-	public function getOpen($name, $method, $action, $attributes = array()){
+	//public function getOpen($name, $method, $action, $attributes = array()){
+	public function getOpen($attributes){
 
 		$default = [
-			'name' => $name, 
-			'id' => $name.'Form',
-			'class' => $name.'Form',
-			'method' => $method, 
-			'action' => $action
+			'name' => $attributes['name'], 
+			'id' => $attributes['name'].'Form',
+			'class' => $attributes['name'].'Form',
+			'method' => '', 
+			'action' => ''
 		];
 
 		$attr = array_merge($default, $attributes);
@@ -52,16 +53,16 @@ class Form {
 	/**
 	 * Wrapper function to get the input field type="text"
 	 */
-	public function getTextfield($name, $label = null, $attributes = []){
+	public function getTextfield($label = null, $name, $attributes = []){
 		
 		$attributes['type'] = 'text';
-		return $this->input($name, $label, $attributes);
+		return $this->input($label, $name, $attributes);
 	}
 
 	/**
 	 * Wrapper function to get the input field type="checkbox"
 	 */
-	public function getCheckbox($name, $label = null, $attributes = []){
+	public function getCheckbox($label = null, $name, $attributes = []){
 		
 		$attributes['type'] = 'checkbox';
 		$attributes['value'] = isset($attributes['value']) ? $attributes['value'] : $name;
@@ -70,13 +71,13 @@ class Form {
 			$attributes['checked'] = 'checked';
 		}
 
-		return $this->input($name, $label, $attributes);
+		return $this->input($label, $name, $attributes);
 	}
 
 	/**
 	 * Wrapper function to get the input field type="radio"
 	 */
-	public function getRadiobutton($name, $value, $label = null, $attributes = []){
+	public function getRadiobutton($label = null, $name, $value, $attributes = []){
 		
 		$attributes['type'] = 'radio';
 		$attributes['value'] = $value;
@@ -85,7 +86,7 @@ class Form {
 			$attributes['checked'] = 'checked';
 		}
 
-		return $this->input($name, $label, $attributes);
+		return $this->input($label, $name, $attributes);
 	}
 
 	/**
@@ -96,13 +97,13 @@ class Form {
 		$attributes['type'] = (isset($attributes['type'])) ? $attributes['type'] : 'submit';
 		$attributes['value'] = $value;
 
-		return $this->input($name, $label, $attributes);
+		return $this->input($label, $name, $attributes);
 	}
 
 	/**
 	 * Generates HTML for a specified input field.
 	 */
-	public function input($name, $label = null, $attributes = []){
+	public function input($label = null, $name, $attributes = []){
 
 		$default = [
 			'name' => $name, 
@@ -131,7 +132,7 @@ class Form {
 	/**
 	 * Generates the html for a textarea field
 	 */
-	public function getTextarea($name, $label = null, $attributes =[]){
+	public function getTextarea($label = null, $name, $attributes =[]){
 
 		$default = [
 			'name' => $name, 
@@ -165,7 +166,7 @@ class Form {
 	/**
 	 * Generates the HTML for a slect input field
 	 */
-	public function getSelect($name, $options = [], $label = null, $selectedKey = null, $settings = []){
+	public function getSelect($label = null, $name, $options = [], $selectedKey = null, $settings = []){
 
 		$default = [
 			'name' => $name,
@@ -237,31 +238,33 @@ class Form {
 	 */
 	
 	public function open($name, $method, $action, $attributes = array()){
-		echo $this->getOpen($name, $method, $action, $attributes);
+		$e = new Element($this);
+		return $e->name($name, $this, 'getOpen');
+		//echo $this->getOpen($name, $method, $action, $attributes);
 	}
 
-	public function textfield($name, $label = null, $attributes = []){
-		echo $this->getTextfield($name, $label, $attributes);
+	public function textfield($label = null, $name, $attributes = []){
+		echo $this->getTextfield($label, $name, $attributes);
 	}
 
-	public function checkbox($name, $label = null, $attributes = []){
-		echo $this->getCheckbox($name, $label, $attributes);
+	public function checkbox($label = null, $name, $attributes = []){
+		echo $this->getCheckbox($label, $name, $attributes);
 	}
 
-	public function radiobutton($name, $value, $label = null, $attributes = []){
-		echo $this->getRadiobutton($name, $value, $label, $attributes);
+	public function radiobutton($label = null, $name, $value, $attributes = []){
+		echo $this->getRadiobutton($label, $name, $value, $attributes);
 	}
 
 	public function button($name, $value = 'Submit', $label = null, $attributes = []){
 		echo $this->getButton($name, $value, $label, $attributes);
 	}	
 
-	public function textarea($name, $label = null, $attributes =[]){
-		echo $this->getTextarea($name, $label, $attributes);
+	public function textarea($label = null, $name, $attributes =[]){
+		echo $this->getTextarea($label, $name, $attributes);
 	}
 
-	public function select($name, $options = [], $label = null, $defaultOptionKey = null, $settings = []){
-		echo $this->getSelect($name, $options, $label, $defaultOptionKey, $settings);
+	public function select($label = null, $name, $options = [], $defaultOptionKey = null, $settings = []){
+		echo $this->getSelect($label, $name, $options, $defaultOptionKey, $settings);
 	}
 
 	public function close($data = ''){
@@ -279,6 +282,62 @@ class Form {
 		}
 
 		return $str;
+	}
+
+}
+
+class Element {
+
+	public $obj;
+
+	public $requiredParams;
+
+	public $form;
+
+	public $function;
+
+	public function __construct($arr, $form, $func){
+		$this->obj = [];
+		$this->form = $form;
+	}
+
+	protected function show(){
+		echo $this->form->{$this->callback}((array)$this->obj);
+	}
+
+	public function name($n){
+		$this->obj['name'] = $n;
+		return $this;
+	}
+
+	public function value($v){
+		$this->obj['value'] = $v;
+		return $this;
+	}
+
+	public function label($l){
+		$this->obj['label'] = $l;
+		return $this;
+	}
+
+	public function type($t){
+		$this->obj['type'] = $t;
+		return $this;
+	}
+
+	public function options($o){
+		$this->obj['options'] = $o;
+		return $this;
+	}
+
+	public function option($key, $value){
+		$this->obj['options'][$key] = $value;
+		return $this;
+	}
+
+	public function default($k){
+		$this->obj['default'] = $k;
+		return $this;
 	}
 
 }
