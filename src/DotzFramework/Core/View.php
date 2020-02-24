@@ -14,7 +14,7 @@ class View{
 	 * 
 	 * Params:
 	 *  - $view - view file name (without the extension)
-	 *  - $dotz - object/array/data to be passed along to the view file.
+	 *  - $app - object/array/data to be passed along to the view file.
 	 */
 	public function load($view, $app = null){
 		if(!$this->viewsConfigsOk()){
