@@ -4,6 +4,11 @@
 	"_instructions":"appSystemPath is the full server file system path where this app is installed. Please exclude trailing slashes.",
 	"appSystemPath":"/Applications/MAMP/htdocs/WDRouterLibrary",
 
-	"_instrcutions":"appURL is the complete URL that you would type into the browser's address bar to reach this app. Please exclude trailing slashes. Please exclude HTTP protocol in definition. Please include subdomain.",
-	"appURL":"localhost/WDRouterLibrary"
+	"httpProtocol":"http",
+
+	"_instrcutions":"url is the complete URL that you would type into the browser's address bar to reach this app. Please exclude trailing slashes. Please exclude HTTP protocol in definition. Please include subdomain.",
+	"url":"localhost/WDRouterLibrary",
+
+	"_instructions":"directory holds the path to the query-definitions/models.",
+	"queryClassesNamespace":"App\\Queries"
 }

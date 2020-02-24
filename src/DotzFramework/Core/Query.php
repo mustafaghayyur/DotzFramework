@@ -3,10 +3,8 @@ namespace DotzFramework\Core;
 
 use DotzFramework\Core\Dotz;
 
-
 /**
- * This is the parent Query class meant to give the entire data 
- * modeling some uniformity. Each database type will have its own
+ * A wrapper for PDO. Each database type will have its own
  * extension to this class.  
  */
 class Query {
@@ -17,39 +15,42 @@ class Query {
 	public $connection;
 
 	/**
-	 * Holds all used models' instances
+	 * Holds all Query Definition Classes' instances
 	 */
-	public $models;
+	public $queryClass;
 
+	/**
+	 * To be extended in children classes.
+	 * $this->connection would have to be defined.
+	 */
 	public function __construct(){
 
-		// $connection now holds the connection instance held by DB::connection
-		$this->connection = Dotz::get()->load('db')->connection;
-
-		$this->models = [];
-
+		$this->queryClass = [];
+	
 	}
 
 	/**
-	 * Fetches query from application's defined Models.
+	 * Fetches query from application's defined Queries.
 	 */
-	public function fetchQuery($model, $key) {
+	public function fetchQuery($class, $property) {
 
-		if(isset($this->models[$model])){
+		if(isset($this->queryClass[$class])){
 			
-			return isset($this->models[$model]->$key) ? $this->models[$model]->$key : null;
+			return isset($this->queryClass[$class]->$property) 
+				? $this->queryClass[$class]->$property 
+				: null;
 		
 		}else{
 			
 			$namespace = trim(
-								Dotz::get()->container['configs']->props->models->namespace, 
-								'\\'
-							);
+				Dotz::get()->container['configs']->props->app->queryClassesNamespace, 
+				'\\'
+			);
 
-			$class = $namespace .'\\'. ucfirst($model);
-			$this->models[$model] = new $class;
+			$className = $namespace .'\\'. ucfirst($class);
+			$this->queryClass[$class] = new $className;
 
-			return $this->models[$model]->$key;
+			return $this->queryClass[$class]->$property;
 		}
 
 		return null;
@@ -69,10 +70,27 @@ class Query {
 	}
 
 	/**
-	 * Good to get string of '?' placeholders for prepared statements.
-	 * Useful for queries like SELECT ... WHERE col1 IN ([array]);
+	 * Executes an un-preprared query, carrying raw parameters, directly injected
+	 * into the query string.
 	 */
-	public function getPlaceHolders($array){
+	public function raw($query, $flags = \PDO::FETCH_ASSOC){
+		$r = $this->connection->query($query);
+
+		return $r->fetchAll($flags);
+	}
+
+	/**
+	 * Quotes a string for querying purposes.
+	 */
+	public function quote($string, $flags = \PDO::PARAM_STR){
+		return $this->connection->quote($string, $flags);
+	}
+
+	/**
+	 * Good for generating a string of '?' placeholders for prepared statements.
+	 * Useful for queries like SELECT * ... WHERE col1 IN ([array]);
+	 */
+	public function generatePlaceHolders($array){
 	
 		return  implode(',', array_fill(0, count($array), '?'));
 

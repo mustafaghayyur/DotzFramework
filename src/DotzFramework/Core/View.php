@@ -4,36 +4,35 @@ namespace DotzFramework\Core;
 class View{
 
 	public $configs;
+
 	public function __construct(){
-		$dotz= Dotz::get();
-		$this->configs = $dotz->container['configs']->props;
+		$this->configs = Dotz::get()->load('configs')->props;
 	}
 
 	/**
 	 * Use for HTML outputs.
 	 * 
 	 * Params:
-	 *  - $view - file name (without the extension)
-	 *  - $path - subdirectory (if any) where view resides
-	 *  - $data - assoc. array of non-numeric keys that carry 
-	 *  		  objects/arrays/data to be passed along to the view.
-	 *
-	 * For example, to send an array of names called $employees, 
-	 * you would call the load method with the following parameters:
-	 * 
-	 * `  Views::load('employee_list', '', [ 'employees' => $employees ]);`
+	 *  - $view - view file name (without the extension)
+	 *  - $dotz - object/array/data to be passed along to the view file.
 	 */
-	public function load($view, $dotz = null){
+	public function load($view, $app = null){
 		if(!$this->viewsConfigsOk()){
 			throw new \Exception('Views configurations not set correctly.');
 		}
 
 		$path = trim($view, '/');
-		$file = $this->configs->views->directory .'/'. $path .'.php';
+		$file = $this->configs->views->sysPath .'/'. $path .'.php';
 
 		if(!file_exists($file)){
 			throw new \Exception('View not found in View::load().');			
 		}
+
+		$dotz = new \stdClass();
+		$dotz->configs = Dotz::get()->load('configs')->props;
+		$dotz->url = $dotz->configs->app->httpProtocol .
+				'://'. $dotz->configs->app->url .
+				'/'. $dotz->configs->views->directory;
 
 		include_once($file);
 	}
@@ -55,28 +54,11 @@ class View{
 		if(isset($this->configs->views)
 				&& is_object($this->configs->views)){
 
-			if(isset($this->configs->views->directory)){
-				if(file_exists($this->configs->views->directory)){
+			if(isset($this->configs->views->sysPath)){
+				if(file_exists($this->configs->views->sysPath)){
 					return true;
 				}
 			}
-		}
-
-		return false;
-	}
-
-	protected static function dataOk($data){
-				
-		if(is_array($data)){
-			$keys = array_keys($data);
-
-			foreach ($keys as $key) {
-				if(is_int($key)){
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 		return false;

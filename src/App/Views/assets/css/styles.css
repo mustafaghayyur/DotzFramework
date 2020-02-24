@@ -1,0 +1,30 @@
+html{
+	padding: 0;
+	margin: 0;
+}
+
+body{
+	font-family: 'Arial', 'san-serif';
+	font-size: 12pt;
+	line-height: 14pt;
+	color: #333;
+	padding: 10px;
+	margin: 10px;
+}
+
+p{
+	margin: 0px 0px 12px;
+	display: block;
+}
+
+div{
+	display: block;
+	margin: 0px;
+	padding: 5px 3px 5px;
+}
+
+h1, h2,, h3, h4, h5, h6 {
+	display: block;
+	margin: 12px 0;
+	padding: 3px;
+}

@@ -14,13 +14,13 @@
 
 	"_instructions":"Add the controller class name and method for the homepage below:",
 	"default":{
-		"controller":"DefaultController",
+		"controller":"PagesController",
 		"method":"index"
 	},
 
 	"_instructions":"Add the controller class name and method for the 404 error page below:",
 	"notFound":{
-		"controller":"DefaultController",
+		"controller":"PagesController",
 		"method":"notFound"
 	}
 }

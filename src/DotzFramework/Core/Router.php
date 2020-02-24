@@ -90,7 +90,7 @@ class Router {
 	*/
 	public function areConfigsDefined(){
 
-		if(isset($this->configs->app->appURL)
+		if(isset($this->configs->app->url)
 			&& isset($this->configs->controllers->directory)
 			&& isset($this->configs->router->default) 
 			&& is_object($this->configs->router->default)
@@ -117,8 +117,8 @@ class Router {
 
 		$fullURI = $dotz->container['request']->server->get('REQUEST_URI');
 
-		if(strpos($this->configs->app->appURL, $host) !== 0){
-			throw new Exception('[ Router Error ] The appURL config property does not match the HTTP Host this app is running on.');
+		if(strpos($this->configs->app->url, $host) !== 0){
+			throw new Exception('[ Router Error ] The url config property does not match the HTTP Host this app is running on.');
 		}
 
 		// If this app was not installed in the root directory of
@@ -126,7 +126,7 @@ class Router {
 		// is running from.
 		$appURI = trim(
 						substr(
-							$this->configs->app->appURL, 
+							$this->configs->app->url, 
 							strlen($host)
 						), 
 						'/'

@@ -25,9 +25,9 @@ final class Version20200211144805 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
 
-        $this->addSql('CREATE TABLE example_table (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE test_table (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
         
-        $this->addSql("INSERT INTO example_table (title) VALUES ('hello world')");
+        $this->addSql("INSERT INTO test_table (title) VALUES ('If you are seeing this sentence in the browser; your database and doctrine are setup correctly!')");
 
     }
 
