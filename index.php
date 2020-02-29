@@ -1,4 +1,8 @@
 <?php 
+
+$stMem = memory_get_usage();
+$stTime = microtime(true);
+
 error_reporting(E_ALL & ~E_NOTICE);
 
 require __DIR__ . '/vendor/autoload.php';
@@ -19,5 +23,9 @@ try{
 
 }
 
+$enMem = memory_get_usage();
+$enTime = microtime(true);
 
+echo 'Time: ' . ($enTime - $stTime) ."<br/>";
+echo 'Memory: ' . ( ($enMem - $stMem) / 1000) ."kb<br/>";
 

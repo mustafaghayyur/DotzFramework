@@ -31,6 +31,9 @@ class View{
 		$dotz = new \stdClass();
 		$dotz->configs = Dotz::get()->load('configs')->props;
 		$dotz->url = $dotz->configs->app->httpProtocol .
+				'://'. $dotz->configs->app->url;
+
+		$dotz->viewsUrl = $dotz->configs->app->httpProtocol .
 				'://'. $dotz->configs->app->url .
 				'/'. $dotz->configs->views->directory;
 

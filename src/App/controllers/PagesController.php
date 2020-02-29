@@ -50,7 +50,7 @@ class PagesController extends Controller{
 
 	public function form(){
 		
-		$user = [
+		$systemData = [
 			'name'=>'Mustafa', 
 			'email'=>'mustafa@domain.com',
 			'city'=>'mississauga', 
@@ -61,7 +61,7 @@ class PagesController extends Controller{
 
 		$obj = new \stdClass();
 		$obj->form = new Form();
-		$obj->form->bind($user);
+		$obj->form->bind($systemData);
 
 		$obj->data = [
 			'cities' => [ 

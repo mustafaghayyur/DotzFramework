@@ -8,8 +8,17 @@ body{
 	font-size: 12pt;
 	line-height: 14pt;
 	color: #333;
-	padding: 10px;
-	margin: 10px;
+	padding: 0px;
+	margin: 0px;
+	background-color: #17B0D7;
+}
+
+.page{
+	display: block;
+	background-color: #fff;
+	opacity: 0.8;
+	padding: 20px;
+	margin: 25px;
 }
 
 p{
@@ -27,4 +36,20 @@ h1, h2,, h3, h4, h5, h6 {
 	display: block;
 	margin: 12px 0;
 	padding: 3px;
+}
+
+.menu {
+	display: block;
+	width: 85%;
+	margin: 55px auto 0px;
+	background-color: #333;
+	opacity: 0.5;
+	padding: 7px;
+}
+
+.menu .item {
+	color: #fff;
+	font-weight: bold;
+	margin: 0 20px 0;
+	padding: 10px;
 }
