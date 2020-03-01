@@ -1,17 +1,22 @@
 <!DocType html />
 <html>
 	<head>
-		<title>[Dotz Framework] Query Example</title>
+		<title>[Dotz Framework] Post Example</title>
 		<link rel="stylesheet" type="text/css" href="<?php echo $dotz->viewsUrl;?>/assets/css/styles.css">
 	</head>
 	<body>
 		<div class="page">
-			<h1>Example select queries output:</h1>
-			<p><?php echo $app['one'][0]['title'];?></p>
-			<p><?php echo $app['two'][0]['title'];?></p>
-			<p><?php echo $app['three'][0]['title'];?></p>
+			<h1>POST variable filtering example</h1>
+			<h3>Message Contents:</h3>
+			<h4>Orginal message:</h4>
+			<div>
+				<?php echo  $app['original'];?>
+			</div>
+			<h4>Filtered message:</h4>
+			<div>
+				<?php echo  $app['filtered'];?>
+			</div>
 
-			
 			<div class="menu">
 				<a href="<?php echo $dotz->url;?>" class="item">Home</a>
 				<a href="<?php echo $dotz->url;?>/pages/form" class="item">Form Example</a>

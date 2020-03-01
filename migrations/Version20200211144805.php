@@ -29,6 +29,10 @@ final class Version20200211144805 extends AbstractMigration
         
         $this->addSql("INSERT INTO test_table (title) VALUES ('If you are seeing this sentence in the browser; your database and doctrine are setup correctly!')");
 
+        $this->addSql("INSERT INTO test_table (title) VALUES ('This is the second query.')");
+
+        $this->addSql("INSERT INTO test_table (title) VALUES ('This is the third query.')");
+
     }
 
     /**

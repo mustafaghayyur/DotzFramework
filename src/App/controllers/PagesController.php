@@ -4,50 +4,74 @@ use DotzFramework\Modules\Form\Form;
 
 class PagesController extends Controller{
 
+	/**
+	 * Home page
+	 */
 	public function index($test=''){
 		
-		$data = [ 'name' => 'Mustafa Ghayyur' ];
+		$data = [ 'msg' => 'Developed by Web Dotz' ];
 
 		$this->view->load('home', $data);
 	}
 
+	/**
+	 * 404 Error Page. Could be a json response, or a HTML view.
+	 */
 	public function notFound($uriArray){
 		$this->view->sendToJson(['msg'=>'Page not found.', 'uri_array:'=>$uriArray]);
 	}
 
-	public function customPage($arg1 = null, $arg2 = null, $arg3 = null){
-		echo "This is a custom url dummy page.";
-		var_dump($arg1, $arg2, $arg3);
+	/**
+	 * A custom url controller. 
+	 * Shows the index GET value in both filtered & unfiltered forms.
+	 * Go to the following URL in your browser:
+	 * ://my-app-url/get?index=<script>var t='hello'; document.write(t);</script>
+	 */
+	public function showGetVars(){
+		$index = $this->input->get('index');
+		$indexNonFiltered = $this->input->get('index', 'none');
+
+		$this->view->load('get', ['original'=>$indexNonFiltered, 'filtered'=>$index]);
 	}
 
-	public function queryone( $id='1' ){
+	/**
+	 * A custom url controller. 
+	 * Shows the message POST value in both filtered & unfiltered forms:
+	 */
+	public function showPostVars(){
+		$message = $this->input->post('message');
+		$messageNonFiltered = $this->input->post('message', 'none');
+
+		$this->view->load('post', ['original'=>$messageNonFiltered, 'filtered'=>$message]);
+	}
+
+	/**
+	 * Shows several ways to query your database.
+	 * Requires a successful run of migration 20200211144805.
+	 */
+	public function queries(){
 		
-		$data = $this->query->execute(
-			'SELECT * FROM example_table WHERE id = ?;', 
-			[$id]
+		$data =[];
+
+		$data['one'] = $this->query->execute(
+			'SELECT * FROM test_table WHERE id = ?;', 
+			[1]
 		);
 
-		$this->view->load('query', $data[0]);
-	}
-
-	public function querytwo( $id='1' ){
-		
-		$data = $this->query->execute( 
+		$data['two'] = $this->query->execute( 
 			$this->query->fetchQuery('Example', 'get'), 
-			[$id] 
+			[2] 
 		);
 
-		$this->view->load('query', $data[0]);
+		$id = $this->query->quote('3');
+		$data['three'] = $this->query->raw('SELECT * FROM test_table WHERE id = '.$id.';');
+
+		$this->view->load('query', $data);
 	}
 
-	public function rawquery( $id='1' ){
-		
-		$id = $this->query->quote($id);
-		$data = $this->query->raw('SELECT * FROM example_table WHERE id = '.$id.';');
-
-		$this->view->load('query', $data[0]);
-	}
-
+	/**
+	 * Shows a form generated with the Form module.
+	 */
 	public function form(){
 		
 		$systemData = [
@@ -56,9 +80,10 @@ class PagesController extends Controller{
 			'city'=>'mississauga', 
 			'citizen'=>'citizen', 
 			'gender'=>'male',
-			'message'=>'I wish to join this project.'
+			'message'=>'<script>var t=\'I wish to join this project.\'; document.write(t);</script>'
 		];
 
+		// setup $obj to send to the view.
 		$obj = new \stdClass();
 		$obj->form = new Form();
 		$obj->form->bind($systemData);

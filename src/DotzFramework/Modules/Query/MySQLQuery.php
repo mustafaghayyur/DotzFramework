@@ -23,7 +23,7 @@ class MySQLQuery extends Query {
 		 * This would configure the right database to your Query module.
 		 */
 
-		$db = new DB($overwrite = false);
+		$db = new DB();
 		$this->connection = $db->connection;
 	}
 

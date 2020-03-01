@@ -8,7 +8,7 @@
 		<div class="page">
 			<h1>Form:</h1>
 			
-			<?php $app->form->open('test')->method('POST')->action('/')->show();?>
+			<?php $app->form->open('test')->method('POST')->action($dotz->url . '/submit')->show();?>
 
 				<div>
 					<?php $app->form->textfield('name')->label('Name:')->show();?>
@@ -31,8 +31,8 @@
 				<div>
 					<?php $app->form->select('test')
 						->label('Test:')
-						->option('test', 'Test')
 						->option('test2', 'Test Two')
+						->option('test', 'Test')
 						->default('test2')
 						->show();?>
 				</div>
@@ -49,7 +49,8 @@
 			<div class="menu">
 				<a href="<?php echo $dotz->url;?>" class="item">Home</a>
 				<a href="<?php echo $dotz->url;?>/pages/form" class="item">Form Example</a>
-				<a href="<?php echo $dotz->url;?>/pages/queryone" class="item">MySQL Query example</a>
+				<a href="<?php echo $dotz->url;?>/pages/queries" class="item">MySQL Query example</a>
+				<a href="<?php echo $dotz->url;?>/get?index=<script>var t='hello'; document.write(t);</script>" class="item">Get Filtering Example</a>
 			</div>
 		</div>
 	</body>

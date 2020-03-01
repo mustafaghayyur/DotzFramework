@@ -3,6 +3,6 @@ namespace App\Queries;
 
 class Example {
 
-	public $get = 'SELECT * FROM example_table WHERE id = ?;';
+	public $get = 'SELECT * FROM test_table WHERE id = ?;';
 
 }

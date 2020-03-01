@@ -118,17 +118,17 @@ class FormGenerator {
 
 		$default = [
 			'name' => $name, 
-			'class' => $name.'TextField',
-			'rows'=>'',
-			'col'=>''
+			'class' => $name.'TextField'
 		];
-
-		$attr = array_merge($default, $attributes);
 
 		$initialText = '';
 		if(isset($attributes['systemBoundValue'])){
 			$initialText = $attributes['systemBoundValue'];
+
+			unset($attributes['systemBoundValue']);
 		}
+
+		$attr = array_merge($default, $attributes);
 
 		$html = '';
 

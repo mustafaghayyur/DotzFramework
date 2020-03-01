@@ -1,9 +1,13 @@
 {
 	"_instructions":"Any custom URLs you wish to define should be configured in customRules definition below.",
 	"customRules":{
-		"uri-for-custom-page":{
+		"get":{
 			"controller":"PagesController",
-			"method":"customPage"
+			"method":"showGetVars"
+		},
+		"submit":{
+			"controller":"PagesController",
+			"method":"showPostVars"
 		}
 	},
 
