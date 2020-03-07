@@ -1,5 +1,5 @@
 {
-	"_instructions":"Any custom URLs you wish to define should be configured in customRules definition below.",
+	"------------":"Custom URLs you wish to define should be set below.-------",
 	"customRules":{
 		"get":{
 			"controller":"PagesController",
@@ -11,18 +11,18 @@
 		}
 	},
 
-	"_instructions":"REST Controllers should be defined in restResources object below:",
+	"------------":"REST Controllers should be defined below.-------",
 	"restResources":{
 		"uri-for-resource":"ControllerNameForResource"
 	},
 
-	"_instructions":"Add the controller class name and method for the homepage below:",
+	"------------":"Controller class name and method for the homepage.-------",
 	"default":{
 		"controller":"PagesController",
 		"method":"index"
 	},
 
-	"_instructions":"Add the controller class name and method for the 404 error page below:",
+	"------------":"Controller class name and method for the 404 error page.",
 	"notFound":{
 		"controller":"PagesController",
 		"method":"notFound"

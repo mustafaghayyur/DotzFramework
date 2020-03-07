@@ -1,7 +1,6 @@
 {
 
-	"_instructions":"directory holds the path to the view HTML files.",
-	"sysPath":"/Applications/MAMP/htdocs/WDRouterLibrary/src/App/Views",
-	"directory":"/src/App/Views"
+	"------------":"Path to the view HTML files from application root.-------",
+	"directory":"src/App/Views"
 
 }

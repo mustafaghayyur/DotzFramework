@@ -1,6 +1,7 @@
 <?php 
 use DotzFramework\Core\Controller;
 use DotzFramework\Modules\Form\Form;
+use DotzFramework\Core\Dotz;
 
 class PagesController extends Controller{
 
@@ -28,10 +29,11 @@ class PagesController extends Controller{
 	 * ://my-app-url/get?index=<script>var t='hello'; document.write(t);</script>
 	 */
 	public function showGetVars(){
-		$index = $this->input->get('index');
-		$indexNonFiltered = $this->input->get('index', 'none');
+		header('X-XSS-Protection: 0');
+		$filtered = $this->input->secure()->get('index');
+		$unfiltered = $this->input->get('index', false);
 
-		$this->view->load('get', ['original'=>$indexNonFiltered, 'filtered'=>$index]);
+		$this->view->load('get', ['original'=>$unfiltered, 'filtered'=>$filtered]);
 	}
 
 	/**
@@ -39,10 +41,20 @@ class PagesController extends Controller{
 	 * Shows the message POST value in both filtered & unfiltered forms:
 	 */
 	public function showPostVars(){
-		$message = $this->input->post('message');
-		$messageNonFiltered = $this->input->post('message', 'none');
 
-		$this->view->load('post', ['original'=>$messageNonFiltered, 'filtered'=>$message]);
+		$unfiltered = $this->input->post('message', false);
+
+		$sanitized = $this->input->secure()->post('message');
+
+		$validated = $this->input->secure()->post(
+			'message', 
+			FILTER_VALIDATE_REGEXP, 
+			['options' => 
+				[ 'regexp' => '/^M[a-z]{4}/' ]
+			]
+		);
+
+		$this->view->load('post', ['original'=>$unfiltered, 'sanitized'=>$sanitized, 'validated'=>$validated]);
 	}
 
 	/**
@@ -80,7 +92,8 @@ class PagesController extends Controller{
 			'city'=>'mississauga', 
 			'citizen'=>'citizen', 
 			'gender'=>'male',
-			'message'=>'<script>var t=\'I wish to join this project.\'; document.write(t);</script>'
+			'message'=>'Match this string'
+			//'message'=>'<script>var t=\'I wish to join this project.\'; document.write(t);</script>'
 		];
 
 		// setup $obj to send to the view.

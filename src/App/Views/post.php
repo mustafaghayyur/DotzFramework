@@ -12,9 +12,13 @@
 			<div>
 				<?php echo  $app['original'];?>
 			</div>
-			<h4>Filtered message:</h4>
+			<h4>Sanitized message:</h4>
 			<div>
-				<?php echo  $app['filtered'];?>
+				<?php echo  $app['sanitized'];?>
+			</div>
+			<h4>Validated message:</h4>
+			<div>
+				<?php echo  $app['validated'];?>
 			</div>
 
 			<div class="menu">

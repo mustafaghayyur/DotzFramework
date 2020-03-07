@@ -1,8 +1,11 @@
 {
+	"------------":"Define database configurations.-------",
 	"name":"test",
 	"user":"root",
 	"password":"mal123",
 	"host":"127.0.0.1",
-	"driverDoctrine":"pdo_mysql",
-	"driver":"mysql"
+	"driver":"mysql",
+
+	"------------":"Used by Doctrine-Migrations.-------",
+	"driverDoctrine":"pdo_mysql"
 }

@@ -1,4 +1,5 @@
 {
+	"------------":"Used by Doctrine-Migrations.-------",
 	"nameSpace":"Migrations",
 	"tableName":"doctrine_migration_versions",
 	"colName":"version",
