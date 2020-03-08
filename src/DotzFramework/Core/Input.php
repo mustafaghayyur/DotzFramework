@@ -7,6 +7,8 @@ class Input {
 
 	/**
 	 * Adds a CSRF check.
+	 * If tokenized forms are enabled then that check is also
+	 * performed here.
 	 */
 	public function secure(){
 

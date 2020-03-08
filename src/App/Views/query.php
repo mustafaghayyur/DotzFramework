@@ -1,23 +1,8 @@
-<!DocType html />
-<html>
-	<head>
-		<title>[Dotz Framework] Query Example</title>
-		<link rel="stylesheet" type="text/css" href="<?php echo $dotz->viewsUrl;?>/assets/css/styles.css">
-	</head>
-	<body>
-		<div class="page">
-			<h1>Example select queries output:</h1>
-			<p><?php echo $app['one'][0]['title'];?></p>
-			<p><?php echo $app['two'][0]['title'];?></p>
-			<p><?php echo $app['three'][0]['title'];?></p>
+<?php include_once('_header.php');?>
 
-			
-			<div class="menu">
-				<a href="<?php echo $dotz->url;?>" class="item">Home</a>
-				<a href="<?php echo $dotz->url;?>/pages/form" class="item">Form Example</a>
-				<a href="<?php echo $dotz->url;?>/pages/queries" class="item">MySQL Query example</a>
-				<a href="<?php echo $dotz->url;?>/get?index=<script>var t='hello'; document.write(t);</script>" class="item">Get Filtering Example</a>
-			</div>
-		</div>
-	</body>
-</html>
+<h1>Example select queries output:</h1>
+<p><?php echo $one[0]['title'];?></p>
+<p><?php echo $two[0]['title'];?></p>
+<p><?php echo $three[0]['title'];?></p>
+	
+<?php include_once('_footer.php');?>

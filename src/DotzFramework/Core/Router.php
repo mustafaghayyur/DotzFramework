@@ -112,11 +112,11 @@ class Router {
 
 		$dotz = Dotz::get();
 		$host = trim(
-					$dotz->container['request']->server->get('HTTP_HOST'), 
+					$dotz->load('request')->server->get('HTTP_HOST'), 
 					'www.'
 					);
 
-		$fullURI = $dotz->container['request']->server->get('REQUEST_URI');
+		$fullURI = $dotz->load('request')->server->get('REQUEST_URI');
 
 		if(strpos($this->configs->app->url, $host) !== 0){
 			throw new Exception('[ Router Error ] The url config property does not match the HTTP Host this app is running on.');
@@ -168,7 +168,7 @@ class Router {
 
 		$c = $this->configs->router->restResources->{$uri[0]};
 		$dotz = Dotz::get();
-		$m = $dotz->container['request']->getMethod();
+		$m = $dotz->load('request')->getMethod();
 
 		$httpMethodIssues = strpbrk($m, "#$%^&*()+=[]';,./{}|:<>?~");
 		$m = (!$httpMethodIssues) ? strtolower($m) . 'Resource' : null;

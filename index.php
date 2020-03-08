@@ -14,7 +14,7 @@ $dotz = Dotz::get();
 
 try{
     
-    $r = new Router($dotz->container['configs']->props);
+    $r = new Router($dotz->load('configs')->props);
     $r->do();
 
 }catch (Exception $e){

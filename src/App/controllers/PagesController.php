@@ -10,9 +10,9 @@ class PagesController extends Controller{
 	 */
 	public function index($test=''){
 		
-		$data = [ 'msg' => 'Developed by Web Dotz' ];
+		$packet = [ 'msg' => 'Developed by Web Dotz' ];
 
-		$this->view->load('home', $data);
+		$this->view->load('home', $packet);
 	}
 
 	/**
@@ -29,11 +29,11 @@ class PagesController extends Controller{
 	 * ://my-app-url/get?index=<script>var t='hello'; document.write(t);</script>
 	 */
 	public function showGetVars(){
-		header('X-XSS-Protection: 0');
-		$filtered = $this->input->secure()->get('index');
-		$unfiltered = $this->input->get('index', false);
 
-		$this->view->load('get', ['original'=>$unfiltered, 'filtered'=>$filtered]);
+		$packet['filtered'] = $this->input->get('index');
+		$packet['unfiltered'] = $this->input->secure()->get('index', false);
+
+		$this->view->load('get', $packet);
 	}
 
 	/**
@@ -42,11 +42,13 @@ class PagesController extends Controller{
 	 */
 	public function showPostVars(){
 
-		$unfiltered = $this->input->post('message', false);
+		$packet = [];
 
-		$sanitized = $this->input->secure()->post('message');
+		$packet['unfiltered'] = $this->input->post('message', false);
 
-		$validated = $this->input->secure()->post(
+		$packet['sanitized'] = $this->input->secure()->post('message');
+
+		$packet['validated'] = $this->input->secure()->post(
 			'message', 
 			FILTER_VALIDATE_REGEXP, 
 			['options' => 
@@ -54,7 +56,7 @@ class PagesController extends Controller{
 			]
 		);
 
-		$this->view->load('post', ['original'=>$unfiltered, 'sanitized'=>$sanitized, 'validated'=>$validated]);
+		$this->view->load('post', $packet);
 	}
 
 	/**
@@ -63,29 +65,29 @@ class PagesController extends Controller{
 	 */
 	public function queries(){
 		
-		$data =[];
+		$packet = [];
 
-		$data['one'] = $this->query->execute(
+		$packet['one'] = $this->query->execute(
 			'SELECT * FROM test_table WHERE id = ?;', 
 			[1]
 		);
 
-		$data['two'] = $this->query->execute( 
+		$packet['two'] = $this->query->execute( 
 			$this->query->fetchQuery('Example', 'get'), 
 			[2] 
 		);
 
 		$id = $this->query->quote('3');
-		$data['three'] = $this->query->raw('SELECT * FROM test_table WHERE id = '.$id.';');
+		$packet['three'] = $this->query->raw('SELECT * FROM test_table WHERE id = '.$id.';');
 
-		$this->view->load('query', $data);
+		$this->view->load('query', $packet);
 	}
 
 	/**
 	 * Shows a form generated with the Form module.
 	 */
 	public function form(){
-		
+
 		$systemData = [
 			'name'=>'Mustafa', 
 			'email'=>'mustafa@domain.com',
@@ -93,15 +95,14 @@ class PagesController extends Controller{
 			'citizen'=>'citizen', 
 			'gender'=>'male',
 			'message'=>'Match this string'
-			//'message'=>'<script>var t=\'I wish to join this project.\'; document.write(t);</script>'
 		];
 
-		// setup $obj to send to the view.
-		$obj = new \stdClass();
-		$obj->form = new Form();
-		$obj->form->bind($systemData);
+		// setup $packet to send to the view.
+		$packet = [];
+		$packet['form'] = new Form();
+		$packet['form']->bind($systemData);
 
-		$obj->data = [
+		$packet['data'] = [
 			'cities' => [ 
 				'oakville'=>'Oakville', 
 				'brampton'=>'Brampton', 
@@ -112,7 +113,7 @@ class PagesController extends Controller{
 			]
 		];
 
-		$this->view->load('form', $obj);
+		$this->view->load('form', $packet);
 	}
 
         

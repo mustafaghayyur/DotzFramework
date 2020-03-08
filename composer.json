@@ -3,7 +3,7 @@
         "symfony/http-foundation": "^4.4",
         "pimple/pimple": "~3.0",
         "doctrine/migrations": "^2.2",
-        "owasp/csrf-protector-php": "^1.0"
+        "firebase/php-jwt": "^5.1"
     },
     "autoload": {
     	"psr-4": {

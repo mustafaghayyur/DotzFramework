@@ -5,7 +5,7 @@ require __DIR__ . '/vendor/autoload.php';
 use DotzFramework\Core\Dotz;
 
 $dotz = Dotz::get(__DIR__ . '/configs');
-$conf = $dotz->container['configs']->props;
+$conf = $dotz->load('configs')->props;
 
 return [
     'dbname' => $conf->db->name,

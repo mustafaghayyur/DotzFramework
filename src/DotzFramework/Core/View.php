@@ -14,32 +14,35 @@ class View{
 	 * 
 	 * Params:
 	 *  - $view - view file name (without the extension)
-	 *  - $app - object/array/data to be passed along to the view file.
+	 *  - $packet - Array of all vars you wish to pass to the view.
 	 */
-	public function load($view, $app = null){
+	public function load($view, Array $packet = null){
+		
 		if(!$this->viewsConfigsOk()){
 			throw new \Exception('Views configurations not set correctly.');
 		}
 
 		$path = trim($view, '/');
-		$file = $this->configs->app->systemPath .
+		$dotzViewFile = $this->configs->app->systemPath .
 				'/'. $this->configs->views->directory .
 				'/'. $path .'.php';
 
-		if(!file_exists($file)){
+		if(!file_exists($dotzViewFile)){
 			throw new \Exception('View not found in View::load().');			
 		}
 
-		$dotz = new \stdClass();
-		$dotz->configs = Dotz::get()->load('configs')->props;
-		$dotz->url = $dotz->configs->app->httpProtocol .
-				'://'. $dotz->configs->app->url;
+		if(is_array($packet)){
 
-		$dotz->viewsUrl = $dotz->configs->app->httpProtocol .
-				'://'. $dotz->configs->app->url .
-				'/'. $dotz->configs->views->directory;
+			if(isset($packet['dotzViewFile'])){
+				throw new \Exception('The key $packet[\'dotzViewFile\'] cannot be used in views. Exiting.');
+			}
 
-		include_once($file);
+			extract($packet);
+		}
+
+		$dotz = self::generateSystemVars();
+		
+		include_once($dotzViewFile);
 	}
 
 	/**
@@ -53,6 +56,24 @@ class View{
 			echo $o;
 			die();
 		}
+	}
+
+	protected static function generateSystemVars(){
+
+		$dotz = new \stdClass();
+		
+		$dotz->configs = $this->configs;
+		
+		$dotz->url = $dotz->configs->app->httpProtocol .'://'. $dotz->configs->app->url;
+		
+		$dotz->viewsUrl = $dotz->url .'/'. $dotz->configs->views->directory;
+
+		$js = Dotz::get()->load('js');
+		$js->add('configs-for-js', 'var dotz = '.json_encode($dotz->configs->js)).';';
+		
+		$dotz->js = $js->stringify();
+
+		return $dotz;
 	}
 
 	protected function viewsConfigsOk(){

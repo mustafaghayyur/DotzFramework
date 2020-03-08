@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Define over here any app-wide modules you wish to 
- * make available to $dotz->container
+ * make available to $dotz->load();
  *   
  * Below you can define your own modules to mount to 
  * the container. Follow the below pattern to define 
@@ -26,9 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * You can then load a module anywhere in your application, using:
  *   $dotz = Dotz::get();
- *   $dotz->load('uniqueKey');
- *   // Then use it...
- *   $dotz->container['uniqueKey']->someMyClassMethod();
+ *   $dotz->load('uniqueKey')->someMyClassMethod();
  * 
  */
 class ModulesDefinitions {
@@ -47,6 +45,10 @@ class ModulesDefinitions {
 
 		$mods['view'] = function($c){
 			return new Core\View();
+		};
+
+		$mods['js'] = function($c){
+			return new Utilities\JSOutput();
 		};
 
 		/**

@@ -24,7 +24,7 @@ class DB {
 		}
 
 		$dotz = Dotz::get();
-		$c = $dotz->container['configs']->props->db;
+		$c = $dotz->load('configs')->props->db;
 
 		$dsn = $this->getDataSourceName($c);
 
