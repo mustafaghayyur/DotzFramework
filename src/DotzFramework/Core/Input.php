@@ -5,32 +5,69 @@ use DotzFramework\Utilities\CSRF;
 
 class Input {
 
+	public static $secureInstance;
+
+	public $onlyGet;
+
+	public $tokenRequired;
+
+	public function __construct($onlyGet = false, $tokenRequired = false){
+		
+		$this->onlyGet = $onlyGet;
+		$this->tokenRequired = $tokenRequired;
+
+	}
+
 	/**
 	 * Adds a CSRF check.
 	 * If tokenized forms are enabled then that check is also
 	 * performed here.
 	 */
-	public function secure(){
+	public function secure(bool $tokenRequired = null){
 
-		$csrf = Dotz::get()->load('configs')->props->app->csrfCheck;
-		$formTokenization = Dotz::get()->load('configs')->props->app->formTokenization;
+		$req = (empty(self::$secureInstance)) ? false : self::$secureInstance->tokenRequired;
+		$tokenRequired = ($tokenRequired === null) ? $req : $tokenRequired;
 
-		if($csrf === true || $csrf === 'true'){
-			if(CSRF::checkOrigin() === false){
-				throw new \Exception('Could not pass CSRF security check. Exiting.');
+		if(empty(self::$secureInstance) || $req !== $tokenRequired){
+
+			$csrf = Dotz::get()->load('configs')->props->app->csrfCheck;
+			$formTokenization = Dotz::get()->load('configs')->props->app->formTokenization;
+
+			if($csrf === true || $csrf === 'true'){
+				if(CSRF::checkOrigin() === false){
+					throw new \Exception('Could not pass CSRF security check. Exiting.');
+				}
 			}
-		}
 
-		if($formTokenization === true || $formTokenization === 'true'){
-			
-			$jwt = $this->post('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			
-			if(!CSRF::validateToken($jwt)){
-				throw new \Exception('Invalid CSRF token passed. Exiting.');
+			$jwtP = $this->post('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$jwtG = $this->get('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+			// Below we create logic similar to bitwise logic,
+			// to determine weather to set $onlyGet to true.
+			$onlyGet = false;
+			$a = ($tokenRequired === true) ? 1 : 0;
+			$b = (empty($jwtP) && empty($jwtG)) ? 0 : 2;
+
+			if($b == 2){
+				$jwt = (empty($jwtP)) ? $jwtG : $jwtP;
 			}
-		}
 
-		return $this;
+			if(($a + $b) === 0){
+				$onlyGet = true;
+			}
+
+			if($tokenRequired === true && ( $formTokenization === true || $formTokenization === 'true' )){
+				
+				if(!CSRF::validateToken($jwt)){
+					throw new \Exception('Invalid CSRF token passed. Exiting.');
+				}
+			}
+
+			return self::$secureInstance = new Input($onlyGet, $tokenRequired);
+
+		}else{
+			return self::$secureInstance;
+		}
 		
 	}
 
@@ -64,20 +101,28 @@ class Input {
 	 */
 	public function post($key, $filter = null, $options = []){
 
-		if($filter === null){
-			$xss = Dotz::get()->load('configs')->props->app->enableXSSCheck;
+		if($this->onlyGet === false){
+			
+			if($filter === null){
+				$xss = Dotz::get()->load('configs')->props->app->enableXSSCheck;
 
-			if($xss === true || $xss === 'true'){
-				$filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS;
+				if($xss === true || $xss === 'true'){
+					$filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS;
+				}
 			}
-		}
 
-		// if $filter is still null or false...
-		if($filter === false || $filter === null){
-			$filter = FILTER_DEFAULT; // don't filter
-		}
+			// if $filter is still null or false...
+			if($filter === false || $filter === null){
+				$filter = FILTER_DEFAULT; // don't filter
+			}
 
-		return Dotz::get()->load('request')->request->filter($key, '', $filter, $options);
+			return Dotz::get()->load('request')->request->filter($key, '', $filter, $options);
+		
+		}else{
+			
+			throw new \Exception('Cannot retrieve a POST value without a valid CSRF token.');
+		}
+		
 	}
 
 }
