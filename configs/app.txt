@@ -24,8 +24,7 @@
 
 	"------------":"Enable tokenizition on forms? Ensures better protection against CSRF attacks.------",
 	"formTokenization":true,
-	
-	"------------":"Enable Sessions? Required for Form-Tokenizition.------",
-	"sessions":true
+
+	"secretKey":"jkasdh89q8nkskjdha89789yhas"
 
 }

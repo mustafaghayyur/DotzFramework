@@ -2,6 +2,8 @@
 namespace DotzFramework\Utilities;
 
 use DotzFramework\Core\Dotz;
+use \Firebase\JWT\JWT;
+
 
 class CSRF {
 
@@ -21,4 +23,31 @@ class CSRF {
 
 	}
 
+	public static function generateToken(){
+		
+		$c = Dotz::get()->load('configs')->props->app;
+		$key = $c->secretKey;
+
+		$payload = array(
+		    "iss" => $c->httpProtocol.'://'.$c->url,
+		    "iat" => time(),
+		    "exp" => time() + (60 * 10)
+		);
+
+		return JWT::encode($payload, $key, 'HS256');
+
+	}
+
+	public static function validateToken($token){
+		
+		$c = Dotz::get()->load('configs')->props->app;
+		$key = $c->secretKey;
+
+		if(JWT::decode($token, $key, array('HS256'))){
+			return true;
+		}
+
+		return false;
+
+	}
 }

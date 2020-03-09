@@ -10,7 +10,7 @@ class Controller{
 	public $query;
 
 	public function __construct(){
-		$this->input = new Input();
+		$this->input = Dotz::get()->load('input');
 		$this->view = Dotz::get()->load('view');
 		$this->query = Dotz::get()->load('query');
 	}

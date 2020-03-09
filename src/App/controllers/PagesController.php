@@ -1,6 +1,7 @@
 <?php 
 use DotzFramework\Core\Controller;
 use DotzFramework\Modules\Form\Form;
+use DotzFramework\Utilities\CSRF;
 use DotzFramework\Core\Dotz;
 
 class PagesController extends Controller{
@@ -112,6 +113,8 @@ class PagesController extends Controller{
 				'toronto'=>'Toronto' 
 			]
 		];
+
+		$packet['jwt'] = CSRF::generateToken();
 
 		$this->view->load('form', $packet);
 	}

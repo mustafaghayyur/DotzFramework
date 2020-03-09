@@ -35,6 +35,10 @@ class Form {
 		return new Element($name, 'getTextfield', $this->data[$name]);
 	}
 
+	public function hidden($name){
+		return new Element($name, 'getHiddenField', $this->data[$name]);
+	}
+
 	public function checkbox($name){
 		return new Element($name, 'getCheckbox', $this->data[$name]);
 	}

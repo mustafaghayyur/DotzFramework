@@ -36,6 +36,12 @@ class FormGenerator {
 		return self::getInput($attributes);
 	}
 
+	public static function getHiddenField($attributes = []){
+		
+		$attributes['type'] = 'hidden';
+		return self::getInput($attributes);
+	}
+
 	/**
 	 * Wrapper function to get the input field type="checkbox"
 	 */

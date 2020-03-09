@@ -3,6 +3,8 @@
 <h1>Form:</h1>
 
 <?php $form->open('test')->method('POST')->action($dotz->url . '/submit')->show();?>
+	
+	<?php $form->hidden('jwt')->value($jwt)->show();?>
 
 	<div>
 		<?php $form->textfield('name')->label('Name:')->show();?>
@@ -27,11 +29,11 @@
 			->show();?>
 	</div>
 	<div>
-		<?php $form->select('test')
-			->label('Test:')
-			->option('test2', 'Test Two')
-			->option('test', 'Test')
-			->default('test2')
+		<?php $form->select('prov')
+			->label('Province:')
+			->option('ON', 'ON')
+			->option('QC', 'QC')
+			->default('QC')
 			->show();?>
 	</div>
 	<div>

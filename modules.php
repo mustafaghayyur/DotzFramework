@@ -43,6 +43,10 @@ class ModulesDefinitions {
 			return new Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
 		};
 
+		$mods['input'] = function($c){
+			return new Core\Input();
+		};
+
 		$mods['view'] = function($c){
 			return new Core\View();
 		};

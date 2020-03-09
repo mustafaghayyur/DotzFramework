@@ -13,10 +13,20 @@ class Input {
 	public function secure(){
 
 		$csrf = Dotz::get()->load('configs')->props->app->csrfCheck;
+		$formTokenization = Dotz::get()->load('configs')->props->app->formTokenization;
 
 		if($csrf === true || $csrf === 'true'){
 			if(CSRF::checkOrigin() === false){
 				throw new \Exception('Could not pass CSRF security check. Exiting.');
+			}
+		}
+
+		if($formTokenization === true || $formTokenization === 'true'){
+			
+			$jwt = $this->post('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			
+			if(!CSRF::validateToken($jwt)){
+				throw new \Exception('Invalid CSRF token passed. Exiting.');
 			}
 		}
 

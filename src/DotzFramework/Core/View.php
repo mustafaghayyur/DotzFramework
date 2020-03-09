@@ -40,7 +40,7 @@ class View{
 			extract($packet);
 		}
 
-		$dotz = self::generateSystemVars();
+		$dotz = $this->generateSystemVars();
 		
 		include_once($dotzViewFile);
 	}
@@ -58,7 +58,7 @@ class View{
 		}
 	}
 
-	protected static function generateSystemVars(){
+	protected function generateSystemVars(){
 
 		$dotz = new \stdClass();
 		
