@@ -29,10 +29,15 @@ class PagesController extends Controller{
 	 * Go to the following URL in your browser:
 	 * ://my-app-url/get?index=<script>var t='hello'; document.write(t);</script>
 	 */
-	public function showGetVars(){
+	public function showGetVars($secure = ''){
 
 		$packet['filtered'] = $this->input->get('index');
-		$packet['unfiltered'] = $this->input->secure()->get('index', false);
+
+		if($secure == 'secure'){
+			$packet['unfiltered'] = $this->input->verySecure()->get('index', false);
+		}else{
+			$packet['unfiltered'] = $this->input->secure()->get('index', false);
+		}
 
 		$this->view->load('get', $packet);
 	}

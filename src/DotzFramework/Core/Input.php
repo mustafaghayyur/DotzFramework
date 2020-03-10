@@ -5,11 +5,21 @@ use DotzFramework\Utilities\CSRF;
 
 class Input {
 
-	public static $secureInstance;
+	protected static $secureInstance;
 
-	public $onlyGet;
+	/**
+	 * If $onlyGet is set to true. Only get values can be 
+	 * retrieved under the secure instance of this object.
+	 * Post values are blocked due to a missing CSRF token.
+	 */
+	protected $onlyGet;
 
-	public $tokenRequired;
+	/**
+	 * If set to true. The $onlyGet option cannot be used.
+	 * All get and post values under the secure instance of this 
+	 * object would require a valid token.
+	 */
+	protected $tokenRequired;
 
 	public function __construct($onlyGet = false, $tokenRequired = false){
 		
@@ -18,17 +28,22 @@ class Input {
 
 	}
 
+	public function verySecure(){
+
+		return $this->secure(true);
+
+	}
+
 	/**
 	 * Adds a CSRF check.
 	 * If tokenized forms are enabled then that check is also
 	 * performed here.
 	 */
-	public function secure(bool $tokenRequired = null){
+	public function secure($tokenRequired = false){
 
-		$req = (empty(self::$secureInstance)) ? false : self::$secureInstance->tokenRequired;
-		$tokenRequired = ($tokenRequired === null) ? $req : $tokenRequired;
+		$storedTokenRequiredValue = (empty(self::$secureInstance)) ? false : self::$secureInstance->tokenRequired;
 
-		if(empty(self::$secureInstance) || $req !== $tokenRequired){
+		if(empty(self::$secureInstance) || $storedTokenRequiredValue !== $tokenRequired){
 
 			$csrf = Dotz::get()->load('configs')->props->app->csrfCheck;
 			$formTokenization = Dotz::get()->load('configs')->props->app->formTokenization;
@@ -39,28 +54,29 @@ class Input {
 				}
 			}
 
-			$jwtP = $this->post('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$jwt = $this->post('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			$jwtG = $this->get('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 			// Below we create logic similar to bitwise logic,
 			// to determine weather to set $onlyGet to true.
 			$onlyGet = false;
 			$a = ($tokenRequired === true) ? 1 : 0;
-			$b = (empty($jwtP) && empty($jwtG)) ? 0 : 2;
+			$b = (empty($jwt) && empty($jwtG)) ? 0 : 2;
 
 			if($b == 2){
-				$jwt = (empty($jwtP)) ? $jwtG : $jwtP;
+				$jwt = (empty($jwt)) ? $jwtG : $jwt;
 			}
 
-			if(($a + $b) === 0){
-				$onlyGet = true;
-			}
+			if($formTokenization === true || $formTokenization === 'true'){
 
-			if($tokenRequired === true && ( $formTokenization === true || $formTokenization === 'true' )){
-				
-				if(!CSRF::validateToken($jwt)){
-					throw new \Exception('Invalid CSRF token passed. Exiting.');
+				if(($a + $b) === 0){
+					$onlyGet = true;
+				}else{
+					if(!CSRF::validateToken($jwt)){
+						throw new \Exception('Invalid CSRF token passed. Exiting.');
+					}
 				}
+
 			}
 
 			return self::$secureInstance = new Input($onlyGet, $tokenRequired);
