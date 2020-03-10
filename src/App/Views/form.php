@@ -22,7 +22,7 @@
 	<div>
 		<?php $form->select('city')
 			->label('City:')
-			->options($data['cities'])
+			->options($cities)
 			->default('toronto')
 			->show();?>
 	</div>

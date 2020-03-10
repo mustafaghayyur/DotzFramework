@@ -10,9 +10,7 @@ class PagesController extends Controller{
 	 * Home page
 	 */
 	public function index($test=''){
-		
 		$packet = [ 'msg' => 'Developed by Web Dotz' ];
-
 		$this->view->load('home', $packet);
 	}
 
@@ -49,9 +47,7 @@ class PagesController extends Controller{
 		$packet = [];
 
 		$packet['unfiltered'] = $this->input->post('message', false);
-
 		$packet['sanitized'] = $this->input->secure()->post('message');
-
 		$packet['validated'] = $this->input->secure()->post(
 			'message', 
 			FILTER_VALIDATE_REGEXP, 
@@ -101,28 +97,28 @@ class PagesController extends Controller{
 			'message'=>'Match this string'
 		];
 
+		$cities = [
+			'oakville'=>'Oakville', 
+			'brampton'=>'Brampton', 
+			'milton'=>'Milton', 
+			'burlington'=>'Burlington', 
+			'mississauga'=>'Mississauga', 
+			'toronto'=>'Toronto' 
+		];
+
 		// setup $packet to send to the view.
 		$packet = [];
+		
+		$packet['cities'] = $cities;
+
 		$packet['form'] = new Form();
 		$packet['form']->bind($systemData);
-
-		$packet['data'] = [
-			'cities' => [ 
-				'oakville'=>'Oakville', 
-				'brampton'=>'Brampton', 
-				'milton'=>'Milton', 
-				'burlington'=>'Burlington', 
-				'mississauga'=>'Mississauga', 
-				'toronto'=>'Toronto' 
-			]
-		];
 
 		$this->view->load('form', $packet);
 	}
 
 	/**
-	 * Shows how to retrieve a HTTP header. For example, the
-	 * Authorization HTTP header, often needed for API tokens.
+	 * Shows how to retrieve a HTTP header. 
 	 */
 	public function header(){
 
