@@ -24,7 +24,7 @@ class View{
 
 		$path = trim($view, '/');
 		$dotzViewFile = $this->configs->app->systemPath .
-				'/'. $this->configs->views->directory .
+				'/'. $this->configs->app->viewsDir .
 				'/'. $path .'.php';
 
 		if(!file_exists($dotzViewFile)){
@@ -66,7 +66,7 @@ class View{
 		
 		$dotz->url = $dotz->configs->app->httpProtocol .'://'. $dotz->configs->app->url;
 		
-		$dotz->viewsUrl = $dotz->url .'/'. $dotz->configs->views->directory;
+		$dotz->viewsUrl = $dotz->url .'/'. $dotz->configs->app->viewsDir;
 
 		$js = Dotz::get()->load('js');
 		$js->add('configs-for-js', 'var dotz = '.json_encode($dotz->configs->js)).';';
@@ -77,11 +77,13 @@ class View{
 	}
 
 	protected function viewsConfigsOk(){
-		if(isset($this->configs->views)
-				&& is_object($this->configs->views)){
+		if(isset($this->configs->app->viewsDir)){
 
 			if(isset($this->configs->app->systemPath)){
-				if(file_exists($this->configs->app->systemPath)){
+				
+				$f = $this->configs->app->systemPath .'/'. $this->configs->app->viewsDir;
+				
+				if(file_exists($f)){
 					return true;
 				}
 			}

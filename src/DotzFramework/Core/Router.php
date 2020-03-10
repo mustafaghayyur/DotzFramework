@@ -21,7 +21,7 @@ class Router {
 	public function do(){
 
 		if(!$this->areConfigsDefined()){
-			throw new Exception("[ Router Error ] Router configurations are not correct. (Make sure your config files don't have any json errors.)");
+			throw new Exception("[ Router Error ] Router configurations are not correct. (Check for Json errors.)");
 		}
 
 		$uri = $this->getUri();
@@ -33,28 +33,27 @@ class Router {
 		// If there are no uri elements, load the default page.
 		if(empty($uri[0])){
 
-			$cObj = $this->instantiateClass(
-						$this->configs->router->default->controller, 
-						$this->configs->router->default->method
-					);
+			$h = explode('@', $this->configs->router->default);
+
+			$cObj = $this->instantiateClass( $h[1], $h[0] );
 
 			if(!$cObj){
 				throw new Exception('[ Router Error ] Could not load Default page.');
 			}
 
-			$controller = [ $cObj, $this->configs->router->default->method, [] ];
+			$controller = [ $cObj, $h[0], [] ];
 
 		}
 
 		// Is it a custom URL defined in the router configs?
 		if(empty($controller)
-			&& isset($this->configs->router->customRules->{$uri[0]})){
+			&& isset($this->configs->router->custom->{$uri[0]})){
 				$controller = $this->tryCustomRulesCall($uri);
 		}
 
 		// Is it a REST resource?
 		if(empty($controller)
-			&& isset($this->configs->router->restResources->{$uri[0]})){
+			&& isset($this->configs->router->rest->{$uri[0]})){
 				$controller = $this->tryRestResourceCall($uri);
 		}
 
@@ -71,16 +70,15 @@ class Router {
 
 		}else{
 
-			$cObj = $this->instantiateClass(
-						$this->configs->router->notFound->controller, 
-						$this->configs->router->notFound->method
-					);
+			$e = explode('@', $this->configs->router->default);
+
+			$cObj = $this->instantiateClass($e[1], $e[0]);
 
 			if(!$cObj){
 				throw new Exception('[ Router Error ] Could not load Not Found page.');
 			}
 			// Pass the $uri array to it as an argument.
-			call_user_func_array([$cObj, $this->configs->router->notFound->method], [$uri]);
+			call_user_func_array([$cObj, $e[0]], [$uri]);
 		}
 
 	}
@@ -92,11 +90,10 @@ class Router {
 
 		if(isset($this->configs->app->url)
 			&& isset($this->configs->app->systemPath)
-			&& isset($this->configs->controllers->directory)
+			&& isset($this->configs->app->controllersDir)
 			&& isset($this->configs->router->default) 
-			&& is_object($this->configs->router->default)
-			&& isset($this->configs->router->notFound) 
-			&& is_object($this->configs->router->notFound)){
+			&& isset($this->configs->router->notFound)
+		){
 
 			return true;
 		}
@@ -112,9 +109,9 @@ class Router {
 
 		$dotz = Dotz::get();
 		$host = trim(
-					$dotz->load('request')->server->get('HTTP_HOST'), 
-					'www.'
-					);
+			$dotz->load('request')->server->get('HTTP_HOST'), 
+			'www.'
+		);
 
 		$fullURI = $dotz->load('request')->server->get('REQUEST_URI');
 
@@ -126,22 +123,22 @@ class Router {
 		// the domain, the $appURI would carry the path to where it
 		// is running from.
 		$appURI = trim(
-						substr(
-							$this->configs->app->url, 
-							strlen($host)
-						), 
-						'/'
-					);
+			substr(
+				$this->configs->app->url, 
+				strlen($host)
+			), 
+			'/'
+		);
 
 		// Get the URI that relates to routing within the app...
 		// In other words; the URI without the $appURI defined above.
 		$uri = trim(
-					substr(
-						trim($fullURI, '/'), 
-						strlen($appURI)
-					), 
-					'/'
-				);
+			substr(
+				trim($fullURI, '/'), 
+				strlen($appURI)
+			), 
+			'/'
+		);
 
 		// Get rid of the query string, explode path into an array
 		// and clean each element before sending to router.
@@ -166,9 +163,9 @@ class Router {
 	*/
 	public function tryRestResourceCall($uri){
 
-		$c = $this->configs->router->restResources->{$uri[0]};
-		$dotz = Dotz::get();
-		$m = $dotz->load('request')->getMethod();
+		$c = $this->configs->router->rest->{$uri[0]};
+
+		$m = Dotz::get()->load('request')->getMethod();
 
 		$httpMethodIssues = strpbrk($m, "#$%^&*()+=[]';,./{}|:<>?~");
 		$m = (!$httpMethodIssues) ? strtolower($m) . 'Resource' : null;
@@ -193,9 +190,10 @@ class Router {
 	*/
 	public function tryCustomRulesCall($uri){
 
-		$customRule = $this->configs->router->customRules->{$uri[0]};
+		$rule = $this->configs->router->custom->{$uri[0]};
+		$c = explode('@', $rule);
 
-		$cObj = $this->instantiateClass($customRule->controller, $customRule->method);
+		$cObj = $this->instantiateClass($c[1], $c[0]);
 
 		$args = []; 
 
@@ -205,7 +203,7 @@ class Router {
 			}
 		}
 
-		return 	($cObj) ? [$cObj, $customRule->method, $args] : null;
+		return 	($cObj) ? [$cObj, $c[0], $args] : null;
 	}
 
 	/**
@@ -236,7 +234,7 @@ class Router {
 	private function instantiateClass($class, $method){
 
 		$file = '/'. trim($this->configs->app->systemPath, '/') .'/'.
-				trim($this->configs->controllers->directory, '/') .'/'.
+				trim($this->configs->app->controllersDir, '/') .'/'.
 				$class.'.php';
 
 		if(file_exists($file)){

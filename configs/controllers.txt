@@ -1,6 +1,0 @@
-{
-
-	"------------":"Holds the full system path to the Controllers directory.------------",
-	"directory":"src/App/Controllers"
-
-}

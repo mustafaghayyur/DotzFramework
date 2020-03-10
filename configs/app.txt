@@ -11,10 +11,16 @@
 	"------------":"Leave trailing slashes and HTTP protocol out. Include subdomain(s).-------",
 	"url":"localhost/WDRouterLibrary",
 
+	"------------":"Path to Controllers directory from application root.------------",
+	"controllersDir":"src/App/Controllers",
+
 	"------------":"Namespace of your Query definitions.------",
 	"------------":"Usually set up in src/App/Queries.------",
 	"------------":"Ensure namespace is included in composer's autoload settings.-----",
 	"queryClassesNamespace":"App\\Queries",
+
+	"------------":"Path to HTML view files from application root.-------",
+	"viewsDir":"src/App/Views",
 
 	"------------":"Enable XSS security check? Recommended.------",
 	"xssCheck":true,
