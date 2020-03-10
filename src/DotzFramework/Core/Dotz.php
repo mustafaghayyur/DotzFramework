@@ -7,7 +7,7 @@ class Dotz {
 
 	protected static $instance;
 
-	public $container;
+	protected $container;
 
 	protected function __construct(){
 
@@ -17,6 +17,10 @@ class Dotz {
 
 	} 
 
+	/**
+	 * Loads a conatiner module. If the module is already loaded;
+	 * returns its stored instance.
+	 */
 	public function load($key, $functionDefinition = false){
 		
 		if(!isset($this->container[$key])){

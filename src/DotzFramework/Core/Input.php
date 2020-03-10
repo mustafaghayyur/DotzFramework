@@ -16,16 +16,16 @@ class Input {
 	protected static $secureInstance;
 
 	/**
-	 * If $onlyGet is set to true. Only get values can be 
-	 * retrieved under the secure instance of this object.
+	 * If set to true POST values cannot be retrieved under the
+	 * secure instance of this object.
+	 * 
 	 * Post values are blocked due to a missing CSRF token.
 	 */
 	protected $onlyGet;
 
 	/**
-	 * If set to true. The $onlyGet option cannot be used.
-	 * All get and post values under the secure instance of this 
-	 * object would require a valid token.
+	 * If set to true the $onlyGet option cannot be used.
+	 * GET variables would also require a valid CSRF token.
 	 */
 	protected $tokenRequired;
 
