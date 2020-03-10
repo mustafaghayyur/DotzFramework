@@ -2,6 +2,8 @@
 namespace DotzFramework\Modules\Form;
 
 use DotzFramework\Modules\Form\Element;
+use DotzFramework\Core\Dotz;
+use DotzFramework\Utilities\CSRF;
 
 class Form {
 
@@ -9,6 +11,18 @@ class Form {
 	 * Holds data to bind with the form.
 	 */
 	public $data;
+
+	public $jwt;
+
+	public function __construct(){
+		$c = Dotz::get()->load('configs')->props->app;
+
+		if(($c->csrfCheck === true || $c->csrfCheck === 'true')
+			&& ($c->formTokenization === true || $c->formTokenization === 'true')){
+
+			$this->jwt = $this->hidden('jwt')->value(CSRF::generateToken())->get();
+		}
+	}
 
 	/**
 	 * Binds given data to this instance of Form(). 
@@ -28,7 +42,7 @@ class Form {
 	}
 
 	public function open($name){
-		return new Element($name, 'getOpen');
+		return new Element($name, 'getOpen', null, $this->jwt);
 	}
 
 	public function textfield($name){

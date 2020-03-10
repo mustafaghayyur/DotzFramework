@@ -71,7 +71,7 @@ class Input {
 			$jwtG = $this->get('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 			// Below we create logic similar to bitwise logic,
-			// to determine weather to set $onlySecureGetAllowed to true.
+			// to determine value of $onlySecureGetAllowed.
 			$onlySecureGetAllowed = false;
 			$a = ($tokenRequiredForSecureInstance === false) ? 0 : 1;
 			$b = (empty($jwt) && empty($jwtG)) ? 0 : 2;

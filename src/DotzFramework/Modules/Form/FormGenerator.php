@@ -16,12 +16,23 @@ class FormGenerator {
 			'action' => ''
 		];
 
+		// If a hidden JWT field was created by the system
+		// it would be in the $attributes['additional'] 
+		$jwt = $attributes['additional'];
+		
 		$attr = array_merge($default, $attributes);
+		
+		unset($attr['additional']);
+		unset($attr['systemBoundValue']);
 
 		if(is_array($attr) && isset($attr)){
 			$html = '<form';
 			$html .= self::attributesToString($attr);
 			$html .= ">\n";	
+		}
+
+		if(!empty($jwt)){
+			$html .= "\n\r\n". $jwt;
 		}
 		
 		return $html;
@@ -80,6 +91,7 @@ class FormGenerator {
 		
 		$attributes['type'] = (isset($attributes['type'])) ? $attributes['type'] : 'submit';
 		$attributes['value'] = (isset($attributes['value'])) ? $attributes['value'] : 'Submit';
+		$attributes['class'] = $attributes['name'].'Button button';
 
 		return self::getInput($attributes);
 	}
@@ -101,6 +113,10 @@ class FormGenerator {
 		if(isset($attributes['systemBoundValue'])){
 			$attr['value'] = $attributes['systemBoundValue'];
 		}
+
+		unset($attr['systemBoundValue']);
+		unset($attr['additional']);
+		unset($attr['label']);
 		
 		$html = '';
 
@@ -135,6 +151,10 @@ class FormGenerator {
 		}
 
 		$attr = array_merge($default, $attributes);
+
+		unset($attr['systemBoundValue']);
+		unset($attr['additional']);
+		unset($attr['label']);
 
 		$html = '';
 
@@ -179,7 +199,7 @@ class FormGenerator {
 		$html = '';
 		$label = '';
 
-		if(!empty($attributes['label'])){
+		if(!empty($settings['label'])){
 			$label = '<label for="'.$attr['name'].'" >'.$settings['label'].' </label>';
 		}
 

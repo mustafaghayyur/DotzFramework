@@ -4,8 +4,6 @@
 
 <?php $form->open('test')->method('POST')->action($dotz->url . '/submit')->show();?>
 	
-	<?php $form->hidden('jwt')->value($jwt)->show();?>
-
 	<div>
 		<?php $form->textfield('name')->label('Name:')->show();?>
 	</div>

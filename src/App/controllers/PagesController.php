@@ -117,8 +117,6 @@ class PagesController extends Controller{
 			]
 		];
 
-		$packet['jwt'] = CSRF::generateToken();
-
 		$this->view->load('form', $packet);
 	}
 

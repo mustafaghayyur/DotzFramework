@@ -9,11 +9,12 @@ class Element {
 
 	public $callback;
 
-	public function __construct($n, $funcName, $systemBoundValue = null){
+	public function __construct($n, $funcName, $systemBoundValue = null, $additional = null){
 		
 		$this->obj = [ 
 			'name' => $n,
-			'systemBoundValue' => $systemBoundValue 
+			'systemBoundValue' => $systemBoundValue,
+			'additional' => $additional
 		];
 
 		$this->callback = $funcName;
