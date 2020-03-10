@@ -48,7 +48,7 @@ class View{
 	/**
 	 * Use for jSON outputs.
 	 */
-	public function sendToJson($data){
+	public function json($data){
 		$o = json_encode($data);
 		
 		if($o){

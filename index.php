@@ -19,7 +19,7 @@ try{
 
 }catch (Exception $e){
 
-    Dotz::get()->load('view')->sendToJson(["Exception:" => $e->getMessage()]);
+    Dotz::get()->load('view')->json(["Exception:" => $e->getMessage()]);
 
 }
 

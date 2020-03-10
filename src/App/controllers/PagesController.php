@@ -20,14 +20,12 @@ class PagesController extends Controller{
 	 * 404 Error Page. Could be a json response, or a HTML view.
 	 */
 	public function notFound($uriArray){
-		$this->view->sendToJson(['msg'=>'Page not found.', 'uri_array:'=>$uriArray]);
+		$this->view->json(['msg'=>'Page not found.', 'uri_array:'=>$uriArray]);
 	}
 
 	/**
 	 * A custom url controller. 
-	 * Shows the index GET value in both filtered & unfiltered forms.
-	 * Go to the following URL in your browser:
-	 * ://my-app-url/get?index=<script>var t='hello'; document.write(t);</script>
+	 * Shows the index GET value in filtered & unfiltered forms.
 	 */
 	public function showGetVars($secure = ''){
 
@@ -44,7 +42,7 @@ class PagesController extends Controller{
 
 	/**
 	 * A custom url controller. 
-	 * Shows the message POST value in both filtered & unfiltered forms:
+	 * Shows the message POST value in filtered & unfiltered forms:
 	 */
 	public function showPostVars(){
 
@@ -122,6 +120,18 @@ class PagesController extends Controller{
 		$packet['jwt'] = CSRF::generateToken();
 
 		$this->view->load('form', $packet);
+	}
+
+	/**
+	 * Shows how to retrieve a HTTP header. For example, the
+	 * Authorization HTTP header, often needed for API tokens.
+	 */
+	public function header(){
+
+		$auth = $this->input->header('authorization');
+		preg_match('#(Bearer )?([a-zA-z0-9\.]*)#', $auth, $t);
+
+		echo "Authorization token: " . $t[2];
 	}
 
         

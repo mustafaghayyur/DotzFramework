@@ -3,8 +3,16 @@ namespace DotzFramework\Core;
 
 use DotzFramework\Utilities\CSRF;
 
+/**
+ * This is not a traditional singleton class.
+ * It however uses the static instance of itself to hold
+ * settings used for secure retrieval of GET and POST variables.
+ */
 class Input {
 
+	/**
+	 * Holds an instance of itself.
+	 */
 	protected static $secureInstance;
 
 	/**
@@ -28,6 +36,11 @@ class Input {
 
 	}
 
+	/**
+	 * Wrapper function for setting $tokenRequired to true
+	 * in the secure method. Useful for ensuring a get variable
+	 * is only retrieved if a valid token exists.
+	 */
 	public function verySecure(){
 
 		return $this->secure(true);
@@ -139,6 +152,18 @@ class Input {
 			throw new \Exception('Cannot retrieve a POST value without a valid CSRF token.');
 		}
 		
+	}
+
+	/**
+	 * Grabs the HTTP header you identify with $key.
+	 * 
+	 * Note: the Authorization header is not included
+	 * in the PHP global variable $_SERVER. 
+	 * 
+	 * Requires some re-configuration to access.
+	 */
+	public function header($key = ''){
+		return Dotz::get()->load('request')->headers->get($key);
 	}
 
 }
