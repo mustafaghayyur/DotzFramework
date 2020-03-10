@@ -21,23 +21,23 @@ class Input {
 	 * 
 	 * Post values are blocked due to a missing CSRF token.
 	 */
-	protected $onlyGet;
+	protected $onlySecureGetAllowed;
 
 	/**
-	 * If set to true the $onlyGet option cannot be used.
+	 * If set to true the $onlySecureGetAllowed option cannot be used.
 	 * GET variables would also require a valid CSRF token.
 	 */
-	protected $tokenRequired;
+	protected $tokenRequiredForSecureInstance;
 
-	public function __construct($onlyGet = false, $tokenRequired = false){
+	public function __construct($onlySecureGetAllowed = false, $tokenRequiredForSecureInstance = false){
 		
-		$this->onlyGet = $onlyGet;
-		$this->tokenRequired = $tokenRequired;
+		$this->onlySecureGetAllowed = $onlySecureGetAllowed;
+		$this->tokenRequiredForSecureInstance = $tokenRequiredForSecureInstance;
 
 	}
 
 	/**
-	 * Wrapper function for setting $tokenRequired to true
+	 * Wrapper function for setting $tokenRequiredForSecureInstance to true
 	 * in the secure method. Useful for ensuring a get variable
 	 * is only retrieved if a valid token exists.
 	 */
@@ -52,11 +52,11 @@ class Input {
 	 * If tokenized forms are enabled then that check is also
 	 * performed here.
 	 */
-	public function secure($tokenRequired = false){
+	public function secure($tokenRequiredForSecureInstance = false){
 
-		$storedTokenRequiredValue = (empty(self::$secureInstance)) ? false : self::$secureInstance->tokenRequired;
+		$storedTokenRequiredValue = (empty(self::$secureInstance)) ? false : self::$secureInstance->tokenRequiredForSecureInstance;
 
-		if(empty(self::$secureInstance) || $storedTokenRequiredValue !== $tokenRequired){
+		if(empty(self::$secureInstance) || $storedTokenRequiredValue !== $tokenRequiredForSecureInstance){
 
 			$csrf = Dotz::get()->load('configs')->props->app->csrfCheck;
 			$formTokenization = Dotz::get()->load('configs')->props->app->formTokenization;
@@ -71,9 +71,9 @@ class Input {
 			$jwtG = $this->get('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
 			// Below we create logic similar to bitwise logic,
-			// to determine weather to set $onlyGet to true.
-			$onlyGet = false;
-			$a = ($tokenRequired === true) ? 1 : 0;
+			// to determine weather to set $onlySecureGetAllowed to true.
+			$onlySecureGetAllowed = false;
+			$a = ($tokenRequiredForSecureInstance === false) ? 0 : 1;
 			$b = (empty($jwt) && empty($jwtG)) ? 0 : 2;
 
 			if($b == 2){
@@ -83,7 +83,7 @@ class Input {
 			if($formTokenization === true || $formTokenization === 'true'){
 
 				if(($a + $b) === 0){
-					$onlyGet = true;
+					$onlySecureGetAllowed = true;
 				}else{
 					if(!CSRF::validateToken($jwt)){
 						throw new \Exception('Invalid CSRF token passed. Exiting.');
@@ -92,7 +92,7 @@ class Input {
 
 			}
 
-			return self::$secureInstance = new Input($onlyGet, $tokenRequired);
+			return self::$secureInstance = new Input($onlySecureGetAllowed, $tokenRequiredForSecureInstance);
 
 		}else{
 			return self::$secureInstance;
@@ -130,7 +130,7 @@ class Input {
 	 */
 	public function post($key, $filter = null, $options = []){
 
-		if($this->onlyGet === false){
+		if($this->onlySecureGetAllowed === false){
 			
 			if($filter === null){
 				$xss = Dotz::get()->load('configs')->props->app->enableXSSCheck;
