@@ -1,4 +1,5 @@
 
+			</div>
 			<div class="menu">
 				<a href="<?php echo $dotz->url;?>" class="item">Home</a>
 				<a href="<?php echo $dotz->url;?>/pages/form" class="item">Form Example</a>

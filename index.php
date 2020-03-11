@@ -1,7 +1,7 @@
 <?php 
 
-$stMem = memory_get_usage();
-$stTime = microtime(true);
+$m1 = memory_get_usage();
+$t1 = microtime(true);
 
 error_reporting(E_ALL & ~E_NOTICE);
 
@@ -23,9 +23,4 @@ try{
 
 }
 
-$enMem = memory_get_usage();
-$enTime = microtime(true);
-
-echo 'Time: ' . ($enTime - $stTime) ."<br/>";
-echo 'Memory: ' . ( ($enMem - $stMem) / 1000) ."kb<br/>";
-
+$r->profiler('on', $m1, $t1);

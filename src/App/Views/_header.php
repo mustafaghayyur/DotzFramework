@@ -8,4 +8,6 @@
 	</head>
 	<body>
 		<div class="page">
+			<a href="http://www.web-dotz.com" target="_blank" class="logo"></a>
+			<div class="content">
 

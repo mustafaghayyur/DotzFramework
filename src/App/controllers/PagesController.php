@@ -52,7 +52,7 @@ class PagesController extends Controller{
 			'message', 
 			FILTER_VALIDATE_REGEXP, 
 			['options' => 
-				[ 'regexp' => '/^M[a-z]{4}/' ]
+				[ 'regexp' => '/^H[a-z]{1}/' ]
 			]
 		);
 
@@ -89,12 +89,12 @@ class PagesController extends Controller{
 	public function form(){
 
 		$systemData = [
-			'name'=>'Mustafa', 
-			'email'=>'mustafa@domain.com',
+			'name'=>'John Doe', 
+			'email'=>'john@domain.com',
 			'city'=>'mississauga', 
 			'citizen'=>'citizen', 
 			'gender'=>'male',
-			'message'=>'Match this string'
+			'message'=>'Hi, I would like to join this project.'
 		];
 
 		$cities = [

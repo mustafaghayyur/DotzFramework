@@ -258,4 +258,19 @@ class Router {
 		return false;
 	}
 
+	public function profiler($status = 'off', $m1 = null, $t1 = null){
+		
+		if($status == 'on'){
+			$m2 = memory_get_usage();
+			$t2 = microtime(true);
+			$m = ($m2 - $m1) / 1000;
+			$t = $t2 - $t1;
+
+			echo '<div class="profiler">'.
+					'Time: ' . round($t, 3) .'s<br/>'.
+					'Memory: ' . round($m, 3) .'kb'.
+				'</div>';
+		}
+	}
+
 }

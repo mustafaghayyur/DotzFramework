@@ -6,19 +6,42 @@ html{
 body{
 	font-family: 'Arial', 'san-serif';
 	font-size: 12pt;
-	line-height: 14pt;
-	color: #333;
+	line-height: 15pt;
+	color: #000;
 	padding: 0px;
 	margin: 0px;
-	background-color: #17B0D7;
+	background-color: rgba(53,92,125,1);
+	background-image: linear-gradient( 89.7deg,  rgba(0,0,0,1) -10.7%, rgba(53,92,125,1) 88.8% );
 }
 
 .page{
 	display: block;
+	width: 90%;
 	background-color: #fff;
-	opacity: 0.8;
-	padding: 20px;
-	margin: 25px;
+	opacity: 1;
+	padding: 0;
+	margin: 5% 5% 100px 5%;
+	border-radius: 0px 0px 50px 0px;
+	border-bottom: 6px rgba(247, 210, 22,1) solid;
+	border-right: 6px rgba(247, 210, 22,1) solid;
+	position: relative;
+}
+
+.logo{
+	position: absolute;
+	width: 182px;
+	height: 95px;
+	top: 25px;
+	right: 60px;
+	background-image: url('../img/webdotz_logo.png');
+	background-repeat: no-repeat;
+	opacity: 0.5;
+}
+
+.content{
+	display: block;
+	padding: 25px;
+	width: 630px;
 }
 
 p{
@@ -38,18 +61,113 @@ h1, h2,, h3, h4, h5, h6 {
 	padding: 3px;
 }
 
+.testForm{
+	display: block;
+	width: 600px;
+}
+
+.testForm .row{
+	display: block;
+	margin: 5px 5px;
+	padding: 4px 7px;
+	vertical-align: top;
+	font-size: 20px;
+	color: #333;
+	font-weight: 400;
+	line-height: 120%;
+}
+
+.testForm .row label {
+	
+	vertical-align: top;
+	display: inline-block;
+	width: 230px;
+}
+
+.testForm .row input,
+.testForm .row textarea,
+.testForm .row select {
+	display: inline-block;
+	vertical-align: top;
+	width: 340px;
+}
+
+.testForm textarea,
+.testForm select,
+.testForm input[type="text"]{
+	font-size: 20px;
+	line-height: 110%;
+	color: #333;
+	font-weight: 500;
+	padding: 5px;
+	border: 1px solid #999;
+}
+
+.testForm input[type="text"] {
+	width: 340px;
+	height: 32px;
+}
+
+.testForm textarea {
+	width: 340px;
+	height: 150px;
+}
+
+.testForm input[type="checkbox"] {
+	width: 30px;
+	height: 30px;
+}
+
+.testForm input[type="radio"] {
+	width: 30px;
+	height: 30px;
+}
+
+input[type="submit"],
+input[type="submit"].button {
+	display: block;
+	width: 80px;
+	height: 30px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	padding: 5px;
+	text-align: center;
+	border: 1px solid #333;
+	background-color: rgba(247, 210, 22,0.9);
+	border-radius: 4px;
+}
+
+input[type="submit"].button {
+	margin-left: 230px;
+}
+
 .menu {
 	display: block;
-	width: 85%;
-	margin: 55px auto 0px;
-	background-color: #333;
-	opacity: 0.5;
+	margin: 55px 50px 0px 0px;
+	background-color: rgba(247, 210, 22,1);
 	padding: 7px;
+	border-radius: 0px 15px 0px 0px;
 }
 
 .menu .item {
 	color: #fff;
 	font-weight: bold;
-	margin: 0 20px 0;
-	padding: 10px;
+	margin: 0 10px 0;
+	padding: 5px;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.profiler{
+	display: block;
+	margin: 10px 0 15px 0px;
+	width: 300px;
+	height: 50px;
+	background-color: #999999;
+	padding: 15px;
+	color: #fff;
+	font-weight: bold;
+	font-size: 18px;
+	line-height: 130%;
 }
