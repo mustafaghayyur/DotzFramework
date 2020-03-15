@@ -29,7 +29,7 @@ class FilterText {
 
 	}
 
-	public function process($text = null){
+	public function process($inputName, $text = ''){
 
 		$removed = [];
 		$tagsArr = [];
@@ -42,7 +42,7 @@ class FilterText {
 		for ($s=0; $s < count($tags[0]); $s++) { 
 
 			//preg_match('#<!?([a-zA-Z0-9]+)#', 
-			preg_match('#</?([^> ]+)#', 
+			preg_match('#</?([^> \n]+)#', 
 				$tags[0][$s], $tagName
 			);
 			
@@ -72,16 +72,30 @@ class FilterText {
 
 					// need to remove the whole tag and its contents.
 					//$_text = preg_replace("#<".$t."\b.*>([\w\d\s\`\~\!\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\[\}\]\\\|\;\:\'\"\,\>\.\/\?]*)<\/".$t."\b.*>#Us",		 
-					$_text = preg_replace("#<".$t."\b.*>(.*)<\/".$t."\b.*>#Us",		 
+					$_text = preg_replace("#<".$t."[^>]*+>((?:(?!<\/".$t.").)*+)<\/".$t."[^>]*+>#Us",		 
 						 "", $text, $l1, $c
 					);
 
-					if($c === 0){
 
+					if(preg_last_error() != PREG_NO_ERROR){
+						throw new Exception('Cannot process input '.$inputName.'. Filter had the following error code: '. preg_last_error());
+					}
+
+					if($c === 0){
+						echo 'f<br>';
  						// if that fails, at least remove the opening and closing tags.
-						$text = preg_replace("#<\/?".$t."\b.*>#Us",	 
+						$text = preg_replace("#<\/?".$t."[^>]*+>#Us",	 
 							 "", $text, $l2, $c
 						);
+
+						if($c === 0){
+
+	 						// Maybe it's some sort of a script tag?
+							$text = preg_replace("#<".$t."[^>]*+>#U",	 
+								 "", $text, $l2, $c
+							);
+
+						}
 
 					}else{
 						$text = $_text;
@@ -89,20 +103,20 @@ class FilterText {
 				}
 
 				$removed[strtolower($tag)] = isset($removed[strtolower($tag)]) ? $removed[strtolower($tag)] : 0;
-				$removed[strtolower($tag)] = $removed[strtolower($tagName[1])] + $c;
+				$removed[strtolower($tag)] = $removed[strtolower($tag)] + $c;
 			}
 		}
 
 		//incase a script tag slipped through...
-		/*$text = preg_replace("#<script\b.*>(.*)<\/script\b.*>#Us",		 
-						 "", $text, -1, $c
-					);*/
+		$text = preg_replace("#<script\b.*>(.*)<\/script\b.*>#Us",		 
+			 "", $text, -1, $c
+		);
 
-		$text = trim($text);
+		$text = preg_replace("#(<script[^>]+>)#U",		 
+			 "", $text, -1, $c
+		);
 
-		var_dump($tagsArr, $removed);
-
-		echo '<textarea rows="18" cols="170" style="font-size:16px; line-height:1.1em;">'.$text.'</textarea>';
+		return trim($text);
 
 	}
 

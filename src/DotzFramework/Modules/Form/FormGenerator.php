@@ -144,10 +144,13 @@ class FormGenerator {
 		];
 
 		$initialText = '';
+
+		if(isset($attributes['text'])){
+			$initialText = $attributes['text'];
+		}
+
 		if(isset($attributes['systemBoundValue'])){
 			$initialText = $attributes['systemBoundValue'];
-
-			unset($attributes['systemBoundValue']);
 		}
 
 		$attr = array_merge($default, $attributes);
@@ -155,6 +158,7 @@ class FormGenerator {
 		unset($attr['systemBoundValue']);
 		unset($attr['additional']);
 		unset($attr['label']);
+		unset($attr['text']);
 
 		$html = '';
 

@@ -6,6 +6,7 @@
 	<div class="row">
 		<?php $form->textarea('message')
 			->label('Personal Comments:')
+			->text($text)
 			->show();?>
 	</div>
 	<div class="row">

@@ -8,20 +8,24 @@ class TestController extends Controller{
 	/**
 	 * Home page
 	 */
-	public function index($test=''){
-
+	public function index(){
+		
+		$packet = [];
 		$packet['form'] = new Form\Form();
-		$f = new Form\FilterText();
 
 		$this->view->load('form2', $packet);
 	}
 
-	public function submit($test=''){
+	public function submit(){
 
 		$text = $this->input->post('message', false);
 		$f = new Form\FilterText();
-		$f->process($text);
+		
+		$packet = [];
+		$packet['form'] = new Form\Form();
+		$packet['text'] = $f->process('testField', $text);
 
+		$this->view->load('form2', $packet);
 	}	
 
         

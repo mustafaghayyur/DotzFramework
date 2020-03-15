@@ -53,6 +53,11 @@ class Element {
 		return $this;
 	}
 
+	public function text($t){
+		$this->obj['text'] = $t;
+		return $this;
+	}
+
 	public function options($o){
 		$this->obj['options'] = $o;
 		return $this;
