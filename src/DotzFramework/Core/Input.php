@@ -132,6 +132,14 @@ class Input {
 
 		if($this->onlySecureGetAllowed === false){
 			
+			if(is_object($filter) && method_exists($filter, 'process')){
+				
+				$v = Dotz::get()->load('request')->request
+						->filter($key, '', FILTER_DEFAULT, $options);
+						
+				return $filter->process($key, $v);
+			}
+
 			if($filter === null){
 				$xss = Dotz::get()->load('configs')->props->app->enableXSSCheck;
 

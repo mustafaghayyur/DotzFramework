@@ -3,7 +3,7 @@
 use DotzFramework\Core\Controller;
 use DotzFramework\Modules\Form;
 
-class TestController extends Controller{
+class FilterController extends Controller{
 
 	/**
 	 * Home page
@@ -13,19 +13,18 @@ class TestController extends Controller{
 		$packet = [];
 		$packet['form'] = new Form\Form();
 
-		$this->view->load('form2', $packet);
+		$this->view->load('filter', $packet);
 	}
 
 	public function submit(){
 
-		$text = $this->input->post('message', false);
-		$f = new Form\FilterText();
-		
+		$filter = new Form\FilterText();
+
 		$packet = [];
 		$packet['form'] = new Form\Form();
-		$packet['text'] = $f->process('testField', $text);
+		$packet['text'] = $this->input->post('text', $filter);
 
-		$this->view->load('form2', $packet);
+		$this->view->load('filter', $packet);
 	}	
 
         

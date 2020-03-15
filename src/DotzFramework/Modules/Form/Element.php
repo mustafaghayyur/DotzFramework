@@ -38,6 +38,11 @@ class Element {
 		return $this;
 	}
 
+	public function target($t){
+		$this->obj['target'] = $t;
+		return $this;
+	}
+
 	public function value($v){
 		$this->obj['value'] = $v;
 		return $this;

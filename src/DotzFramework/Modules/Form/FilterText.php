@@ -3,11 +3,24 @@ namespace DotzFramework\Modules\Form;
 
 use DotzFramework\Core\Dotz;
 
+/**
+ * Useful filter for WYSIWYG editors.
+ * This class could be vulnerable to attacks.
+ * Use at your own descretion.
+ */
 class FilterText {
 
-	public $allowedTags;
+	/**
+	 * Carries a list of tags not to be filtered out.
+	 */
+	protected $allowedTags;
 
-	public $removeOnlyTag;
+	/**
+	 * Carries a list of tags for which only the opening and
+	 * closing tags are to be removed. The contents of these
+	 * tags are to be kept.
+	 */
+	protected $removeOnlyTagList;
 
 	public function __construct($allowedTags = []){
 		
@@ -18,15 +31,34 @@ class FilterText {
 			'ol', 'img', 'section', 'nav', 'desc',
 			'hr', 'footer', 'header', 'small',
 			'em', 'b', 'strong', 'aside', 'pre',
-			'dl', 'dt', 'dd', 'blockquote'
+			'dl', 'dt', 'dd', 'blockquote', 'style',
+			'noscript'
 		];
 
-		$this->removeOnlyTag = [
+		$this->removeOnlyTagList = [
 			'html', 'body'
 		];
 
 		array_merge($this->allowedTags, $allowedTags);
 
+	}
+
+	public function getAllowedTags(){
+		return $this->allowedTags;
+	}
+
+	public function setAllowedTags(Array $array){
+		$this->allowedTags = $array;
+		return $this->getAllowedTags();
+	}
+
+	public function getRemoveOnlyTagList(){
+		return $this->removeOnlyTagList;
+	}
+
+	public function setRemoveOnlyTagList(Array $array){
+		$this->removeOnlyTagList = $array;
+		return $this->getRemoveOnlyTagList();
 	}
 
 	public function process($inputName, $text = ''){
@@ -41,13 +73,16 @@ class FilterText {
 		// loop through each tag and pick out tag names to further nick-pick
 		for ($s=0; $s < count($tags[0]); $s++) { 
 
-			//preg_match('#<!?([a-zA-Z0-9]+)#', 
 			preg_match('#</?([^> \n]+)#', 
 				$tags[0][$s], $tagName
 			);
 			
 			$tagName[1] = isset($tagName[1]) ? $tagName[1] : '';
-			$tagsArr[$tagName[1]] = isset($tagsArr[$tagName[1]]) ? $tagsArr[$tagName[1]] : 0;
+
+			$tagsArr[$tagName[1]] = isset($tagsArr[$tagName[1]]) 
+									? $tagsArr[$tagName[1]] 
+									: 0;
+			
 			$tagsArr[$tagName[1]]++;
 		}
 
@@ -61,7 +96,7 @@ class FilterText {
 
 				$t = preg_quote($tag, '#');
 
-				if(in_array(strtolower($tag), $this->removeOnlyTag)){
+				if(in_array(strtolower($tag), $this->removeOnlyTagList)){
 					
 					// remove only the opening and closing tags...
 					$text = preg_replace("#<\/?".$t."\b.*>#Us",
@@ -71,7 +106,6 @@ class FilterText {
 				}else{
 
 					// need to remove the whole tag and its contents.
-					//$_text = preg_replace("#<".$t."\b.*>([\w\d\s\`\~\!\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\[\}\]\\\|\;\:\'\"\,\>\.\/\?]*)<\/".$t."\b.*>#Us",		 
 					$_text = preg_replace("#<".$t."[^>]*+>((?:(?!<\/".$t.").)*+)<\/".$t."[^>]*+>#Us",		 
 						 "", $text, $l1, $c
 					);
@@ -82,7 +116,7 @@ class FilterText {
 					}
 
 					if($c === 0){
-						echo 'f<br>';
+
  						// if that fails, at least remove the opening and closing tags.
 						$text = preg_replace("#<\/?".$t."[^>]*+>#Us",	 
 							 "", $text, $l2, $c
@@ -102,7 +136,10 @@ class FilterText {
 					}
 				}
 
-				$removed[strtolower($tag)] = isset($removed[strtolower($tag)]) ? $removed[strtolower($tag)] : 0;
+				$removed[strtolower($tag)] = isset($removed[strtolower($tag)]) 
+												? $removed[strtolower($tag)] 
+												: 0;
+
 				$removed[strtolower($tag)] = $removed[strtolower($tag)] + $c;
 			}
 		}
@@ -112,7 +149,7 @@ class FilterText {
 			 "", $text, -1, $c
 		);
 
-		$text = preg_replace("#(<script[^>]+>)#U",		 
+		$text = preg_replace("#(<\/?script[^>]+>)#U",		 
 			 "", $text, -1, $c
 		);
 
