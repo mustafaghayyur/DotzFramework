@@ -3,8 +3,7 @@
 	<head>
 		<title>[Dotz Framework] Get Example</title>
 		<link rel="stylesheet" type="text/css" href="<?php echo $dotz->viewsUrl;?>/assets/css/styles.css">
-
-		<?php echo $dotz->js;?>
+		<script src="<?php echo $dotz->viewsUrl;?>/assets/js/jquery-3.4.1.min.js"></script>
 	</head>
 	<body>
 		<div class="page">

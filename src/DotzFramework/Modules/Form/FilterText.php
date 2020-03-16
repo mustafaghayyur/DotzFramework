@@ -20,7 +20,7 @@ class FilterText {
 	 * closing tags are to be removed. The contents of these
 	 * tags are to be kept.
 	 */
-	protected $removeOnlyTagList;
+	protected $stripOnlyTags;
 
 	public function __construct($allowedTags = []){
 		
@@ -35,7 +35,7 @@ class FilterText {
 			'noscript'
 		];
 
-		$this->removeOnlyTagList = [
+		$this->stripOnlyTags = [
 			'html', 'body'
 		];
 
@@ -52,13 +52,13 @@ class FilterText {
 		return $this->getAllowedTags();
 	}
 
-	public function getRemoveOnlyTagList(){
-		return $this->removeOnlyTagList;
+	public function getStripOnlyTagsList(){
+		return $this->stripOnlyTags;
 	}
 
-	public function setRemoveOnlyTagList(Array $array){
-		$this->removeOnlyTagList = $array;
-		return $this->getRemoveOnlyTagList();
+	public function setStripOnlyTagsList(Array $array){
+		$this->stripOnlyTags = $array;
+		return $this->getStripOnlyTagsList();
 	}
 
 	public function process($inputName, $text = ''){
@@ -96,7 +96,7 @@ class FilterText {
 
 				$t = preg_quote($tag, '#');
 
-				if(in_array(strtolower($tag), $this->removeOnlyTagList)){
+				if(in_array(strtolower($tag), $this->stripOnlyTags)){
 					
 					// remove only the opening and closing tags...
 					$text = preg_replace("#<\/?".$t."\b.*>#Us",

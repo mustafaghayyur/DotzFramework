@@ -13,6 +13,9 @@
 			->method('POST')->action($dotz->url . '/filter/submit')
 			->show();?>
 
+<div class="wysiwyg">
+	<div id="b">b</div>
+</div>
 <div class="row">
 	<?php $form->textarea('text')
 		->label('Enter text in this textbox, and see the filtered result:')

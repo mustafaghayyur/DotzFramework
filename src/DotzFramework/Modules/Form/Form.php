@@ -69,6 +69,11 @@ class Form {
 		return new Element($name, 'getTextarea', $this->data[$name]);
 	}
 
+	public function wysiwyg($name){
+		$wysiwyg = $this->hidden($name)->value('')->get();
+		return new Element($name, 'getWYSIWYG', $this->data[$name], $wysiwyg);
+	}
+
 	public function select($name){
 		return new Element($name, 'getSelect', $this->data[$name]);
 	}

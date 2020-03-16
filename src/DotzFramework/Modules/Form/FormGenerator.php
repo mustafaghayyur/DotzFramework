@@ -176,6 +176,14 @@ class FormGenerator {
 	}
 
 	/**
+	 * Generates a WYSIWYG editor.
+	 */
+	public static function getWYSIWYG($attributes = []){
+		$w = new WYSIWYG();
+		$w->generate($attributes);
+	}
+
+	/**
 	 * Generates the HTML for a slect input field
 	 */
 	public static function getSelect($settings = []){

@@ -5,9 +5,6 @@ use DotzFramework\Modules\Form;
 
 class FilterController extends Controller{
 
-	/**
-	 * Home page
-	 */
 	public function index(){
 		
 		$packet = [];
@@ -25,7 +22,15 @@ class FilterController extends Controller{
 		$packet['text'] = $this->input->post('text', $filter);
 
 		$this->view->load('filter', $packet);
-	}	
+	}
+
+	public function wysiwyg(){
+		
+		$packet = [];
+		$packet['form'] = new Form\Form();
+
+		$this->view->load('wysiwyg', $packet);
+	}
 
         
 }
