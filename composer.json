@@ -22,9 +22,6 @@
     "autoload": {
     	"psr-4": {
     		"":"src/"
-    	},
-    	"files": [
-    		"modules.php"
-    	]
+    	}
     }
 }

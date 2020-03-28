@@ -29,25 +29,19 @@ class SetupCommand extends Command
 		$output->writeln([
 		            '',
 		            '',
-		            '<info>===========================</>',
-		            '<info>   Dotz Framework</>',
-		            '<info>===========================</>',
+		            '<info>=============================================</>',
+		            '<info>=============================================</>',
+		            '<info>   		Dotz Framework</>',
+		            '<info>=============================================</>',
+		            '<info>=============================================</>',
 		            '',
 		            '',
 		            'Let\'s setup the framework\'s working files.',
 		            '',
-		            '<question>You can exit this app by holding the [ctrl] + [c] together</question>',
-		            '',
-		            '',
-		            '',
+		            '<question>You can exit this app by holding the', 
+		            '[ctrl] + [c] together</question>',
+		            ''
 		        ]);
-	
-
-		$output->writeln([
-	    	'',
-	    	'-------------------------------------',
-	    	''
-	    	]);
 
 		$dir = trim(__DIR__, '/');
 		$a = explode('/', $dir);
@@ -59,42 +53,44 @@ class SetupCommand extends Command
 		array_pop($a);
 		$dir = '/' . implode('/', $a);
 
-	    $q1 = new Question\Question('<comment>Is your app\'s root directory [y/n]: </comment><comment>'.$dir.'</comment>');
+		$output->writeln([
+	    	'',
+	    	'=============================================',
+	    	'<comment>APP SYSTEM PATH:</comment>',
+	    	'<comment>'.$dir.'</comment>',
+			'=============================================',
+	    	''
+	    	]);
+
+	    $q1 = new Question\Question('<comment>Is this your app\'s root directory [y/n]: </comment>');
         $q1->setMaxAttempts(null);
 	    $dirOk = $helper->ask($input, $output, $q1);
 
-	    if(strtolower(substr($dirOk, 0, 1)) == 'n'){
+	    if(strtolower(substr($dirOk, 0, 1)) == 'y'){
+
+	    	$path = $dir;
+
+	    }else{
 
 	    	//recurring function to get the right path.
 	    	$path = $this->askForPath($input, $output, $helper);
-
 	    }
 
 	    $output->writeln([
 	 		'',
-	 		'',
 	 		'<comment>Great! Let\'s setup the framework...</comment>',
-	 		'',
 	 		''
 	 	]);
 
 	    $orig = __DIR__ . '/../../../';
 
 	    if($this->moveFiles($path, $orig)){
-	    	$output->writeln([
-		 		'',
-		 		'',
-		 		'<comment>All done.</comment>',
-		 		'',
-		 		''
-		 	]);  
+	    	$output->writeln(['<comment>All done.</comment>']);  
 	    }else{
 	    	$output->writeln([
 		 		'',
-		 		'',
 		 		'<comment>We could not move all the files.</comment>',
 		 		'<comment>Please check permissions and try running this command again.</comment>',
-		 		'',
 		 		''
 		 	]);  
 	    }
@@ -131,17 +127,31 @@ class SetupCommand extends Command
 					if(rename($orig.'/migrations-db.php', $dest.'/migrations-db.php')){
 						if(rename($orig.'/index.php', $dest.'/index.php')){
 							if(rename($orig.'/.htaccess', $dest.'/.htaccess')){
-								
-								if(file_exists($dest.'/src')){
-									if(rename($orig.'/src/App', $dest.'/src/App')){
-										return true;
-									}
-								}else{
-									
-									mkdir($dest.'/src');
+								if(rename($orig.'/migrations', $dest.'/migrations')){
+									if(!file_exists($dest.'/src')){
 
-									if(rename($orig.'/src/App', $dest.'/src/App')){
-										return true;
+										mkdir($dest.'/src');
+
+										if(rename($orig.'/src/App', $dest.'/src/App')){
+
+									    	$json = json_decode(file_get_contents($dest.'/composer.json'));
+																						
+											unset($json->autoload);
+
+											$json->autoload = [
+												'psr-4' => [ 
+													''=>'src/' 
+												],
+												'files' => [
+													'modules.php'
+												]
+											];
+
+									    	if(file_put_contents($dest.'/composer.json', json_encode($json)) !== false){
+
+									    		return true;
+									    	}
+										}
 									}
 								}
 							}
