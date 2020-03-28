@@ -9,12 +9,12 @@ class FIleIO {
 
 	function __construct($file, $mode){
 		$this->fileName = $file;
-		$this->fp = fopen($file, $mode);
+		$this->ok = false;
+		
+		$this->fp = @fopen($file, $mode);
 
 		if($this->fp){
 			$this->ok = true;
-		}else{
-			$this->ok = false;
 		}
 	}
 
@@ -39,6 +39,6 @@ class FIleIO {
 	}
 
 	function __destruct(){
-		fclose($this->fp);
+		if($this->ok) fclose($this->fp);
 	}
 }
