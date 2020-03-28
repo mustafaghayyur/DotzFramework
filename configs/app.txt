@@ -3,13 +3,13 @@
 	"name":"Web Dotz",
 
 	"------------":"Full system path on server.-------",
-	"systemPath":"/Applications/MAMP/htdocs/WDRouterLibrary",
+	"systemPath":"/Applications/MAMP/htdocs/DotzFramework",
 
 	"------------":"http or https------",
 	"httpProtocol":"http",
 
 	"------------":"App URL. Leave trailing slashes and HTTP protocol out. Include subdomain(s).-------",
-	"url":"localhost/WDRouterLibrary",
+	"url":"localhost/DotzFramework",
 
 	"------------":"Path to Controllers directory from application root.------------",
 	"controllersDir":"src/App/Controllers",

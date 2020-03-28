@@ -6,6 +6,6 @@
 	"name":"Web Dotz",
 
 	"------------":"Full URL including HTTP protocol.-------",
-	"url":"http://localhost/WDRouterLibrary"
+	"url":"http://localhost/DotzFramework"
 
 }

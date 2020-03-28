@@ -147,7 +147,7 @@ class SetupCommand extends Command
 												]
 											];
 
-									    	if(file_put_contents($dest.'/composer.json', json_encode($json)) !== false){
+									    	if(file_put_contents($dest.'/composer.json', json_encode($json, JSON_UNESCAPED_SLASHES)) !== false){
 
 									    		return true;
 									    	}
