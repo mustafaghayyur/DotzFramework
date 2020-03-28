@@ -4,7 +4,7 @@ use DotzFramework\Core\Controller;
 use DotzFramework\Modules\Form;
 
 class FilterController extends Controller{
-
+	
 	public function index(){
 		
 		$packet = [];
@@ -16,6 +16,7 @@ class FilterController extends Controller{
 	public function submit(){
 
 		$filter = new Form\FilterText();
+		$filter->addAllowedTags(['svg']);
 
 		$packet = [];
 		$packet['form'] = new Form\Form();
@@ -24,7 +25,12 @@ class FilterController extends Controller{
 		$this->view->load('filter', $packet);
 	}
 
-	public function wysiwyg(){
+	/**
+	 * Try out the powerful Quill JS editor
+	 * https://quilljs.com/
+	 * Form returns the filtered output.
+	 */
+	public function editor(){
 		
 		$packet = [];
 		$packet['form'] = new Form\Form();

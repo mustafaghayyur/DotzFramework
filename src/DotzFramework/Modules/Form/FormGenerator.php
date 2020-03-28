@@ -179,8 +179,42 @@ class FormGenerator {
 	 * Generates a WYSIWYG editor.
 	 */
 	public static function getWYSIWYG($attributes = []){
-		$w = new WYSIWYG();
-		$w->generate($attributes);
+		
+		$label = isset($attributes['label']) ? $attributes['label'] : '';
+		$name = isset($attributes['name']) ? $attributes['name'] : '';
+		$initialText = isset($attributes['text']) ? $attributes['text'] : '';
+		$hidden = isset($attributes['additional']) ? $attributes['additional'] : '';
+		
+		$html = <<<EOD
+			<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+			
+			{$hidden}
+
+			<label for="{$name}">{$label}</label>
+
+			<div id="{$name}WYSIWYG">
+			  <p>{$initialText}</p>
+			</div>
+
+			<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+			<script type="text/javascript">
+				var quill = new Quill('#{$name}WYSIWYG', {
+				    modules: { toolbar: true },
+				    theme: 'snow'
+				});
+
+				
+				quill.on('text-change', function(delta) {
+				  var text = $('#{$name}WYSIWYG .ql-editor').html();
+				  $('.{$name}InputField').val(text);
+				  console.log(text);
+				});
+
+			</script>
+EOD;
+
+		return $html;
+
 	}
 
 	/**

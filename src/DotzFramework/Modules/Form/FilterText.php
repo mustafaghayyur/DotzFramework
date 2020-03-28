@@ -7,6 +7,11 @@ use DotzFramework\Core\Dotz;
  * Useful filter for WYSIWYG editors.
  * This class could be vulnerable to attacks.
  * Use at your own descretion.
+ *
+ * Want to build on it?
+ * Feel free to extend and overwrite the process method.
+ * You can then pass your version of FilterText to 
+ * $this->input->post() in the controller.
  */
 class FilterText {
 
@@ -29,10 +34,10 @@ class FilterText {
 			'th', 'tr', 'td', 'br', 'h1', 'h2',
 			'h3', 'h4', 'h5', 'h6', 'li', 'ul',
 			'ol', 'img', 'section', 'nav', 'desc',
-			'hr', 'footer', 'header', 'small',
-			'em', 'b', 'strong', 'aside', 'pre',
-			'dl', 'dt', 'dd', 'blockquote', 'style',
-			'noscript'
+			'hr', 'footer', 'header', 'em', 'b', 
+			'strong', 'aside', 'pre', 'style',
+			'dl', 'dt', 'dd', 'blockquote', 
+			'noscript', 'code', 'big', 'small'
 		];
 
 		$this->stripOnlyTags = [
@@ -47,18 +52,18 @@ class FilterText {
 		return $this->allowedTags;
 	}
 
-	public function setAllowedTags(Array $array){
-		$this->allowedTags = $array;
+	public function addAllowedTags(Array $array){
+		$this->allowedTags = array_merge($this->allowedTags, $array);
 		return $this->getAllowedTags();
 	}
 
-	public function getStripOnlyTagsList(){
+	public function getStripOnlyTags(){
 		return $this->stripOnlyTags;
 	}
 
-	public function setStripOnlyTagsList(Array $array){
-		$this->stripOnlyTags = $array;
-		return $this->getStripOnlyTagsList();
+	public function addStripOnlyTags(Array $array){
+		$this->stripOnlyTags = array_merge($this->stripOnlyTags, $array);
+		return $this->getStripOnlyTags();
 	}
 
 	public function process($inputName, $text = ''){
