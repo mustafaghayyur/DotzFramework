@@ -63,7 +63,7 @@ class View{
 		$dotz = new \stdClass();
 		
 		$dotz->configs = $this->configs;
-		
+				
 		$dotz->url = $dotz->configs->app->httpProtocol .'://'. $dotz->configs->app->url;
 		
 		$dotz->viewsUrl = $dotz->url .'/'. $dotz->configs->app->viewsDir;

@@ -8,7 +8,7 @@
 	"------------":"http or https------",
 	"httpProtocol":"http",
 
-	"------------":"Leave trailing slashes and HTTP protocol out. Include subdomain(s).-------",
+	"------------":"App URL. Leave trailing slashes and HTTP protocol out. Include subdomain(s).-------",
 	"url":"localhost/WDRouterLibrary",
 
 	"------------":"Path to Controllers directory from application root.------------",
@@ -31,6 +31,7 @@
 	"------------":"Enable tokenizition on forms? Ensures better protection against CSRF attacks.------",
 	"formTokenization":true,
 
+	"------------":"Used by CSRF tokens.------",
 	"secretKey":"jkasdh89q8nkskjdha89789yhas"
 
 }

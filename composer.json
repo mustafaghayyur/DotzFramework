@@ -1,4 +1,18 @@
 {
+    "name": "dotz/framework",
+    "type": "framework",
+    "description": "Light Framework. Secure and easy to use.",
+    "keywords": ["framework","secure","fast","mvc"],
+    "homepage": "https://github.com/mustafaghayyur/DotzFramework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mustafa Ghayyur",
+            "email": "info@web-dotz.com",
+            "homepage": "http://web-dotz.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "symfony/http-foundation": "^4.4",
         "pimple/pimple": "~3.0",
