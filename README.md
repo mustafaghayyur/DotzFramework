@@ -23,6 +23,12 @@ The complete documentation will come soon, however you are welcome to try out th
 
 Please check back for complete documentation.
 
+Online Documentation:
+http://web-dotz.com/wordpress/framework-documentation/
+
+Github:
+https://github.com/mustafaghayyur/DotzFramework
+
 Developed by www.web-dotz.com
 
 Under MIT Licensing.

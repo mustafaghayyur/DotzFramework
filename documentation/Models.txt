@@ -9,7 +9,7 @@ The traditional MVC model is followed in Dotz Framework. However Models are view
 
 Queries Classes only hold actual queries meant to be stored in a central place for ease of referencing.
 
-The entire modeling apparatus is handled by DotzFramework\Core\Query (and its extensions). We rely on PDO heavily and make its operations more intuitive and easy to utilize.
+The entire querying apparatus is handled by DotzFramework\Core\Query (and its extensions). We rely on PDO heavily and make its operations more intuitive and easy to utilize.
 
 The query apparatus is accessed in the controller with:
 	

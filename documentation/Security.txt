@@ -17,17 +17,17 @@ Dotz Framework wishes to make security easy.
 ===================
 
 SQL Injection threats can be minimized with prepared statements, therefore, we have made prepared statements intuitive and easy to use. To make a query on your database, simply call:
-	
-	$this->query->execute('query string with placeholders like where id = ?', $arraOfActualInputs);
 
-This will carry out an execution of the prepared statment. Please read and understand Prepared Staments here:
-	
-	// Please understand Prepared staments:
+	$this->query->execute('query string with placeholders like where id = ?', $arrayOfActualInputs);
+
+This will carry out an execution of the prepared statement. Please read and understand Prepared Statements here:
+
+	// Please understand Prepared statements:
 	https://www.php.net/manual/en/pdo.prepare.php
 
 However, raw queries are still supported with the $this->query->raw() call:
 
-	$this->query->raw('query string with raw inputs like where id = 7');
+$this->query->raw('query string with raw inputs like where id = 7');
 
 Notice how the placeholder '?' has been replaced with an actual value '7'.
 

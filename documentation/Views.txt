@@ -9,7 +9,7 @@ All views should reside in the views directory defined in the configs/app.txt fi
 
 View files can be simple HTML with any PHP data and operations being encapsulated in <?php and ?> script tags.
 
-The dotz setup process adds a few examples for you to be inspred by.
+The dotz setup process adds a few examples for you to be inspired by.
 
 
 =====================
