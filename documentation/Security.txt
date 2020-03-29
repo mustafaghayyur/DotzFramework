@@ -5,3 +5,49 @@
 ====================================================
 
 
+Please read the Inputs section along with this section to better understand security in Dotz Framework.
+
+Many developers are good at development, but lack confidence on security matters. PHP is a beautuful language but hasn't made its various security options very easy to use.
+
+Dotz Framework wishes to make security easy.
+
+
+===================
+## SQL Injection
+===================
+
+SQL Injection threats can be minimized with prepared statements, therefore, we have made prepared statements intuitive and easy to use. To make a query on your database, simply call:
+	
+	$this->query->execute('query string with placeholders like where id = ?', $arraOfActualInputs);
+
+This will carry out an execution of the prepared statment. Please read and understand Prepared Staments here:
+	
+	// Please understand Prepared staments:
+	https://www.php.net/manual/en/pdo.prepare.php
+
+However, raw queries are still supported with the $this->query->raw() call:
+
+	$this->query->raw('query string with raw inputs like where id = 7');
+
+Notice how the placeholder '?' has been replaced with an actual value '7'.
+
+
+===================
+## Inputs
+===================
+
+The other secuirty threat web software face comes from GET & POST inputs. Securing inputs is therefore made simple with the addition of ->secure() and ->verySecure() method calls to the get and post data retrieval process.
+
+To get a highly validated GET and POST data, you simply have to enable the xssCheck, csrfCheck and formTokenization settings in configs/app.txt. Then use the:
+
+	$this->input->secure()->post();
+
+	and
+
+	$this->input->verySecure()->get();
+
+...to get values that are filtered for XSS vulnerabilities, checked for CSRF origin-host matching, and un-adulterated JWT tokens. 
+
+
+We hope that with such intuitive calls, more developers will be able to secure their applications.
+

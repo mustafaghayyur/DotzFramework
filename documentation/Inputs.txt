@@ -5,3 +5,79 @@
 ====================================================
 
 
+Retrieving GET and POST data is fairly easy in PHP, however doing it securely is not. Dotz Framework attempts to take away the confusion from retrieving GET and POST data securely.
+
+The controller carries the input property which allows you to retrieve GET and POST variables like so:
+	
+	// Returns the requested get var.
+	// Filtered if XSS check is enabled in the configs/app.txt.
+	$this->input->get('get_var_key'); 
+
+	// Returns the requested post var.
+	// Filtered if XSS check is enabled in the configs/app.txt.
+	$this->input->post('post_var_key'); 
+
+
+To retrieve the same above variables securely:
+	
+	// Returns the requested get var if the Origin & Host match.
+	// Filtered if XSS check is enabled in the configs/app.txt.
+	$this->input->secure()->get('get_var_key'); // returns the requested get var
+
+	// Returns the requested post var if the Origin & Host match
+	// and a valid token was also passed along with the request.
+	// Filtered if XSS check is enabled in the configs/app.txt.
+	$this->input->secure()->post('post_var_key'); 
+
+
+If you have form-tokeninization enabled, and wish to retrieve a GET variable only if a valid token is passed along as well:
+	
+	// Returns the requested get var if the Origin & Host match, 
+	// and a valid token was also passed along with the request.
+	// Filtered if XSS check is enabled in the configs/app.txt.
+	$this->input->verySecure()->get('get_var_key'); 
+
+GET variables normally don't need such high clearance so token validation is demarkated with the ->verySecure() call. 
+
+
+==============================================
+## XSS Protection
+==============================================
+
+XSS protection is enabled/disabled with the consfigs/app.txt setting called 'xssCheck'.
+
+When xssCheck = true, all get and post retrievals from $this->input property are by default filtered and sanitized for special html characters (equivalent to htmlspecialchars()).
+
+When xssCheck is enabled, to retrieve a GET or POST variable without filtering, pass a second argument of false to the appropriate method:
+	$this->input->get('get_var_key', false); 
+	$this->input->post('get_var_key', false);
+
+When xssCheck is disabled, you can still retrieve filtered values for specific GET/POST variables by passing the appropriate filter name:
+
+	$this->input->get('get_var_key', FILTER_SANITIZE_FULL_SPECIAL_CHARS); 
+	$this->input->post('get_var_key', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+[see all possible filters here: https://www.php.net/manual/en/filter.filters.sanitize.php] 
+
+
+==============================================
+## CSRF Protection
+==============================================
+
+CSRF protection is enabled/diabled with the configs/app.txt setting called 'csrfCheck'.
+
+When csrfCheck = true, all GET and POST retrievals from $this->input->secure() call check for a match between the Origin/Referer HTTP Header and the Host HTTP Header. Only if these values match, is the requested variable fetched, other wise an exception is thrown.
+
+When csrfCheck = true, all GET and POST retrievals from $this->input property remain without a CSRF check! Please keep this in mind.
+
+When csrfCheck = true and formTokenization = true (both found in configs/app.txt); a further check of a valid JWT token is performed on all POST retrievals in the $this->input->secure() call: 
+
+	$this->input->secure()->post('someKey');
+
+To perform the same stringent check on GET retrievals use the $this->input->verySecure() instead for your GET calls:
+
+	$this->input->verySecure()->get('someKey'); // checks for a valid token
+
+
+When formTokenization is enabled, it is good to set your own secret key in the 'secretKey' property in configs/app.txt.
+

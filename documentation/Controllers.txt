@@ -8,9 +8,9 @@
 Our Controllers are inspired by CodeIgniter. They have no namespaces, and each controller class can have several controllers as individual methods of the class.
 
 
-=====================
+===============================================================
 ## Passing arguments to controllers in the URI
-=====================
+===============================================================
 
 Much like CodeIgniter, any additional URI elements that are not part of determining the route will be passed on to the controller method as arguments.
 
@@ -31,16 +31,16 @@ As the above example illustrates, the URI elements are auto-routed to
 if such a combination is found. See Routing.txt for more details.
 
 
-=====================
+==========================
 ## Controllers Directory
-=====================
+==========================
 
 All your controllers should reside in the controllers directory defined in configs/app.txt > 'controllersDir' property.
 
 
-=====================
+=====================================
 ## Controller Class specifications
-=====================
+=====================================
 
 Each controller class must fit the following specifications in order to work:
 
@@ -57,9 +57,9 @@ Each controller class must fit the following specifications in order to work:
 5) Method names should be all lowercase.
 
 
-=====================
+=======================
 ## Controller Features
-=====================
+=======================
 
 Controller classes have the following properties available to them:
 

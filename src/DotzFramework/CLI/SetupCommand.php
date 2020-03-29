@@ -121,45 +121,71 @@ class SetupCommand extends Command
 
     public function moveFiles($dest, $orig){
 
-    	if(rename($orig.'/configs', $dest.'/configs')){
-    		if(rename($orig.'/modules.php', $dest.'/modules.php')){
-				if(rename($orig.'/migrations.php', $dest.'/migrations.php')){
-					if(rename($orig.'/migrations-db.php', $dest.'/migrations-db.php')){
-						if(rename($orig.'/index.php', $dest.'/index.php')){
-							if(rename($orig.'/.htaccess', $dest.'/.htaccess')){
-								if(rename($orig.'/migrations', $dest.'/migrations')){
-									if(!file_exists($dest.'/src')){
+		if(copy($orig.'/modules.php', $dest.'/modules.php')){
+			if(copy($orig.'/migrations.php', $dest.'/migrations.php')){
+				if(copy($orig.'/migrations-db.php', $dest.'/migrations-db.php')){
+					if(copy($orig.'/index.php', $dest.'/index.php')){
+						if(copy($orig.'/.htaccess', $dest.'/.htaccess')){
+					    	
+							//Five copy commands were successful, therefore
+							//it is safe to use command line operations to copy 
+							//over the three directories below:
+							
+							exec('cp -rf '.$orig.'/configs '.$dest.'/', $o1);
 
-										mkdir($dest.'/src');
-
-										if(rename($orig.'/src/App', $dest.'/src/App')){
-
-									    	$json = json_decode(file_get_contents($dest.'/composer.json'));
-																						
-											unset($json->autoload);
-
-											$json->autoload = [
-												'psr-4' => [ 
-													''=>'src/' 
-												],
-												'files' => [
-													'modules.php'
-												]
-											];
-
-									    	if(file_put_contents($dest.'/composer.json', json_encode($json, JSON_UNESCAPED_SLASHES)) !== false){
-
-									    		return true;
-									    	}
-										}
-									}
-								}
+							if(isset($o1) && count($o1) > 0){
+								return false;
 							}
+
+							exec('cp -rf '.$orig.'/migrations '.$dest.'/', $o2);
+
+							if(isset($o2) && count($o2) > 0){
+								return false;
+							}
+
+							exec('cp -rf '.$orig.'/documentation '.$dest.'/', $o3);
+
+							if(isset($o3) && count($o3) > 0){
+								return false;
+							}
+
+							if(!file_exists($dest.'/src')){
+								mkdir($dest.'/src');
+							}
+
+							exec('cp -rf '.$orig.'/src/App '.$dest.'/src/', $o4);
+
+							if(isset($o4) && count($o4) > 0){
+								return false;
+							}
+
+							//Update the composer.json file to auto-load modules.php
+					    	$json = json_decode(file_get_contents($dest.'/composer.json'));
+							unset($json->autoload);
+
+							$json->autoload = [
+								'psr-4' => [ 
+									''=>'src/' 
+								],
+								'files' => [
+									'modules.php'
+								]
+							];
+
+							$ok = file_put_contents(
+								$dest.'/composer.json', 
+								json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+							);
+					    	
+					    	if($ok !== false){
+					    		//success..
+					    		return true;
+					    	}
 						}
 					}
 				}
 			}
-    	}
+		}
 
     	return false;
     }

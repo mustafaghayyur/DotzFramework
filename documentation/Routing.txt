@@ -7,9 +7,9 @@
 
 Routes are simple in Dotz Framework.
 
-=====================
+==========================================
 ## Class / Method Auto Routing
-=====================
+==========================================
 
 When you set up a controller class with a name ClassController and a method 'index', this index controller will be auto-enabled to become accessible with the url:
 
@@ -74,9 +74,9 @@ The 404 error page or the not found page can be defined in the notFound property
 		}
 
 
-=====================
+==========================================
 ## Note on JSON Formatting
-=====================
+==========================================
 
 Each config file is meant to be a JSON object with definition properties. 
 

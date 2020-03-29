@@ -27,9 +27,9 @@ The $dotz object is passed along with the following properties:
 	- $dotz->js: JS configs [defined in configs/js.txt] in JSON format to be passed along to JS.
 
 
-=====================
+===============================================================
 ## Accessing Controller's $packet in the View 
-=====================
+===============================================================
 
 In your controller you are encouraged to collect all your objects, arrays and data you wish to pass along to the view in an array named $packet. The various elements should be referenced with well defined keys, which would be extracted to become stand alone variables in the views for easy referencing.
 

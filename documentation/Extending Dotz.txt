@@ -4,3 +4,94 @@
 ====================================================
 ====================================================
 
+
+Extending the framework will require understanding our framework's core. WHich should not be too difficult, as at the time of inception, it consisted of less than twenty files!
+
+
+=====================
+## Controllers
+=====================
+
+You can extend the DotzFramework\Core\Controller on your own, and use your extended controller as the base controller class from which all actual controller classes extend from:
+
+	- Create a folder: src/App/Core
+
+	- Create a file called Controller.php
+
+	- In the file namespace it 'App\Core'
+
+	- Name the class Controller and make it extend DotzFramework\Core\Controller
+
+You can then add your own functionality as needed.
+
+
+=====================
+## Query Library
+=====================
+
+You can Add your own extension of DotzFramework\Core\Query in src/App/Core.
+
+You can namespace the file App\Core.
+
+You can then go into the modules.php file located in the root of your application and replace the definition of $mods['query'] with your own extended class like so:
+	
+		
+		$mods['query'] = function($c){
+			return new App\Core\MSSQLQuery();
+		}; 
+
+Where you might setup functions more suitable to MSSQL databases.
+
+
+===================================
+## Adding Modules to the Container
+===================================
+
+Please see and study the modules.php file located in the root of your application. It mentions details of how you can add your own services to the PIMPLE container we are using.
+
+Any modules correctly defined in modules.php can be loaded/used anywhere with:
+
+	$dotz = Dotz::get();
+	$dotz->load('module_name')->someMethod();
+
+Dotz class resides in the namespace:
+	DotzFramework\Core
+
+
+==============================
+## Creating Your Own Libraries
+==============================
+
+You are free to add your own libraries to your app; however you wish.
+
+For example:
+
+	1) Create a new directory in src/App called 'Modules'
+
+	2) Create a file called UserAuthentication.php inside Modules:
+
+		namespace App\Modules\UserAuthentication;
+
+		use DotzFrameWork\Core\Dotz;
+		use DotzFrameWork\Modules\Form\Form;
+		
+		class UserAuthentication {
+
+			public function register(){
+
+				$dotz = Dotz::get();
+
+				//get a POST variable
+				$dotz->load('input')->secure()->post('someKey');
+
+				//make a database query
+				$results = $dotz->load('query')->execute('SELECT * FROM table WHERE id = ?', ['1']);
+
+
+				//generate a form
+				$form = new Form();
+				$form->open('nameOfForm')->action('/')->meothod('GET')->show();
+
+			}
+		}
+

@@ -18,9 +18,9 @@ To create forms simply instantiate the Form class:
 	$form = new Form();
 
 
-=====================
+===========================
 ## Opening & Closing tags
-=====================
+===========================
 
 Then you can open and close the form tags in your views like so (respectively):
 	$form->open('form_name')
@@ -53,9 +53,9 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 		->show();
 
 
-=====================
+==========================================
 ## Simple one-line text field
-=====================
+===============================================================
 
 	$form->textfield('name')
 		->label('Name:')
@@ -87,9 +87,9 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 		->label('Need to Relocate?')
 		->show();
 
-=====================
+==========================================
 ## Text Area field (text-boxes)
-=====================
+==========================================
 
 	$form->textarea('message')
 		->label('Personal Comments:')
@@ -140,9 +140,9 @@ You can then adjust the height and width of the editor box by defining the CSS s
 
 
 
-=====================
+==============================
 ## JWT Token Hidden Field
-=====================
+==============================
 
 The JWT token hidden field is automatically added to each form generated with DotzFramework\Modules\Form library; when 'csrfCheck' & 'formTokenization' settings are set to true in the configs/app.txt file.
 
