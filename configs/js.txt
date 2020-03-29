@@ -1,4 +1,7 @@
 {
+
+	"============":"Use https://jsonformatter.curiousconcept.com/ to validate your JSON",
+
 	"------------":"Add here any settings you wish to pass along to Javascript in the view..------",
 
 

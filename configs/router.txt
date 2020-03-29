@@ -1,5 +1,7 @@
 {
 
+	"============":"Use https://jsonformatter.curiousconcept.com/ to validate your JSON",
+
 	"------------":"Controller for the homepage.-------",
 	"default":"index@PagesController",
 

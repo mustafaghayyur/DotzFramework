@@ -1,0 +1,43 @@
+====================================================
+||				        						  ||
+||				SETTING UP DOTZ					  ||
+||												  ||
+====================================================
+
+
+Dotz Framework is a collection of many good projects, and brillient design.
+
+It offers containerization, security, migrations, routing and MVC design all in a simple package.
+
+To setup Dotz Framework, make sure you have PHP7 running, and install composer incase you haven't already.
+
+## Requirements
+- PHP 7
+- composer (https://getcomposer.org/download/)
+
+## Setting up Dotz...
+1) Create a diectory for your project in the command line
+
+2) cd into your project directory
+
+3) Run `composer require dotz/framework`
+
+4) Run `php vendor/dotz/framework/dotz setup` 
+   and follow the instructions in the command line app to fully setup Dotz.
+
+5) Review the config files found in the configs/ folder and ensure all settings are correct for your environment. Each setting has a helpful instruction above it. The configs/app.txt file and configs/db.txt file are most important to start off with.
+
+6) Run `composer update` to update the autoloader.
+
+7) Launch your app in the browser: http://yourappurl
+
+
+## Apache vs Nginx
+This framework was developed with Apache as the primary web server in mind.
+
+However, it uses Symfony's HTTP-Foundation component to minimize any Nginx environment issues. We hope it will work on Nginx just as well. If you find any problems relating to Nginx environment, please let us know, we would like to fix such issues.
+
+*Note:* Nginx users would need to closely replicate all .htaccess file settings onto their Nginx environment.
+
+--
+Developed by www.web-dotz.com

@@ -1,0 +1,26 @@
+====================================================
+||				        						  ||
+||					REST APIs					  ||
+||												  ||
+====================================================
+
+REST APIs can be built quickly with Dotz Framework. Use the REST routing and create resource classes for each resource you wish to setup.
+
+## Naming REST Controllers
+The class name should always end with the suffix 'Resource'. Therefore, a rest class intended to deal with data about people should be named:
+	PeopleResource
+
+Methods should have the following naming convention:
+	httpMethodResource()
+
+Therefore, a GET opertion for the people resource would have a method name:
+	getResource()
+
+
+## Views in REST Resources
+To send an output of your final result you should use the controller's view property:
+	
+	$this->view->json(['msg'=>'This is a get request.']);
+
+The associative array (or PHP object) passed to $this->view->json() will be transformed into a json object and outputted with the appropriate HTTP Content-Type header.
+

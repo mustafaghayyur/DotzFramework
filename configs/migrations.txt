@@ -1,4 +1,7 @@
 {
+
+	"============":"Use https://jsonformatter.curiousconcept.com/ to validate your JSON",
+
 	"------------":"Used by Doctrine-Migrations.-------",
 	"nameSpace":"Migrations",
 	"tableName":"doctrine_migration_versions",

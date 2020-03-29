@@ -1,4 +1,7 @@
 {
+	
+	"============":"Use https://jsonformatter.curiousconcept.com/ to validate your JSON",
+
 	"------------":"Please add app name below.------",
 	"name":"Web Dotz",
 

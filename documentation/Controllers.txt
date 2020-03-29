@@ -1,0 +1,59 @@
+====================================================
+||				        						  ||
+||				USING CONTROLLERS				  ||
+||												  ||
+====================================================
+
+
+Our Controllers are inspired by CodeIgniter. They have no namespaces, and each controller class can have several controllers as individual methods of the class.
+
+
+## Passing arguments to controllers in the URI
+Much like CodeIgniter, any additional URI elements that are not part of determining the route will be passed on to the controller method as arguments.
+
+So the following URI:
+`http://yourappurl.com/pages/welcome/123/345/567`
+would result in:
+
+class PagesController extends Controller {
+	public function welcome ($first, $second, $third){
+		//where $first = 123
+		//where $second = 345
+		//where $third = 567
+	}
+}
+
+As the above example illustrates, the URI elements are auto-routed to 
+`ClassName/MethodName` 
+if such a combination is found. See Routing.txt for more details.
+
+
+## Controllers Directory
+All your controllers should reside in the controllers directory defined in configs/app.txt > 'controllersDir' property.
+
+
+## Controller Class specifications
+Each controller class must fit the following specifications in order to work:
+
+1) Class name should have (only) the first letter capitalized, with a suffix 'Controller' appended. 
+	- eg. PagesController
+
+2) REST Resources should follow the above format except with the suffix 'Resource' appended to them (instead of 'Controller').
+	- eg. PeoplesResource
+
+3) File names should be ClassController.php with the file name matching in case and spelling to the class name. 
+
+4) Each controller should extend the DotzFramework\Core\Controller class as shown in the example controllers setup during the installation process.
+
+5) Method names should be all lowercase.
+
+
+## Controller Features
+Controller classes have the following properties available to them:
+
+	- $this->input: allows you to interact with HTTP GET and POST inputs. As well as HTTP Headers. See Inputs.txt for more details.
+
+	- $this->views: allows you to send your final output in a HTML or JSON response. See Views.txt for more details.
+
+	- $this->configs: allows you to access the configs defined in the configs/ directory.
+

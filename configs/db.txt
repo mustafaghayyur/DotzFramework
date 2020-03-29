@@ -1,4 +1,7 @@
 {
+
+	"============":"Use https://jsonformatter.curiousconcept.com/ to validate your JSON",
+
 	"------------":"Define database configurations.-------",
 	"name":"test",
 	"user":"root",

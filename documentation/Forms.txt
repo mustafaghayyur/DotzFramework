@@ -1,0 +1,122 @@
+====================================================
+||				        						  ||
+||						FORMS					  ||
+||												  ||
+====================================================
+
+
+One of the few libraries included in Dotz Framework is the Form library/module. As forms tend to be seen as a neucense by many developers while developing applications. Also since security operations are often involved in the generation of forms.
+
+Our form module is meant to be intuitive. But one man's (or woman's) gem can sometimes be another trash. Haha..
+
+We recommend developers use this library to generate all forms, for enhanced security options.
+
+To create forms simply instantiate the Form class:
+
+	use DotzFramework\Modules\Form;
+
+	$form = new Form();
+
+
+## Opening & Closing tags
+Then you can open and close the form tags in your views like so (respectively):
+	$form->open('form_name')
+		->method('POST')
+		->action('path/to/submit/form/to')
+		->show();
+
+	$form->close()->show();
+
+The last ->show() call is quite important. Alternatly you could call ->get() at the end of the chain to get a return string value of the generated field. This goes for all following elements as well.
+
+
+## Select Elements
+	
+	$form->select('select_field_name')
+		->options(['key1'=>'Display Value', 'key2'=>'Display Value'])
+		->label('Select this option here:')
+		->default('key1')
+		->show();
+
+You could have replaced ->options() in the chain of calls with a series of ->option('key', 'display value') calls. This would allow you to code more on-the-go:
+
+	$form->select('select_field_name')
+		->label('Select this option here:')
+		->option('key1', 'Display Value')
+		->option('key2'=>'Display Value')
+		->default('key2')
+		->show();
+
+
+## Simple one-line text field
+	$form->textfield('name')
+		->label('Name:')
+		->show();
+
+
+## Radio buttons
+	$form->radiobutton('gender')
+		->label('Female:')
+		->value('female')
+		->show();
+	$form->radiobutton('gender')
+		->value('male') 
+		->label('Male:')
+		->show();
+
+
+## Checkboxes
+	$form->checkbox('citizen')
+		->label('Citizen?')
+		->show();
+	$form->checkbox('relocate')
+		->label('Need to Relocate?')
+		->show();
+
+## Text Area field (text-boxes)
+	$form->textarea('message')
+		->label('Personal Comments:')
+		->show();
+
+
+## Submit buttons
+	$form->button('submit')
+		->value('Send')
+		->show();
+
+
+## WYSIWYG Editors
+We utilize Quill.js for our WYSIWYG. Simple, intuitive and fairly light. 
+
+	$form->editor('text')
+		->label('Add rich content below:')
+		->text('You can enter any formatted text here.')
+		->show();
+
+You can then adjust the height and width of the editor box by defining the CSS styles for:
+	
+	.ql-toolbar{
+		width: 300px;
+	}
+
+	#textWYSIWYG.ql-container{
+		width: 300px;
+		height: 300px;
+	}
+
+#textWYSIWYG is the generated id for this field. You can use the code inspector to identify such details. 
+
+
+## Hidden Fields 
+	$form->hidden('some_key')
+		->value('hello world')
+		->show();
+
+
+
+## JWT Token Hidden Field
+-------------------------
+The JWT token hidden field is automatically added to each form generated with DotzFramework\Modules\Form library; when 'csrfCheck' & 'formTokenization' settings are set to true in the configs/app.txt file.
+
+See the Security.txt documentation file for more details on how the JWT hidden field works. And why it is added.
+

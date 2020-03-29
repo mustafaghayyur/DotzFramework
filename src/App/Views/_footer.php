@@ -8,6 +8,5 @@
 				<a href="<?php echo $dotz->url;?>/filter/editor" class="item">Rich Text Editor</a>
 			</div>
 		</div>		
-		<?php echo $dotz->js;?>
 	</body>
 </html>

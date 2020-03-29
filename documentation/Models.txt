@@ -1,0 +1,93 @@
+====================================================
+||				        						  ||
+||				MODELS/QUERIES IN DOTZ			  ||
+||												  ||
+====================================================
+
+
+The traditional MVC model is followed in Dotz Framework. However Models are viewed differently than other frameworks, that is why we have more appropriately named our Models as Queries.
+
+Queries Classes only hold actual queries meant to be stored in a central place for ease of referencing.
+
+The entire modeling apparatus is handled by DotzFramework\Core\Query (and its extensions). We rely on PDO heavily and make its operations more intuitive and easy to utilize.
+
+The query apparatus is accessed in the controller with:
+	
+	$this->query
+
+Below are the features available with $this->query.
+
+
+## $this->query->execute($query, $data, $flags)
+execute() is a wrapper function to execute a prepared statement. Since prepared statements are more secure and can help against SQL injections.
+
+	Arguments accepted:
+		- $query: the string query with actual inputs replaced by placeholders, 
+		- $data: and array of inputs to be passed to PDOStatement::execute(), 
+		- $flags: defaults to \PDO::FETCH_ASSOC
+
+We recommend developers use this method for all queries, when possible.
+
+Returns: an array of results. False on failiure.
+
+
+## $this->query->raw($query, $flags)
+raw() is a wrapper function to execute a raw query. The inputs inside the query string are not escaped or quoted. Please use $this->query->quote() on all inputs to be inserted into the query string, before passing the string to this method.
+
+	Arguments accepted:
+		- $query: the string query with raw inputs included, 
+		- $flags: defaults to \PDO::FETCH_ASSOC
+
+We recommend developers use this method as a last resort.
+
+Returns: an array of results. False on failiure.
+
+
+## $this->query->quote($string, $flags)
+quote() is a wrapper function for PDO's quote() method. If you must use the raw() method, please use quote() on all user supplied inputs.
+
+	Arguments accepted:
+		- $string: individual input to be escaped for quotes, 
+		- $flags: defaults to \PDO::PARAM_STR
+
+Returns: quoted input string. False on unsupported feature (in some drivers).
+
+## $this->query->generatePlaceHolders($array)
+generatePlaceHolders() generates '?' place holders for the size of the passed array. Useful for prepared statements.
+
+	Arguments accepted:
+		- $array: array of inputs to be passed to execute() method
+
+Returns: string of '?' place holders.
+
+
+==================================================================================
+
+
+## Creating Models
+--------------------
+Models are created in the src/App/Queries directory. 
+
+You can change this location, however your changes should be reflected in composers' auto-loader and the correct namespace should be assigned to configs/app.txt > 'queryClassesNamespace' property.
+
+Each model/query class should have the following format:
+
+	- Filename should be Modelname.php
+		so a model about Users should have the file name:
+			Users.php
+
+		...where in all queries relating to retrieving and storing user data can be stored, as an example.
+
+	- Class for the model should have the same name as the file (case and spelling):
+		class Users {
+			//...
+		}
+
+	- The __construct() method should be public. Carrying definitions of class properties that are query strings. Query strings can carry raw input values or placeholders to be appropriately replaced by prepared statement operations.
+
+
+We encourage developers to think of QueryClasses in the same way as Models of other frameworks. 
+
+With on less restriction: QueryClasses are not tied down to one specific database table. In a way they are the true models, where data can be modelled around actual objects/concepts which can cover several relational-database tables, rather than just one table.
+
+QueryClasses are the more free-form models. Focussed on encapsulating ideas, rather than representing tables in object forms!
