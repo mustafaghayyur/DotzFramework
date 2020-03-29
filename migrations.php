@@ -17,7 +17,7 @@ $dotz = Dotz::get(__DIR__ . '/configs');
 $conf = $dotz->load('configs')->props;
 
 return [
-    'name' => $conf->app->appName,
+    'name' => $conf->app->name,
     'migrations_namespace' => $conf->migrations->nameSpace,
     'table_name' => $conf->migrations->tableName,
     'column_name' => $conf->migrations->colName,

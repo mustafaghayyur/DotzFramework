@@ -15,7 +15,7 @@
 	"url":"localhost/DotzFramework",
 
 	"------------":"Path to Controllers directory from application root.------------",
-	"controllersDir":"src/App/Controllers",
+	"controllersDir":"src/App/Controller",
 
 	"------------":"Namespace of your Query definitions.------",
 	"------------":"Usually set up in src/App/Queries.------",

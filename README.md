@@ -1,7 +1,7 @@
 # Dotz Framework
 A light weight yet sophisticated framework made for everyone!
 
-Dotz Framework is a collection of many good projects, and brillient design.
+Dotz Framework is a collection of many good projects, and brilliant design.
 
 It offers containerization, security, migrations, routing and MVC design all in a simple package.
 

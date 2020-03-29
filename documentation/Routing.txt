@@ -28,9 +28,13 @@ In configs/routers.txt:
 	- Add a new uri in the following format inside the custom property:
 		
 		{
+			// other properties...
+
 			custom: {
 				"custom-uri":"method@ClassnameController"
 			}
+
+			// other properties...
 		}
 
 Where method is the method name in ClassnameController class. The @ symbol seperates the method from the class name.
@@ -48,9 +52,13 @@ In configs/routers.txt:
 	- Add a new uri in the following format inside the rest property:
 		
 		{
+			// other properties...
+
 			rest: {
 				"uri-for-resource":"ControllerNameForResource"
 			}
+
+			// other properties...
 		}
 
 =====================

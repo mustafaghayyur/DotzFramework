@@ -1,0 +1,82 @@
+====================================================
+====================================================
+	> MIGRATIONS
+====================================================
+====================================================
+
+
+Dotz Framework uses Doctrine Migrations. It's fully integrated with the configurations you add in configs/db.txt and configs/migrations.txt.
+
+
+================================
+## Generate a new migration:
+================================
+
+	./vendor/bin/doctrine-migrations generate
+
+
+The above command will generate a PHP class and print the file location in the command line terminal.
+
+
+================================
+## Writing the migrations
+================================
+
+In the migration class, you will have two methods setup:
+	
+	- public function up()
+	- public function down()
+
+In the up and down methods you can use the following functions to write your migrations:
+
+	
+    $this->warnIf(true, 'Something might be going wrong');
+		- If the condition is met, throw a warning message. 
+
+	$this->abortIf(true, 'Something went wrong. Aborting.');
+		- If the codition is met, abort migration and throw a message.
+
+	$this->skipIf(true, 'Skipping this migration.');
+		- If the condition is met, skip this specific migration and output a notification.
+
+	$this->write('Doing some cool migration!');
+		- Print some message onto the console.
+
+
+	With addSql() you can add a SQL query to run in the migration. You can pass arguments separately:
+
+			$users = [
+		        ['name' => 'mike', 'id' => 1],
+		    ];
+
+	        $this->addSql('UPDATE user SET happy = true WHERE name = :name AND id = :id', $user);
+	        	
+	 Or use raw values inside the query strings like the following:
+
+	        $this->addSql("INSERT INTO test_table (title) VALUES ('If you are seeing this sentence in the browser; your database and doctrine are setup correctly!')");
+ 
+
+
+================================================================
+## Run the migrations in the command line
+================================================================
+
+	./vendor/bin/doctrine-migrations migrate
+		- migrates all un-run migrations
+
+
+	./vendor/bin/doctrine-migrations execute 20180601193057 --up
+		- run a single migration up
+
+	./vendor/bin/doctrine-migrations execute 20180601193057 --down
+		- run a single migration down
+
+	./vendor/bin/doctrine-migrations migrate first
+		- revert migrations down to the first migration.
+
+
+These commands and functions should suffice most projects needs. If you are comfortable with doctrine and Dotz Framework; you can delve deeper into Doctrine's Migration options for your project needs.
+
+Please also refer to Doctrine's own Migration documentation:
+https://www.doctrine-project.org/projects/doctrine-migrations/en/2.2/reference/migration-classes.html#migration-classes
+
