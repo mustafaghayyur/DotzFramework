@@ -1,7 +1,7 @@
 ====================================================
-||				        						  ||
-||				MODELS/QUERIES IN DOTZ			  ||
-||												  ||
+====================================================
+	> MODELS/QUERIES IN DOTZ
+====================================================
 ====================================================
 
 
@@ -18,7 +18,10 @@ The query apparatus is accessed in the controller with:
 Below are the features available with $this->query.
 
 
+=====================
 ## $this->query->execute($query, $data, $flags)
+=====================
+
 execute() is a wrapper function to execute a prepared statement. Since prepared statements are more secure and can help against SQL injections.
 
 	Arguments accepted:
@@ -31,7 +34,10 @@ We recommend developers use this method for all queries, when possible.
 Returns: an array of results. False on failiure.
 
 
+=====================
 ## $this->query->raw($query, $flags)
+=====================
+
 raw() is a wrapper function to execute a raw query. The inputs inside the query string are not escaped or quoted. Please use $this->query->quote() on all inputs to be inserted into the query string, before passing the string to this method.
 
 	Arguments accepted:
@@ -43,7 +49,10 @@ We recommend developers use this method as a last resort.
 Returns: an array of results. False on failiure.
 
 
+=====================
 ## $this->query->quote($string, $flags)
+=====================
+
 quote() is a wrapper function for PDO's quote() method. If you must use the raw() method, please use quote() on all user supplied inputs.
 
 	Arguments accepted:
@@ -64,8 +73,10 @@ Returns: string of '?' place holders.
 ==================================================================================
 
 
+=====================
 ## Creating Models
---------------------
+=====================
+
 Models are created in the src/App/Queries directory. 
 
 You can change this location, however your changes should be reflected in composers' auto-loader and the correct namespace should be assigned to configs/app.txt > 'queryClassesNamespace' property.

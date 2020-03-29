@@ -1,7 +1,7 @@
 ====================================================
-||				        						  ||
-||						FORMS					  ||
-||												  ||
+====================================================
+	> OUR FORMS MODULE
+====================================================
 ====================================================
 
 
@@ -18,7 +18,10 @@ To create forms simply instantiate the Form class:
 	$form = new Form();
 
 
+=====================
 ## Opening & Closing tags
+=====================
+
 Then you can open and close the form tags in your views like so (respectively):
 	$form->open('form_name')
 		->method('POST')
@@ -30,8 +33,10 @@ Then you can open and close the form tags in your views like so (respectively):
 The last ->show() call is quite important. Alternatly you could call ->get() at the end of the chain to get a return string value of the generated field. This goes for all following elements as well.
 
 
+=====================
 ## Select Elements
-	
+=====================
+
 	$form->select('select_field_name')
 		->options(['key1'=>'Display Value', 'key2'=>'Display Value'])
 		->label('Select this option here:')
@@ -48,13 +53,19 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 		->show();
 
 
+=====================
 ## Simple one-line text field
+=====================
+
 	$form->textfield('name')
 		->label('Name:')
 		->show();
 
 
+=====================
 ## Radio buttons
+=====================
+
 	$form->radiobutton('gender')
 		->label('Female:')
 		->value('female')
@@ -65,7 +76,10 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 		->show();
 
 
+=====================
 ## Checkboxes
+=====================
+
 	$form->checkbox('citizen')
 		->label('Citizen?')
 		->show();
@@ -73,19 +87,28 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 		->label('Need to Relocate?')
 		->show();
 
+=====================
 ## Text Area field (text-boxes)
+=====================
+
 	$form->textarea('message')
 		->label('Personal Comments:')
 		->show();
 
 
+=====================
 ## Submit buttons
+=====================
+
 	$form->button('submit')
 		->value('Send')
 		->show();
 
 
+=====================
 ## WYSIWYG Editors
+=====================
+
 We utilize Quill.js for our WYSIWYG. Simple, intuitive and fairly light. 
 
 	$form->editor('text')
@@ -107,15 +130,20 @@ You can then adjust the height and width of the editor box by defining the CSS s
 #textWYSIWYG is the generated id for this field. You can use the code inspector to identify such details. 
 
 
+=====================
 ## Hidden Fields 
+=====================
+
 	$form->hidden('some_key')
 		->value('hello world')
 		->show();
 
 
 
+=====================
 ## JWT Token Hidden Field
--------------------------
+=====================
+
 The JWT token hidden field is automatically added to each form generated with DotzFramework\Modules\Form library; when 'csrfCheck' & 'formTokenization' settings are set to true in the configs/app.txt file.
 
 See the Security.txt documentation file for more details on how the JWT hidden field works. And why it is added.

@@ -1,13 +1,16 @@
 ====================================================
-||				        						  ||
-||						ROUTING					  ||
-||												  ||
+====================================================
+	> DEFINING ROUTES
+====================================================
 ====================================================
 
 
 Routes are simple in Dotz Framework.
 
+=====================
 ## Class / Method Auto Routing
+=====================
+
 When you set up a controller class with a name ClassController and a method 'index', this index controller will be auto-enabled to become accessible with the url:
 
 	http://yourappurl.com/class/index
@@ -15,7 +18,10 @@ When you set up a controller class with a name ClassController and a method 'ind
 Dotz Framework takes the class name (less the suffix) and the method name as the first two URI elements and attempts to route to them when a custom url or resource rule is not defined in the configs/router.txt file.
 
 
+=====================
 ## Custom URL Rules
+=====================
+
 If you have need for a custom URL, add a URI (containing only alphanumerical values, underscores and hyphens). 
 
 In configs/routers.txt:
@@ -30,7 +36,10 @@ In configs/routers.txt:
 Where method is the method name in ClassnameController class. The @ symbol seperates the method from the class name.
 
 
+=====================
 ## REST Resources
+=====================
+
 REST API routes typically get bundled by objects, with each class holding various methods for each HTTP method. 
 
 That is why we have designed their routes as follows.
@@ -44,14 +53,20 @@ In configs/routers.txt:
 			}
 		}
 
+=====================
 ## Home Page
+=====================
+
 The home page or the default app page can be defined in the default property of the configs/router.txt file:
 		
 		{
 			"default":"index@PagesController",
 		}
 
+=====================
 ## 404 Error Page
+=====================
+
 The 404 error page or the not found page can be defined in the notFound property of the configs/router.txt file:
 		
 		{
@@ -59,7 +74,10 @@ The 404 error page or the not found page can be defined in the notFound property
 		}
 
 
+=====================
 ## Note on JSON Formatting
+=====================
+
 Each config file is meant to be a JSON object with definition properties. 
 
 Be sure to follow correct protcols while working with these files. 
