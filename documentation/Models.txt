@@ -31,7 +31,7 @@ execute() is a wrapper function to execute a prepared statement. Since prepared 
 
 We recommend developers use this method for all queries, when possible.
 
-Returns: an array of results. False on failiure.
+Returns: an array of results. False on failure.
 
 
 ==========================================
@@ -46,7 +46,7 @@ raw() is a wrapper function to execute a raw query. The inputs inside the query 
 
 We recommend developers use this method as a last resort.
 
-Returns: an array of results. False on failiure.
+Returns: an array of results. False on failure.
 
 
 ==========================================

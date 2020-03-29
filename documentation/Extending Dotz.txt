@@ -5,7 +5,7 @@
 ====================================================
 
 
-Extending the framework will require understanding our framework's core. WHich should not be too difficult, as at the time of inception, it consisted of less than twenty files!
+Extending the framework will require understanding our framework's core. Which should not be too difficult, as at the time of inception, it consisted of less than twenty files!
 
 
 =====================
@@ -70,10 +70,10 @@ For example:
 
 	2) Create a file called UserAuthentication.php inside Modules:
 
-		namespace App\Modules\UserAuthentication;
+		namespace App\Modules;
 
-		use DotzFrameWork\Core\Dotz;
-		use DotzFrameWork\Modules\Form\Form;
+		use DotzFramework\Core\Dotz;
+		use DotzFramework\Modules\Form\Form;
 		
 		class UserAuthentication {
 
@@ -90,7 +90,7 @@ For example:
 
 				//generate a form
 				$form = new Form();
-				$form->open('nameOfForm')->action('/')->meothod('GET')->show();
+				$form->open('nameOfForm')->action('/')->method('GET')->show();
 
 			}
 		}

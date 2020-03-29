@@ -5,7 +5,7 @@
 ====================================================
 
 
-Dotz Framework is a collection of many good projects, and brillient design.
+Dotz Framework is a collection of many good projects, and brilliant design.
 
 It offers containerization, security, migrations, routing and MVC design all in a simple package.
 
@@ -22,7 +22,7 @@ To setup Dotz Framework, make sure you have PHP7 running, and install composer i
 ## Setting up Dotz...
 =====================
 
-1) Create a diectory for your project in the command line
+1) Create a directory for your project in the command line
 
 2) cd into your project directory
 

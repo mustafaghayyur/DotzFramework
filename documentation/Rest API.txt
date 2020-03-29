@@ -17,7 +17,7 @@ The class name should always end with the suffix 'Resource'. Therefore, a rest c
 Methods should have the following naming convention:
 	httpMethodResource()
 
-Therefore, a GET opertion for the people resource would have a method name:
+Therefore, a GET operation for the people resource would have a method name:
 	getResource()
 
 

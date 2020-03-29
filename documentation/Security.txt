@@ -7,7 +7,7 @@
 
 Please read the Inputs section along with this section to better understand security in Dotz Framework.
 
-Many developers are good at development, but lack confidence on security matters. PHP is a beautuful language but hasn't made its various security options very easy to use.
+Many developers are good at development, but lack confidence on security matters. PHP is a beautiful language but hasn't made its various security options very easy to use.
 
 Dotz Framework wishes to make security easy.
 
@@ -36,7 +36,7 @@ Notice how the placeholder '?' has been replaced with an actual value '7'.
 ## Inputs
 ===================
 
-The other secuirty threat web software face comes from GET & POST inputs. Securing inputs is therefore made simple with the addition of ->secure() and ->verySecure() method calls to the get and post data retrieval process.
+The other security threat web software face comes from GET & POST inputs. Securing inputs is therefore made simple with the addition of ->secure() and ->verySecure() method calls to the get and post data retrieval process.
 
 To get a highly validated GET and POST data, you simply have to enable the xssCheck, csrfCheck and formTokenization settings in configs/app.txt. Then use the:
 

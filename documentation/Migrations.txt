@@ -34,7 +34,7 @@ In the up and down methods you can use the following functions to write your mig
 		- If the condition is met, throw a warning message. 
 
 	$this->abortIf(true, 'Something went wrong. Aborting.');
-		- If the codition is met, abort migration and throw a message.
+		- If the condition is met, abort migration and throw a message.
 
 	$this->skipIf(true, 'Skipping this migration.');
 		- If the condition is met, skip this specific migration and output a notification.

@@ -5,7 +5,7 @@
 ====================================================
 
 
-One of the few libraries included in Dotz Framework is the Form library/module. As forms tend to be seen as a neucense by many developers while developing applications. Also since security operations are often involved in the generation of forms.
+One of the few libraries included in Dotz Framework is the Form library/module. As forms tend to be seen as a nuisance by many developers while developing applications. Also since security operations are often involved in the generation of forms.
 
 Our form module is meant to be intuitive. But one man's (or woman's) gem can sometimes be another trash. Haha..
 
@@ -30,7 +30,7 @@ Then you can open and close the form tags in your views like so (respectively):
 
 	$form->close()->show();
 
-The last ->show() call is quite important. Alternatly you could call ->get() at the end of the chain to get a return string value of the generated field. This goes for all following elements as well.
+The last ->show() call is quite important. Alternately you could call ->get() at the end of the chain to get a return string value of the generated field. This goes for all following elements as well.
 
 
 =====================

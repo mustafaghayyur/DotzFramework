@@ -30,21 +30,21 @@ To retrieve the same above variables securely:
 	$this->input->secure()->post('post_var_key'); 
 
 
-If you have form-tokeninization enabled, and wish to retrieve a GET variable only if a valid token is passed along as well:
+If you have form-tokenization enabled, and wish to retrieve a GET variable only if a valid token is passed along as well:
 	
 	// Returns the requested get var if the Origin & Host match, 
 	// and a valid token was also passed along with the request.
 	// Filtered if XSS check is enabled in the configs/app.txt.
 	$this->input->verySecure()->get('get_var_key'); 
 
-GET variables normally don't need such high clearance so token validation is demarkated with the ->verySecure() call. 
+GET variables normally don't need such high clearance so token validation is demarcated with the ->verySecure() call. 
 
 
 ==============================================
 ## XSS Protection
 ==============================================
 
-XSS protection is enabled/disabled with the consfigs/app.txt setting called 'xssCheck'.
+XSS protection is enabled/disabled with the configs/app.txt setting called 'xssCheck'.
 
 When xssCheck = true, all get and post retrievals from $this->input property are by default filtered and sanitized for special html characters (equivalent to htmlspecialchars()).
 
@@ -64,7 +64,7 @@ When xssCheck is disabled, you can still retrieve filtered values for specific G
 ## CSRF Protection
 ==============================================
 
-CSRF protection is enabled/diabled with the configs/app.txt setting called 'csrfCheck'.
+CSRF protection is enabled/disabled with the configs/app.txt setting called 'csrfCheck'.
 
 When csrfCheck = true, all GET and POST retrievals from $this->input->secure() call check for a match between the Origin/Referer HTTP Header and the Host HTTP Header. Only if these values match, is the requested variable fetched, other wise an exception is thrown.
 
