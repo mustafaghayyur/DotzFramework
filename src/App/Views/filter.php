@@ -8,6 +8,8 @@
 </style>
 
 <h1>FilterText Example:</h1>
+<h3>FilterText is the WYSIWYG text filter we have created. It should take out malicious code from any input you supply it; leaving behind only safe code/text. Feel free to test some scenarios below.</h3>
+<p></p>
 
 <?php $form->open('test')
 			->method('POST')->action($dotz->url . '/filter/submit')

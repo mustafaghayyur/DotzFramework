@@ -1,0 +1,36 @@
+====================================================
+====================================================
+	> DEALING WITH UPDATES
+====================================================
+====================================================
+
+
+When Composer updates the framework, all core files should be updated automatically.
+
+However, the files and folders that:
+	
+	php vendor/dotz/framework/dotz setup
+
+...copied over to the root of your application, will not be updated automatically.
+
+This is to protect you from loosing your valuable configurations.
+
+
+
+
+## What you should do
+===================================================
+
+
+	1) Run the following command in the command line after every composer update:
+	
+		php vendor/dotz/framework/dotz update
+
+	This will update the documentation folder with the latest documentation.
+
+	
+	2) Do a quick test for any new exceptions thrown by the app. If the exception is in the following format:
+
+		Update Error <number>
+
+	Search the documentaion/ChangeLog.txt file for that error number. It will explain how to remedy that error.

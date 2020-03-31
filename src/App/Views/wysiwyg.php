@@ -1,7 +1,7 @@
 <?php include_once('_header.php');?>
 
 <h1>WYSIWYG Example:</h1>
-<h2>When you submit the form, <br/>the filtered HTML will be outputted in a text box</h2>
+<h2>When you submit the form, <br/>the filtered HTML will be outputted <br/>in a text box on the next page.</h2>
 
 <?php $form->open('test')->method('POST')->action($dotz->url . '/filter/submit')->show();?>
 	

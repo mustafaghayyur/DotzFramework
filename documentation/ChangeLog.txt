@@ -1,0 +1,14 @@
+============================================================
+CHANGELOG
+============================================================
+
+____________________________________________________________
+version | Details
+--------|---------------------------------------------------
+0.1.8   | - updated the index.php to turn off automatic 
+			error reporting. 
+		  - Added  profiler setting in configs/app.txt
+		  	which determines whether profiler is on or off.
+		  - fixed a few undefined variable/index notices
+		  - Added Dotz::grabKey()
+		  - Added the update command to dotz CLI app

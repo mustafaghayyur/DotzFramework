@@ -14,8 +14,11 @@
 	"------------":"App URL. Leave trailing slashes and HTTP protocol out. Include subdomain(s).-------",
 	"url":"localhost/DotzFramework",
 
+	"------------":"[on|off] Leave on to see time and memory usage stats.-------",
+	"profiler":"on",
+
 	"------------":"Path to Controllers directory from application root.------------",
-	"controllersDir":"src/App/Controller",
+	"controllersDir":"src/App/Controllers",
 
 	"------------":"Namespace of your Query definitions.------",
 	"------------":"Usually set up in src/App/Queries.------",

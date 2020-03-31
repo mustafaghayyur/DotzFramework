@@ -1,7 +1,6 @@
 <?php
 namespace DotzFramework\Modules\Form;
 
-use DotzFramework\Modules\Form\Element;
 use DotzFramework\Core\Dotz;
 use DotzFramework\Utilities\CSRF;
 
@@ -16,6 +15,7 @@ class Form {
 
 	public function __construct(){
 		$c = Dotz::get()->load('configs')->props->app;
+		$this->jwt = null;
 
 		if(($c->csrfCheck === true || $c->csrfCheck === 'true')
 			&& ($c->formTokenization === true || $c->formTokenization === 'true')){
@@ -41,41 +41,43 @@ class Form {
 		}
 	}
 
+
+
 	public function open($name){
 		return new Element($name, 'getOpen', null, $this->jwt);
 	}
 
 	public function textfield($name){
-		return new Element($name, 'getTextfield', $this->data[$name]);
+		return new Element($name, 'getTextfield', Dotz::grabKey($this->data, $name));
 	}
 
 	public function hidden($name){
-		return new Element($name, 'getHiddenField', $this->data[$name]);
+		return new Element($name, 'getHiddenField', Dotz::grabKey($this->data, $name));
 	}
 
 	public function checkbox($name){
-		return new Element($name, 'getCheckbox', $this->data[$name]);
+		return new Element($name, 'getCheckbox', Dotz::grabKey($this->data, $name));
 	}
 
 	public function radiobutton($name){
-		return new Element($name, 'getRadiobutton', $this->data[$name]);
+		return new Element($name, 'getRadiobutton', Dotz::grabKey($this->data, $name));
 	}
 
 	public function button($name){
-		return new Element($name, 'getButton', $this->data[$name]);
+		return new Element($name, 'getButton', Dotz::grabKey($this->data, $name));
 	}	
 
 	public function textarea($name){
-		return new Element($name, 'getTextarea', $this->data[$name]);
+		return new Element($name, 'getTextarea', Dotz::grabKey($this->data, $name));
 	}
 
 	public function editor($name){
 		$editor = $this->hidden($name)->value('')->get();
-		return new Element($name, 'getWYSIWYG', $this->data[$name], $editor);
+		return new Element($name, 'getWYSIWYG', Dotz::grabKey($this->data, $name), $editor);
 	}
 
 	public function select($name){
-		return new Element($name, 'getSelect', $this->data[$name]);
+		return new Element($name, 'getSelect', Dotz::grabKey($this->data, $name));
 	}
 
 	public function close(){

@@ -49,6 +49,7 @@ XSS protection is enabled/disabled with the configs/app.txt setting called 'xssC
 When xssCheck = true, all get and post retrievals from $this->input property are by default filtered and sanitized for special html characters (equivalent to htmlspecialchars()).
 
 When xssCheck is enabled, to retrieve a GET or POST variable without filtering, pass a second argument of false to the appropriate method:
+	
 	$this->input->get('get_var_key', false); 
 	$this->input->post('get_var_key', false);
 
@@ -80,4 +81,16 @@ To perform the same stringent check on GET retrievals use the $this->input->very
 
 
 When formTokenization is enabled, it is good to set your own secret key in the 'secretKey' property in configs/app.txt.
+
+
+
+===================
+## Input Class
+===================
+
+The Input class that holds the get() and post() methods can be found in DotzFramework\Core\Inputs. It is also available through the Dotz service container:
+
+	// The ‘input’ service was defined in the modules.php file 
+	// found in the root of the application.
+	$inputObj = Dotz::get()->load(‘input’);
 

@@ -52,6 +52,9 @@ class FilterText {
 		return $this->allowedTags;
 	}
 
+	/**
+	 * Use this method to add to the ignore list...
+	 */
 	public function addAllowedTags(Array $array){
 		$this->allowedTags = array_merge($this->allowedTags, $array);
 		return $this->getAllowedTags();
@@ -61,14 +64,24 @@ class FilterText {
 		return $this->stripOnlyTags;
 	}
 
-	public function addStripOnlyTags(Array $array){
+	/**
+	 * Any other tags you need the contents kept of?
+	 * Pass them along to this method while applying the filter
+	 * to your input->post() call.
+	 */
+	public function addToStripOnlyTagsList(Array $array){
 		$this->stripOnlyTags = array_merge($this->stripOnlyTags, $array);
 		return $this->getStripOnlyTags();
 	}
 
 	public function process($inputName, $text = ''){
 
+		// Keeps a count of instances removed for each tag.
+		// This count can be lower than $tagsArr, when preg_replace()
+		// removes the entire opening & closing tag block together 
 		$removed = [];
+		
+		// keeps a count of instances found for each tag
 		$tagsArr = [];
 
 		preg_match_all("|(<[^>]+>)|U",
@@ -76,7 +89,7 @@ class FilterText {
 		);
 
 		// loop through each tag and pick out tag names to further nick-pick
-		for ($s=0; $s < count($tags[0]); $s++) { 
+		for ($s=0; $s < count(Dotz::grabKey($tags, 0)); $s++) { 
 
 			preg_match('#</?([^> \n]+)#', 
 				$tags[0][$s], $tagName
@@ -111,6 +124,7 @@ class FilterText {
 				}else{
 
 					// need to remove the whole tag and its contents.
+					// keep in mind $c in this case is only half of what it should be.
 					$_text = preg_replace("#<".$t."[^>]*+>((?:(?!<\/".$t.").)*+)<\/".$t."[^>]*+>#Us",		 
 						 "", $text, $l1, $c
 					);
@@ -149,7 +163,7 @@ class FilterText {
 			}
 		}
 
-		//incase a script tag slipped through...
+		// incase a script tag slipped through...
 		$text = preg_replace("#<script\b.*>(.*)<\/script\b.*>#Us",		 
 			 "", $text, -1, $c
 		);

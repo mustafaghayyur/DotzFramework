@@ -51,3 +51,50 @@ To get a highly validated GET and POST data, you simply have to enable the xssCh
 
 We hope that with such intuitive calls, more developers will be able to secure their applications.
 
+
+
+===================
+## CSRF Tokens
+===================
+
+In case you need to generate CSRF security tokens on your own. The CSRF class can help.
+
+	use DotzFramework\Utilities\CSRF;
+
+	//generate a new token (JWT)
+	$token = CSRF::generateToken();
+
+	//validate a token received from a HTTP request
+	$valid = CSRF::validateToken($token); // boolean value
+
+		 
+
+======================================
+## CSRF Origins Check
+======================================
+
+You can also check whether the HTTP Origin/Referer header and the HTTP Host header match using:
+
+	use DotzFramework\Utilities\CSRF;
+
+	if(CSRF::checkOrigin()){
+		// origins okay…
+	}else{
+		// origins not okay
+	}
+
+ 
+
+===================
+## XSS Filtering
+===================
+
+The Inputs page does not delve into details of how the GET & POST inputs are filtered. Dotz Framework utilizes Symfony’s HTTP Foundation’s $this->request->filter() method.
+
+The filter method uses PHP’s native function filter_var to carry out the filtering process of the retrieved GET/POST vars and scrub them against the filter you specify. The default filter is FILTER_DEFAULT. You should see the full list of filters accepted by the filter parameter in $this->input->get() & $this->input->post() (as the second parameter of course):
+
+https://www.php.net/manual/en/filter.filters.php
+
+
+
+

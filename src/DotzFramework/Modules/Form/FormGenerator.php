@@ -1,6 +1,8 @@
 <?php
 namespace DotzFramework\Modules\Form;
 
+use DotzFramework\Core\Dotz;
+
 class FormGenerator {
 
 	/**
@@ -18,7 +20,7 @@ class FormGenerator {
 
 		// If a hidden JWT field was created by the system
 		// it would be in the $attributes['additional'] 
-		$jwt = $attributes['additional'];
+		$jwt = Dotz::grabKey($attributes, 'additional');
 		
 		$attr = array_merge($default, $attributes);
 		
@@ -291,7 +293,7 @@ EOD;
 	 * Generates the closing tag for a html form.
 	 */
 	public static function getClose($attributes){
-		return '</form '. $attributes['data'] .">\n";
+		return '</form '. Dotz::grabKey($attributes, 'data') .">\n";
 	}
 
 	/**

@@ -141,7 +141,7 @@ class Input {
 			}
 
 			if($filter === null){
-				$xss = Dotz::get()->load('configs')->props->app->enableXSSCheck;
+				$xss = Dotz::get()->load('configs')->props->app->xssCheck;
 
 				if($xss === true || $xss === 'true'){
 					$filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS;

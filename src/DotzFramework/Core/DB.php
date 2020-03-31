@@ -28,7 +28,7 @@ class DB {
 
 		$dsn = $this->getDataSourceName($c);
 
-		if($configs->driver === 'pgsql'){
+		if($c->driver === 'pgsql'){
 			$this->connection = new \PDO($dsn);
 		}else{
 			$this->connection = new \PDO($dsn, $c->user, $c->password);

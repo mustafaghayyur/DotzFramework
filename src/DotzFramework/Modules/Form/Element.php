@@ -1,7 +1,6 @@
 <?php
 namespace DotzFramework\Modules\Form;
 
-use DotzFramework\Modules\Form\FormGenerator;
 
 class Element {
 

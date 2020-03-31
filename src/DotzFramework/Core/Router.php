@@ -2,7 +2,6 @@
 namespace DotzFramework\Core;
 
 use \Exception;
-use DotzFramework\Core\Dotz;
 
 class Router {
 
@@ -151,7 +150,7 @@ class Router {
 
 		foreach ($arr as $k => $value) {
 			preg_match('#([A-Za-z1-9_-])+#', $value, $matches);
-			$arr[$k] = $matches[0];
+			$arr[$k] = Dotz::grabKey($matches, 0);
 		}
 
 		return $arr;
@@ -213,7 +212,7 @@ class Router {
 	public function trySimpleControllerCall($uri){
 
 		$class = ucfirst($uri[0]) .'Controller';
-		$cObj = $this->instantiateClass($class, $uri[1]);
+		$cObj = $this->instantiateClass($class, Dotz::grabKey($uri, 1));
 
 		$args = []; 
 

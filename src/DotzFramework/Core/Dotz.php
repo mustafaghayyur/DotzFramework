@@ -46,4 +46,24 @@ class Dotz {
 		}
 
 	}
+
+	/**
+	 * PHP notices for undefined index/properties are annoying.
+	 * This static method helps in preventing such flags.
+	 *
+	 * Dotz::grabKey($variable, 'key'); returns the value of the key.
+	 */
+	public static function grabKey($variable, $key){
+
+		if(is_array($variable)){
+			return (isset($variable[$key])) ? $variable[$key] : null;
+		}
+
+		if(is_object($variable)){
+			return (isset($variable->{$key})) ? $variable->{$key} : null;
+		}
+
+		return null;
+
+	}
 }

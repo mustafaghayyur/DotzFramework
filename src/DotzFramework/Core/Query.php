@@ -1,8 +1,6 @@
 <?php
 namespace DotzFramework\Core;
 
-use DotzFramework\Core\Dotz;
-
 /**
  * A wrapper for PDO. Each database type will have its own
  * extension to this class.  
