@@ -34,6 +34,19 @@ We recommend developers use this method for all queries, when possible.
 Returns: an array of results. False on failure.
 
 
+================================================
+## $this->query->fetchQuery($class, $property)
+================================================
+
+fetchQuery() retrieves the query string from the supplied Query Class and supplied property name if they exist. The Query class must reside in the src/App/Queries directory (as that is the default location), with the file name matching the class name in case and spelling.
+	
+	Arguments accepted:
+		- $class: exact class name, 
+		- $property: property name that contains the required query string.
+
+Returns: query string on success. Null on failure.
+
+
 ==========================================
 ## $this->query->raw($query, $flags)
 ==========================================
@@ -87,6 +100,8 @@ You can change this location, however your changes should be reflected in compos
 
 Each model/query class should have the following format:
 
+	- Query Classes should reside in the namespace defined in 'queryClassesNamespace' property of configs/app.txt.
+
 	- Filename should be Modelname.php
 		so a model about Users should have the file name:
 			Users.php
@@ -103,6 +118,6 @@ Each model/query class should have the following format:
 
 We encourage developers to think of QueryClasses in the same way as Models of other frameworks. 
 
-With on less restriction: QueryClasses are not tied down to one specific database table. In a way they are the true models, where data can be modelled around actual objects/concepts which can cover several relational-database tables, rather than just one table.
+With one less restriction: QueryClasses are not tied down to one specific database table. In a way they are the true models, where data can be modelled around actual objects/concepts which can cover several relational-database tables, rather than just one table.
 
 QueryClasses are the more free-form models. Focussed on encapsulating ideas, rather than representing tables in object forms!

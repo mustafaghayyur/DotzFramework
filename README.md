@@ -7,7 +7,7 @@ It offers containerization, security, migrations, routing and MVC design all in 
 
 
 ## Requirements
-- PHP 7
+- PHP 7.1.6 or newer
 - composer (https://getcomposer.org/download/)
 
 ## Installation
