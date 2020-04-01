@@ -12,7 +12,6 @@ class Dotz {
 	protected function __construct(){
 
 		$this->container = new Container();
-		$this->load('configs');
 		$this->load('request');
 
 	} 

@@ -20,7 +20,12 @@ class Configurations{
 				
 				// This is a file. Add it to the files bucket and extract.
 				if(isset($fParts[1]) && !empty($fParts[0]) && !empty($fParts[1])){
+					
 					$this->props->{$fParts[0]} = $this->loadFile($path .'/'. $file);
+					
+					if(json_last_error() !== JSON_ERROR_NONE){
+						throw new \Exception("Configuration file {$fParts[0]}.txt could not be validated due to a JSON formatting error.");
+					}
 				}
 				
 			}

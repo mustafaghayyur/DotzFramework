@@ -10,19 +10,22 @@
 	<div class="row">
 		<?php $form->textfield('email')->label('Email:')->show();?>
 	</div>
+	
 	<div class="row">
 		<?php $form->checkbox('citizen')->label('Citizen?')->show();?>
 	</div>
 	<div class="row">
-		<?php $form->checkbox('relocate')->label('Need to Relocate?')->show();?>
+		<?php $form->checkbox('relocate')->label('Need to Relocate?')->checked()->show();?>
 	</div>
+
 	<div class="row">Gender:</div>
 	<div class="row">
-		<?php $form->radiobutton('gender')->label('Male:')->value('male')->show();?>
+		<?php $form->radiobutton('gender')->label('Male:')->value('male')->checked()->show();?>
 	</div>
 	<div class="row">
 		<?php $form->radiobutton('gender')->label('Female:')->value('female')->show();?>
 	</div>
+
 	<div class="row">
 		<?php $form->select('city')
 			->label('City:')
@@ -38,9 +41,11 @@
 			->default('QC')
 			->show();?>
 	</div>
+
 	<div class="row">
 		<?php $form->textarea('message')->label('Personal Comments:')->show();?>
 	</div>
+	
 	<div class="row">
 		<?php $form->button('submit')->value('Send')->show();?>
 	</div>

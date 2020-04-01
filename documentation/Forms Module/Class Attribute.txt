@@ -1,0 +1,49 @@
+====================================================
+====================================================
+	> FORM FIELD's CLASS ATTRIBUTE
+====================================================
+====================================================
+
+
+The form field you call with:
+	
+	$form->field_type('fieldName')->show();
+
+Is assigned a default class attribute derived from the field's 'name' attribute you supply in the declaration.
+
+In the following example:
+
+	$form->textfield('email')
+		->value('john@doe.com')
+		->show();
+
+...the name attribute value is 'email'.
+
+So the class attribute value will be: 'emailInputField'.
+
+If we call the name attribute value $name, the below table lists the class attribute value for each field type supported by the Form Module:
+
+
+=================================================
+ Field Type 		|	`class` Attribute 		|
+=================================================
+ textfield			|	$name.'InputField'		|
+-------------------------------------------------
+ radiobutton		|	$name.'InputField'		|
+-------------------------------------------------
+ checkbox			|	$name.'InputField'		|
+-------------------------------------------------
+ select				|	$name.'SelectField'		|
+-------------------------------------------------
+ textarea			|	$name.'TextField'		|
+-------------------------------------------------
+ button				|	$name.'Button button'	|
+-------------------------------------------------
+ editor				|	$name.'WYSIWYG'			|
+-------------------------------------------------
+ hidden				|	$name.'InputField'		|
+-------------------------------------------------
+ open tag			|	$name.'Form'			|
+-------------------------------------------------
+
+

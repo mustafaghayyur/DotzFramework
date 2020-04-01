@@ -22,10 +22,9 @@ Dotz Framework takes the class name (less the suffix) and the method name as the
 ## Custom URL Rules
 =====================
 
-If you have need for a custom URL, add a URI (containing only alphanumerical values, underscores and hyphens). 
+You can define custom URLs that lead to a specific controller in your app.
 
-In configs/routers.txt:
-	- Add a new uri in the following format inside the custom property:
+If you have the need for a custom URL, add a “uri”:”method@classname” property inside the  ‘custom’ property object in configs/routers.txt:
 		
 		{
 			// other properties...
@@ -38,6 +37,7 @@ In configs/routers.txt:
 		}
 
 Where method is the method name in ClassnameController class. The @ symbol separates the method from the class name.
+
 
 
 =====================
@@ -60,6 +60,10 @@ In configs/routers.txt:
 
 			// other properties...
 		}
+
+The HTTP method of the request will then determine which method of ControllerNameForResource is utilized.
+
+
 
 =====================
 ## Home Page

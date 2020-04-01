@@ -5,6 +5,13 @@ CHANGELOG
 ____________________________________________________________
 version | Details
 --------|---------------------------------------------------
+0.2.0   | - Routing library modified.
+		  - Configurations.php now handles JSON formatting
+		    errors
+		  - Form Module refined.
+		  - index.php file modified. Please copy changes.
+		  - further documentation improvements
+--------|---------------------------------------------------
 0.1.8   | - updated the index.php to turn off automatic 
 			error reporting. 
 		  - Added  profiler setting in configs/app.txt

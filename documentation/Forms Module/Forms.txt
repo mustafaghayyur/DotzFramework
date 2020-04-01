@@ -55,10 +55,11 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 
 ==========================================
 ## Simple one-line text field
-===============================================================
+==========================================
 
 	$form->textfield('name')
 		->label('Name:')
+		->value('initial vlaue')
 		->show();
 
 
@@ -70,9 +71,11 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 		->label('Female:')
 		->value('female')
 		->show();
+
 	$form->radiobutton('gender')
 		->value('male') 
 		->label('Male:')
+		->checked() // will make this field the default selected value
 		->show();
 
 
@@ -83,8 +86,10 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 	$form->checkbox('citizen')
 		->label('Citizen?')
 		->show();
+
 	$form->checkbox('relocate')
 		->label('Need to Relocate?')
+		->checked() // will make this checkbox checked by default
 		->show();
 
 ==========================================
@@ -93,6 +98,7 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 
 	$form->textarea('message')
 		->label('Personal Comments:')
+		->text('initial text in text box')
 		->show();
 
 
@@ -109,7 +115,7 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 ## WYSIWYG Editors
 =====================
 
-We utilize Quill.js for our WYSIWYG. Simple, intuitive and fairly light. 
+We utilize Quill.js for our WYSIWYG editor. Simple, intuitive and fairly light. 
 
 	$form->editor('text')
 		->label('Add rich content below:')

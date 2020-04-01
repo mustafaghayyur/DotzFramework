@@ -10,8 +10,8 @@ class Router {
 	/**
 	* Sets the configs for this router.
 	*/
-	public function __construct($configs){
-		$this->configs = $configs;
+	public function __construct($c = null){
+		$this->configs = Dotz::get()->load('configs')->props;
 	}
 
 	/**
@@ -20,7 +20,7 @@ class Router {
 	public function do(){
 
 		if(!$this->areConfigsDefined()){
-			throw new Exception("[ Router Error ] Router configurations are not correct. (Check for Json errors.)");
+			throw new Exception("[ Router Error ] Router configurations are not correct.");
 		}
 
 		$uri = $this->getUri();
@@ -115,7 +115,7 @@ class Router {
 		$fullURI = $dotz->load('request')->server->get('REQUEST_URI');
 
 		if(strpos($this->configs->app->url, $host) !== 0){
-			throw new Exception('[ Router Error ] The url config property does not match the HTTP Host this app is running on.');
+			throw new Exception('[ Router Error ] App URL defined in configs/app.txt does not match the HTTP Host this app is running on.');
 		}
 
 		// If this app was not installed in the root directory of
@@ -237,9 +237,13 @@ class Router {
 				$class.'.php';
 
 		if(file_exists($file)){
+			
 			if(!include_once($file)) {
 				throw new Exception('[ Router Error ] Could not load Controller file: '.$class.'.php when file exists.');
 			}
+
+		}else{
+			return false;
 		}
 
 		// Check to see if controller exists

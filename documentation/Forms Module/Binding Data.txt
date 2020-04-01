@@ -1,0 +1,60 @@
+====================================================
+====================================================
+	> BINDING DATA
+====================================================
+====================================================
+
+
+If you wish the form to have data pre-populated into its fields – perhaps a record pulled from the data-base – you can use the bind($data) method:
+
+		public function form(){
+
+			$systemData = [
+				‘name’=>’John Doe’,
+				’email’=>’john@domain.com’,
+				‘city’=>’mississauga’,
+				‘message’=>’Hi, I would like to join this project.’
+			];
+
+			$cities = [
+				‘mississauga’=>’Mississauga’,
+				‘toronto’=>’Toronto’
+			];
+
+			// setup $packet to send to the view.
+			$packet = [];
+			$packet[‘cities’] = $cities;
+
+			$packet[‘form’] = new Form();
+			$packet[‘form’]->bind($systemData);
+
+			$this->view->load(‘form’, $packet);
+		}
+
+
+
+Then in the view file called src/App/Views/form.php:
+
+		<?php $form->open(‘test’)->method(‘POST’)->action($dotz->url . ‘/submit’)->show();?>
+		<?php $form->textfield(‘name’)->label(‘Name:’)->show();?>
+		<?php $form->textfield(’email’)->label(‘Email:’)->show();?>
+		<?php $form->checkbox(‘citizen’)->label(‘Citizen?’)->show();?>
+		<?php $form->checkbox(‘relocate’)->label(‘Need to Relocate?’)->show();?>
+		<?php $form->select(‘city’)->label(‘City:’)->options($cities)->default(‘toronto’)->show();?>
+		<?php $form->textarea(‘message’)->label(‘Personal Comments:’)->show();?>
+		<?php $form->button(‘submit’)->value(‘Send’)->show();?>
+		<?php $form->close()->show();?>
+
+
+
+When you run this script you will notice something interesting:
+
+	- The select field ‘city’ will show the value ‘Mississauga’ NOT ‘Toronto’. Even though toronto was defined as the default value in the view file.
+
+	Why?
+
+	It’s because the data bound with the function $form->bind($data) takes precedence over any defaults you define in the view file. This is the case for all other types of fields. You can define defaults/checked/selected defaults in the view … however if system data is bound in the controller with the bind() method, then that data will take precedence.
+
+
+The $systemData is data retrieved from the database. Usually you need the bind() method in CRUD operations, when data updates need to be enabled. Update operations require saved data to be populated into the form, then re-saved incase the user modifies some of it.
+

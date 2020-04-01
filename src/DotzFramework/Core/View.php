@@ -5,10 +5,6 @@ class View{
 
 	public $configs;
 
-	public function __construct(){
-		$this->configs = Dotz::get()->load('configs')->props;
-	}
-
 	/**
 	 * Use for HTML outputs.
 	 * 
@@ -17,7 +13,9 @@ class View{
 	 *  - $packet - Array of all vars you wish to pass to the view.
 	 */
 	public function load($view, Array $packet = null){
-		
+
+		$this->configs = Dotz::get()->load('configs')->props;
+
 		if(!$this->viewsConfigsOk()){
 			throw new \Exception('Views configurations not set correctly.');
 		}

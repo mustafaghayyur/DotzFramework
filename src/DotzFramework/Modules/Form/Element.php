@@ -77,6 +77,11 @@ class Element {
 		return $this;
 	}
 
+	public function checked(){
+		$this->obj['checked'] = 'checked';
+		return $this;
+	}
+
 	public function data($d){
 		$this->obj['data'] = $d;
 		return $this;

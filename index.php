@@ -11,18 +11,16 @@ use DotzFramework\Core\Dotz;
 use DotzFramework\Core\Router;
 
 try{
-	
-	// grab system configs in $c
-	$c = Dotz::get()->load('configs')->props;
-    
+	    
 	// instantiate Router()
-    $r = new Router($c);
+    $r = new Router();
     
     // do the routing
     $r->do();
     
     // run profiler based on configuration setting
-    $r->profiler($c->app->profiler, $m1, $t1);
+    $status = Dotz::get()->load('configs')->props->app->profiler;
+	$r->profiler($status, $m1, $t1);
 
 }catch (Exception $e){
 
