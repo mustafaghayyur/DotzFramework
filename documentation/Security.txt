@@ -67,6 +67,10 @@ In case you need to generate CSRF security tokens on your own. The CSRF class ca
 	//validate a token received from a HTTP request
 	$valid = CSRF::validateToken($token); // boolean value
 
+All POST retieval requests with the Input library using the secure() call are checked for a valid token, when csrfCheck and formTokenization are enabled in the configurations. 
+
+GET retievals are not, unless you call the verySecure() version of the call.
+
 		 
 
 ======================================
@@ -83,6 +87,8 @@ You can also check whether the HTTP Origin/Referer header and the HTTP Host head
 		// origins not okay
 	}
 
+All inputs retrieved with the Input library using the secure call are screened for a CSRF orgin check when the csrfCheck is enbaled in the configurations.
+
  
 
 ===================
@@ -95,6 +101,7 @@ The filter method uses PHP’s native function filter_var to carry out the filte
 
 https://www.php.net/manual/en/filter.filters.php
 
+In a nut shell, if you have xssCheck enabled in your configurations, all inputs (GET & POST) will be filtered with the htmlspecialchars() filter; unless it is explicitly turned off in the call.
 
 
 

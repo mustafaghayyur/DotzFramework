@@ -85,6 +85,24 @@ The 404 error page or the not found page can be defined in the notFound property
 			"notFound":"notFound@PagesController",
 		}
 
+==============================
+## Multi level URIs
+==============================
+
+You may have noticed that custom urls supported by Dotz are single level. In your application you may come across a need for urls that span several levels.
+
+How do you configure Dotz to have multi level URIs? It's really simple:
+
+In your custom routes, like all other routes, you can pass in any number of additional URI elements so:
+
+	www.yourapp.com/some-custom-uri/can/have/this/many/path/segments
+
+And each of these elements of the URI will be passed along as a separate argument to the controller assigned to 'some-custom-uri'.
+
+So you can set-up the 'some-customer-uri' controller to be a pure decision making controller directing the user to the appropriate sub-controller based on the remaining URI path elements it receives as arguments.
+
+No limits!
+
 
 ==========================================
 ## Note on JSON Formatting

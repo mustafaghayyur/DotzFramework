@@ -25,7 +25,7 @@ class CSRF {
 
 	public static function generateToken(){
 		
-		$c = Dotz::get()->load('configs')->props->app;
+		$c = Dotz::config('app');
 		$key = $c->secretKey;
 
 		$payload = array(
@@ -40,7 +40,7 @@ class CSRF {
 
 	public static function validateToken($token){
 		
-		$c = Dotz::get()->load('configs')->props->app;
+		$c = Dotz::config('app');
 		$key = $c->secretKey;
 
 		if(JWT::decode($token, $key, array('HS256'))){

@@ -194,7 +194,7 @@ class FormGenerator {
 
 			<label for="{$name}">{$label}</label>
 
-			<div id="{$name}WYSIWYG class="{$name}WYSIWYG">
+			<div id="{$name}WYSIWYG" class="{$name}WYSIWYG">
 			  <p>{$initialText}</p>
 			</div>
 

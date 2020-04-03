@@ -58,8 +58,8 @@ class Input {
 
 		if(empty(self::$secureInstance) || $storedTokenRequiredValue !== $tokenRequiredForSecureInstance){
 
-			$csrf = Dotz::get()->load('configs')->props->app->csrfCheck;
-			$formTokenization = Dotz::get()->load('configs')->props->app->formTokenization;
+			$csrf = Dotz::config('app.csrfCheck');
+			$formTokenization = Dotz::config('app.formTokenization');
 
 			if($csrf === true || $csrf === 'true'){
 				if(CSRF::checkOrigin() === false){
@@ -108,7 +108,7 @@ class Input {
 	public function get($key, $filter = null, $options = []){
 
 		if($filter === null){
-			$xss = Dotz::get()->load('configs')->props->app->xssCheck;
+			$xss = Dotz::config('app.xssCheck');
 
 			if($xss === true || $xss === 'true'){
 				$filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS;
@@ -141,7 +141,7 @@ class Input {
 			}
 
 			if($filter === null){
-				$xss = Dotz::get()->load('configs')->props->app->xssCheck;
+				$xss = Dotz::config('app.xssCheck');
 
 				if($xss === true || $xss === 'true'){
 					$filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS;

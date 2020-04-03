@@ -14,7 +14,7 @@ class Form {
 	public $jwt;
 
 	public function __construct(){
-		$c = Dotz::get()->load('configs')->props->app;
+		$c = Dotz::config('app');
 		$this->jwt = null;
 
 		if(($c->csrfCheck === true || $c->csrfCheck === 'true')

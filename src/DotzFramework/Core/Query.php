@@ -41,7 +41,7 @@ class Query {
 		}else{
 			
 			$namespace = trim(
-				Dotz::get()->load('configs')->props->app->queryClassesNamespace, 
+				Dotz::config('app.queryClassesNamespace'), 
 				'\\'
 			);
 

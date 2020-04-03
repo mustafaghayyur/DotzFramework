@@ -5,7 +5,7 @@
 ====================================================
 
 
-If you wish the form to have data pre-populated into its fields – perhaps a record pulled from the data-base – you can use the bind($data) method:
+If you wish the form to have data pre-populated into its fields – perhaps a record pulled from the database – you can use the bind($data) method:
 
 		public function form(){
 
