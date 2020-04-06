@@ -61,14 +61,17 @@ In the up and down methods you can use the following functions to write your mig
 ## Run the migrations in the command line
 ================================================================
 
+	./vendor/bin/doctrine-migrations migrations:status
+		- check status of your migrations
+
 	./vendor/bin/doctrine-migrations migrate
 		- migrates all un-run migrations
 
 
-	./vendor/bin/doctrine-migrations execute 20180601193057 --up
+	./vendor/bin/doctrine-migrations migrations:execute --up 20180601193057
 		- run a single migration up
 
-	./vendor/bin/doctrine-migrations execute 20180601193057 --down
+	./vendor/bin/doctrine-migrations migrations:execute --down 20180601193057
 		- run a single migration down
 
 	./vendor/bin/doctrine-migrations migrate first

@@ -31,6 +31,8 @@ class Configurations{
 			}
 		}
 
+		$this->props->composer = $this->getComposerPackagesInfo();
+
 	}
 
 	public function loadFile($file){
@@ -47,6 +49,31 @@ class Configurations{
 			return new \stdClass();
 		
 		}
+	}
+
+	/**
+	 * Returns an array of 'package' => 'version' pairs.
+	 */
+	public function getComposerPackagesInfo(){
+
+		$packages = json_decode(
+			file_get_contents(
+				$this->props->app->systemPath . '/vendor/composer/installed.json'
+			)
+		);
+
+		$data = [];
+		foreach ($packages as $package) {
+		    $data[$package->name] = $package->version;
+		}
+
+		// incase you're running outside of composer...
+		$data['dotz/framework'] = isset($data['dotz/framework']) 
+			? $data['dotz/framework'] 
+			: '1000.1.1';
+
+
+		return $data;
 	}
 
 }

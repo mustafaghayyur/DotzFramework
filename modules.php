@@ -3,6 +3,7 @@ use DotzFramework\Core;
 use DotzFramework\Utilities;
 use DotzFramework\Modules;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Define over here any app-wide modules you wish to 
@@ -53,6 +54,10 @@ class ModulesDefinitions {
 
 		$mods['js'] = function($c){
 			return new Utilities\JSOutput();
+		};
+
+		$mods['session'] = function($c){
+			return new Session();
 		};
 
 		/**

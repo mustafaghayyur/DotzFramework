@@ -10,6 +10,11 @@ class Query {
 	/**
 	 * Holds the PDO instance
 	 */
+	public $pdo;
+	
+	/**
+	 * Deprecated.
+	 */
 	public $connection;
 
 	/**
@@ -57,31 +62,51 @@ class Query {
 	/**
 	 * Processes a query string as a prepared statement. All values must be 
 	 * extrapulated from the query string and passed seperately as an array of inputs.
+	 *
+	 * Returns an array of results | # of Rows affected
 	 */
 	public function execute($query, $data = [], $flags = \PDO::FETCH_ASSOC){
 
-		$r = $this->connection->prepare($query);
-		$r->execute($data);
+		$s = $this->pdo->prepare($query);
+		
+		if(false === $s->execute($data)){
+			$e = $s->errorInfo();
+			throw new \Exception('[SQL Error Code: '.$e[0].'] - '.$e[2]);
+		}
 
-		return $r->fetchAll($flags);
+		if($s->columnCount() > 0){
+			// the result set can be empty but would still be an array
+			return $s->fetchAll($flags);
+		}else{
+			// the query has no result set. Return rows affected number.
+			return $s->rowCount();
+		}
 
 	}
 
 	/**
 	 * Executes an un-preprared query, carrying raw parameters, directly injected
 	 * into the query string.
+
+	 * Returns an array of results | # of Rows affected
 	 */
 	public function raw($query, $flags = \PDO::FETCH_ASSOC){
-		$r = $this->connection->query($query);
+		$s = $this->pdo->query($query);
 
-		return $r->fetchAll($flags);
+		if($s === false){
+			$e = $s->errorInfo();
+			throw new \Exception('[SQL Error: Code: '.$e[0].'] - '.$e[2]);
+		}
+
+		$r = $s->fetchAll($flags);
+		return (count($r) > 0) ? $r : $s->rowCount();
 	}
 
 	/**
 	 * Quotes a string for querying purposes.
 	 */
 	public function quote($string, $flags = \PDO::PARAM_STR){
-		return $this->connection->quote($string, $flags);
+		return $this->pdo->quote($string, $flags);
 	}
 
 	/**

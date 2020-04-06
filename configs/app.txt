@@ -37,6 +37,9 @@
 	"------------":"Enable tokenizition on forms? Ensures better protection against CSRF attacks.------",
 	"formTokenization":true,
 
+	"------------":"CSRF Token generated in a form will expire in this many seconds.------",
+	"tokenLife":"1200",
+
 	"------------":"Used by CSRF tokens.------",
 	"secretKey":"jkasdh89q8nkskjdha89789yhas"
 

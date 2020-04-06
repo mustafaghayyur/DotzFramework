@@ -26,24 +26,23 @@ class CSRF {
 	public static function generateToken(){
 		
 		$c = Dotz::config('app');
-		$key = $c->secretKey;
+		$life = (int)$c->tokenLife;
 
 		$payload = array(
 		    "iss" => $c->httpProtocol.'://'.$c->url,
 		    "iat" => time(),
-		    "exp" => time() + (60 * 10)
+		    "exp" => time() + $life
 		);
 
-		return JWT::encode($payload, $key, 'HS256');
+		return JWT::encode($payload, $c->secretKey, 'HS256');
 
 	}
 
 	public static function validateToken($token){
 		
 		$c = Dotz::config('app');
-		$key = $c->secretKey;
 
-		if(JWT::decode($token, $key, array('HS256'))){
+		if(JWT::decode($token, $c->secretKey, array('HS256'))){
 			return true;
 		}
 

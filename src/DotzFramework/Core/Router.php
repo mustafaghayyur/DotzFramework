@@ -69,7 +69,7 @@ class Router {
 
 		}else{
 
-			$e = explode('@', $this->configs->router->default);
+			$e = explode('@', $this->configs->router->notFound);
 
 			$cObj = $this->instantiateClass($e[1], $e[0]);
 

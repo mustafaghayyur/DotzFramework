@@ -11,4 +11,5 @@
 
 	"------------":"Used by Doctrine-Migrations.-------",
 	"driverDoctrine":"pdo_mysql"
+
 }
