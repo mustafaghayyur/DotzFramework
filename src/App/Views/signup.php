@@ -1,6 +1,6 @@
 <?php include_once('_header.php');?>
 
-<h1>Form:</h1>
+<h1>Sign Up:</h1>
 
 <?php if(!empty($message)) echo "<h3>Error: {$message}</h3>"; ?>
 
@@ -15,10 +15,6 @@
 	</div>
 	<div class="row">
 		<?php $form->textfield('password')->label('Password:')->show();?>
-	</div>
-	
-	<div class="row">
-		<?php $form->checkbox('remember')->label('Remember me')->checked()->show();?>
 	</div>
 
 	<div class="row">

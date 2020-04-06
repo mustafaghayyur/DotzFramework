@@ -3,21 +3,34 @@ namespace DotzFramework\Modules\User;
 
 use DotzFramework\Core\Dotz;
 use \Firebase\JWT\JWT;
+use DotzFramework\Modules\User\Validate;
 use DotzFramework\Modules\User\Setup;
 
 class Auth {
 
+	/**
+	 * carries the authentication method
+	 * ['session' OR 'token']
+	 */
 	public $method;
 
+	/**
+	 * carries a message to be available in the $auth->message
+	 * property in the script you instantiate this class.
+	 */
 	public $message;
 
 	/**
-	 * $authMethod = 'session'|'token'
+	 * The param $authMethod can have only one of two exact values:
+	 * $authMethod = ['session'|'token']
 	 */
 	public function __construct($authMethod = null){
 		$this->method = empty($authMethod) ? Dotz::config('user.authMethod') : $authMethod;
 	}
 
+	/**
+	 * Checks the supplied username/password combo against the database
+	 */
 	public function login($username, $password){
 		
 		try{
@@ -54,44 +67,24 @@ class Auth {
 
 	}
 
-	protected function _sessionGenerate($user){
-
-		$session = Dotz::get()->load('session');
-		$session->start();
-		$session->set('id', $user['id']);
-		$session->set('user', $user['username']);
-		$session->set('signInTime', time());
-		$session->set('lastActivity', time());
-
-		if(empty($this->message)){
-			$this->message = 'Login successful.';
-		}
-
-	}
-
-	protected function _tokenGenerate($user){
-		$c = Dotz::config('user');
-
-		$payload = array(
-		    "id" => $user['id'],
-		    "user" => $user['username'],
-		    "iat" => time(),
-		    "exp" => time() + ((int)$c->timeout)
-		);
-
-		$this->message = JWT::encode($payload, $c->secretKey, 'HS256');
-
-	}
-	
-	
-
-	public function register(Array $user){
+	/**
+	 * Registers a new user. Adds their username, password and email
+	 * data to the user database table.
+	 *
+	 * To collect additional user data, create your own additional
+	 * database tables and code to handle such data, seperately.
+	 */
+	public function register(Array $user, $validator = null){
 
 		try {
 	
-			self::validateEmail($user['email']);
-			self::validateUsername($user['username']);
-			self::validatePassword($user['password']);
+			if($validator === null || !is_obj($validator)){
+				$validator = new Validate();
+			}
+
+			$validator->email($user['email']);
+			$validator->username($user['username']);
+			$validator->password($user['password']);
 
 		} catch (\Exception $e) {
 
@@ -136,59 +129,18 @@ class Auth {
 
 		$this->message = 'Registration of account failed.';
 		return false;
-	}
 
-	public static function validateEmail($email){
-		if(is_string($email) && !empty($email)){
-			if(strlen($email) < 121){
-				if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					return true;
-				}else{
-					throw new \Exception('Email not formatted correctly.');
-				}
-			}else{
-				throw new \Exception('Email value too large. Max 120 chars allowed.');
-			}
-		}else{
-			throw new \Exception('Email value must be a string and not empty.');
-		}
-
-		return false;
-	}
-
-	public static function validateUsername($username){
-		if(is_string($username) && !empty($username)){
-			if(strlen($username) < 121){
-				return true;
-			}else{
-				throw new \Exception('Username value too large. Max 120 chars allowed.');
-			}
-		}else{
-			throw new \Exception('Username must be a string and not empty.');
-		}
-
-		return false;
-	}
-
-	public static function validatePassword($password){
-		if(is_string($password) && !empty($password)){
-			if(strlen($password) > 8 && strlen($password) < 101){
-				return true;
-			}else{
-				throw new \Exception('Password must be between 8 and 100 characters in length.');
-			}
-		}else{
-			throw new \Exception('Password must be a string and not empty.');
-		}
-
-		return false;
 	}
 
 	/**
-	 * Authorizes the request as legitimate. Redirects  to login 
-	 * if the session is not valid.
+	 * Authorizes the request as legitimate. 
+	 * 
+	 * Redirects  to login if the session is not valid. 
+	 * 
+	 * Does not redirect the user (in session method) if the 
+	 * $redirect argument is set to anything other than boolean true.
 	 */
-	public static function check($block = true){
+	public static function check($redirect = true){
 		
 		$c = Dotz::config('app');
 		$u = Dotz::config('user');
@@ -241,7 +193,7 @@ class Auth {
 			}
 		}
 		
-		if($block === true){
+		if($redirect === true){
 			header('Location: '.$c->httpProtocol.'://'.$c->url.'/'.$u->loginUri);
 			die();	
 		}
@@ -288,6 +240,41 @@ class Auth {
 				]
 			);
 		}
+
+	}
+
+	/**
+	 * Helper function used by login()
+	 */
+	protected function _sessionGenerate($user){
+
+		$session = Dotz::get()->load('session');
+		$session->start();
+		$session->set('id', $user['id']);
+		$session->set('user', $user['username']);
+		$session->set('signInTime', time());
+		$session->set('lastActivity', time());
+
+		if(empty($this->message)){
+			$this->message = 'Login successful.';
+		}
+
+	}
+
+	/**
+	 * Helper function used by login()
+	 */
+	protected function _tokenGenerate($user){
+		$c = Dotz::config('user');
+
+		$payload = array(
+		    "id" => $user['id'],
+		    "user" => $user['username'],
+		    "iat" => time(),
+		    "exp" => time() + ((int)$c->timeout)
+		);
+
+		$this->message = JWT::encode($payload, $c->secretKey, 'HS256');
 
 	}
 

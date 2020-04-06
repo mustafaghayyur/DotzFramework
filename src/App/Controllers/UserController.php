@@ -4,31 +4,44 @@ use DotzFramework\Core\Controller;
 use DotzFramework\Core\Dotz;
 use DotzFramework\Modules\User\Auth;
 use DotzFramework\Modules\Form\Form;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * This controller shows the power of FilterText and Quill.js.
- * With Quill.js and our filtering library called Filtext(),
- * you can create rich user input interfaces while keeping your
- * app safe from XSS vulnerabilities.
+ * Shows off the User module.
+ *
+ * First time use will require following on-screen instructions to 
+ * activate the module.
  */
 class UserController extends Controller{
 	
+	/**
+	 * Members' area page
+	 */
 	public function index(){
 		
 		Auth::check();
 
 		$packet = [];
-		$packet['msg'] = 'Logged in. | <a href="'.$this->configs->app->httpProtocol.'://'.$this->configs->app->url.'/user/logout">Logout</a>
-';
+		$packet['msg'] = 'Logged in. | <a href="' .
+							$this->configs->app->httpProtocol .
+							'://'.$this->configs->app->url .
+							'/user/logout">Logout</a>';
 
 		$this->view->load('home', $packet);
 	}
 
+	/**
+	 * Login page.
+	 *
+	 * Note the logic used for your own projects.
+	 */
 	public function login(){
 		
 		if(Auth::check('allow') === true){
-			header('Location: '.$this->configs->app->httpProtocol.'://'.$this->configs->app->url.'/'.$this->configs->user->loggedInUri);
+			header('Location: ' .
+						$this->configs->app->httpProtocol .
+						'://' . $this->configs->app->url .
+						'/' . $this->configs->user->loggedInUri);
+			die();
 		}
 
 		// setup $packet to send to the view.
@@ -43,7 +56,9 @@ class UserController extends Controller{
 
 			if($a->login($u, $p)){
 				
-				header('Location: '.$this->configs->app->httpProtocol.'://'.$this->configs->app->url.'/'.$this->configs->user->loggedInUri);
+				header('Location: ' . $this->configs->app->httpProtocol . 
+							'://' . $this->configs->app->url . 
+							'/' . $this->configs->user->loggedInUri);
 				die();
 			
 			}
@@ -57,16 +72,30 @@ class UserController extends Controller{
 		
 	}
 
+	/**
+	 * Logout page.
+	 *
+	 * Redirects to the login page upon success for session based
+	 * authentication.
+	 */
 	public function logout(){
 
 		Auth::logout();			
 		
 	}
 
+	/**
+	 * Registration page.
+	 *
+	 * Note the logic used for your own project development.
+	 */
 	public function signup(){
 
 		if(Auth::check('allow') === true){
-			header('Location: '.$this->configs->app->httpProtocol.'://'.$this->configs->app->url.'/'.$this->configs->user->loggedInUri);
+			header('Location: ' . $this->configs->app->httpProtocol .
+						'://' . $this->configs->app->url . 
+						'/' . $this->configs->user->loggedInUri);
+			die();
 		}
 		
 		// setup $packet to send to the view.
@@ -84,7 +113,9 @@ class UserController extends Controller{
 			
 			if($a->register($user)){
 				
-				header('Location: '.$this->configs->app->httpProtocol.'://'.$this->configs->app->url.'/'.$this->configs->user->loggedInUri);
+				header('Location: ' . $this->configs->app->httpProtocol . 
+							'://' . $this->configs->app->url . 
+							'/' . $this->configs->user->loggedInUri);
 				
 				die();
 
@@ -98,6 +129,5 @@ class UserController extends Controller{
 		$this->view->load('signup', $packet);
 		
 	}
-
         
 }
