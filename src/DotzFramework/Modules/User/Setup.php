@@ -82,7 +82,7 @@ EOD;
 	 * Are you sure?
 	 * 
 	 * Create a controller and run Setup::uninstall()
-	 * Then delete the controller (make it inaccessible to the public).
+	 * Then delete the controller (make it in-accessible to the public).
 	 */
 	public static function uninstall(){
 
@@ -93,10 +93,18 @@ EOD;
 		
 		$downSql = [];
 
-		$path = Migrations\Create::migration(null, 
+		$version = Migrations\Create::migration(
+			null, 
 			Migrations\SQL::generate($upSql), 
-			Migrations\SQL::generate($downSql)
+			Migrations\SQL::generate($downSql),
+			'user module migration'
 		);
+
+		echo "<h2>User Module de-activated</h2>";
+		echo "<p>The database migration needs to be run in order to use authentication and other User module functions. In your command line, cd into the application's root directory and run the following command:</p>";
+		echo "<code> > ./vendor/bin/doctrine-migrations migrations:execute --up {$version} </code>";
+		echo '<p>This will druop the user table. The \'configs/user.txt\' file will require manual deleting.';
+		die();
 	
 	}
 

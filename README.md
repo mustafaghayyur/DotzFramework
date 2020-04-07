@@ -26,6 +26,9 @@ http://web-dotz.com/wordpress/framework-documentation/
 Github:
 https://github.com/mustafaghayyur/DotzFramework
 
+
+NOTE: This framework is still in beta. We expect to declare it out of beta by May 2020. Feel free to begin testing, if you have feedback, we would love it.
+
 Developed by www.web-dotz.com
 
 Under MIT Licensing.

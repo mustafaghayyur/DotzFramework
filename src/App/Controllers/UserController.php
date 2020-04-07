@@ -129,5 +129,85 @@ class UserController extends Controller{
 		$this->view->load('signup', $packet);
 		
 	}
+
+
+
+	/**
+	 * Token Based Auth Example:
+	 * Check out:
+	 *  - http://yourappurl/user/api/token
+	 *  - http://yourappurl/user/api/exit
+	 *  - http://yourappurl/user/api/register
+	 *  - http://yourappurl/user/api/
+	 */
+	public function api($path = null){
+		
+		switch($path){
+
+			case 'token':
+
+				$u = $this->input->post('username');
+				$p = $this->input->post('password');
+				
+				if(!empty($u)){
+			
+					$a = new Auth();
+
+					if($a->login($u, $p)){
+						
+						$this->view->json([
+							'status' => 'success',
+							'token' => $a->message
+						]);
+
+					}else{
+						$this->view->json([
+							'status' => 'error',
+							'message' => $a->message
+						]);
+					}
+
+				}else{
+
+					$this->view->json(['status' => 'error', 'message' => 'Post data missing.']);
+
+				}
+
+			case 'exit':
+				Auth::logout();
+
+			case 'register':
+
+				if(!empty($this->input->post('username', false))){
+			
+					$user = [
+						'username' => $this->input->post('username'),
+						'email' => $this->input->post('email'),
+						'password' => $this->input->post('password')
+					];
+			
+					$a = new Auth();
+					
+					if($a->register($user)){
+						
+						$this->view->json(['status' => 'success', 'message' => $a->message]);
+
+					}
+
+					$this->view->json(['status' => 'error', 'message' => $a->message]);
+
+				}else{
+
+					$this->view->json(['status' => 'error', 'message' => 'Post data missing.']);
+
+				}
+
+			default:
+				Auth::check();
+				$this->view->json(['message' => 'Logged in']);
+
+		}
+		
+	}
         
 }

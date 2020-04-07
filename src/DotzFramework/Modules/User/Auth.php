@@ -171,31 +171,29 @@ class Auth {
 			// destroy the session...
 			$s->invalidate();
 
+			if($redirect === true){
+				header('Location: '.$c->httpProtocol.'://'.$c->url.'/'.$u->loginUri);
+				die();	
+			}
+
 		}
 
 		if($u->authMethod === 'token'){
 
-			$key = $c->secretKey;
+			$payload = self::getTokenPayload($u->secretKey);
 
-			$auth = Dotz::get()->load('input')->header('authorization');
-			preg_match('#(Bearer )?([a-zA-z0-9\.]*)#', $auth, $token);
-
-			if(JWT::decode($token[2], $key, array('HS256'))){
-				return true;
+			if(!empty($payload)){
+				Dotz::get()->load('view')->json([
+					'status' => 'success',
+					'message' => 'ok'
+				]);
 			}else{
-				
-				Dotz::get()->load('view')->json(
-					[
-						'status' => 'error',
-						'message' => 'Could not authorize supplied token. Request failed.'
-					]
-				);
+				Dotz::get()->load('view')->json([
+					'status' => 'error',
+					'message' => 'Could not authorize supplied token. Request failed.'
+				]);
 			}
-		}
-		
-		if($redirect === true){
-			header('Location: '.$c->httpProtocol.'://'.$c->url.'/'.$u->loginUri);
-			die();	
+
 		}
 		
 	}
@@ -224,23 +222,67 @@ class Auth {
 
 		if($u->authMethod === 'token'){
 			
-			if((int)$u->timeout > 0){
+			$payload = self::getTokenPayload($u->secretKey);
 
-				$t = round((int)$u->timeout / 60);
-				$msg = 'Token will expire in ~'.$t.' minutes from its creation time.';
+			if(isset($payload->exp)){
+
+				$timeRemaining = (int)$payload->exp - (int)time();
+
+				if($timeRemaining < 0){
+					
+					$msg = 'Token has expired already.';
+				
+				}else{
+					
+					$timeRemaining = round(($timeRemaining / 60), 2);
+					$msg = 'Token will expire in '.$timeRemaining.' minutes from now.';
+				}
 				
 			}else{
+				
 				$msg = 'Your token cannot expire.';
+			
 			}
 
-			Dotz::get()->load('view')->json(
-				[
-					'status' => 'error',
+			Dotz::get()->load('view')->json([
+					'status' => 'notice',
 					'message' => $msg
-				]
-			);
+				]);
 		}
 
+	}
+
+	protected static function getTokenPayload($secretKey){
+
+		$auth = Dotz::get()->load('input')->header('authorization');
+
+		if($auth === null || $auth === false){
+			throw new \Exception('Could not retrieve HTTP Authorization Header.');
+		}
+
+		preg_match('#(Bearer )?(.*)#', $auth, $token);
+
+		if(empty($token[2])){
+			
+			Dotz::get()->load('view')->json([
+					'status' => 'error',
+					'message' => 'Token missing. Request failed.'
+				]);
+		}
+		
+		try{
+
+			return JWT::decode($token[2], $secretKey, array('HS256'));
+
+		}catch(\Exception $e){
+
+			Dotz::get()->load('view')->json([
+				'status' => 'error',
+				'message' => 'Could not recognize supplied token. Request failed.',
+				'error' => $e->getMessage()
+			]);
+
+		}
 	}
 
 	/**
@@ -265,16 +307,20 @@ class Auth {
 	 * Helper function used by login()
 	 */
 	protected function _tokenGenerate($user){
-		$c = Dotz::config('user');
+		
+		$u = Dotz::config('user');
 
 		$payload = array(
 		    "id" => $user['id'],
 		    "user" => $user['username'],
-		    "iat" => time(),
-		    "exp" => time() + ((int)$c->timeout)
+		    "iat" => time()
 		);
 
-		$this->message = JWT::encode($payload, $c->secretKey, 'HS256');
+		if((int)$u->timeout > 0) {
+			$payload['exp'] = (int)time() + (int)$u->timeout;
+		}
+
+		$this->message = JWT::encode($payload, $u->secretKey, 'HS256');
 
 	}
 

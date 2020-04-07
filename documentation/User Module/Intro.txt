@@ -1,0 +1,70 @@
+====================================================
+====================================================
+	> USER MODULE
+====================================================
+====================================================
+
+
+Authentication is vital in most web applications. Dotz will attempt to provide a basic out-of-the-box authentication and authorization module. Following with the theme of the framework; we have left out the bells and whistles for your project team to add on as needed.
+
+The User module will add only one table to your configured database (upon activation):
+
+	`user table`
+	-------------------------------------------------------------------------------------
+	|	id		email		username		password		created_at		updated_at	|
+	|-----------------------------------------------------------------------------------|
+	|	<int>	<var(120)>	<var(120)>		<pass_hash>		<date_time>		<date_time>	|
+	-------------------------------------------------------------------------------------
+
+
+Any other user data can be configured and setup, along with application level code, by you in your src/App directory.
+
+The User module allows you to securely manage two types of authentications:
+
+	1) Session based authentication
+	----------------------------------
+		- relies on Symfony's Session Management library that comes with HTTP-Foundation. 
+
+		- In Dotz v0.2.3 we have added the session library to our container as $mod['session'] in modules.php. You will need that definition for User module to work correctly.
+
+			- Please see `vendor/dotz/framework/modules.php` as inspiration.
+
+		- Upon successful registration and login, a session would be created with some relevent user details. Each Auth::check() protected page would require the existence of the user's 'lastActivity' session key to access the controller/resource.
+
+
+	2) Token based authentication
+	----------------------------------
+		- relies on JWT tokens. 
+
+		- Upon successful registration and login a token consisting of user's basic data is returned to the user. The User can then pass along that token in each request in the HTTP Authorization header in the following format:
+
+			`Authorization: Bearer <jwt-token>`
+
+		If the token passed in the above format is valid, the Auth::check() directive would return true (and allow the script to continue). Otherwise an error message would be returned in JSON format.
+
+
+
+
+==================
+## Setup
+==================
+
+When you first access a controller that calls Auth::check() in a web browser; the User module's migrations and config files will be added to your project's root directories.
+
+Instructions will be provided on screen (in the web browser) on how to run the migration in the command line terminal and adjust the configs/user.txt configuration file to properly use the user module.
+
+Once you complete the instructions on screen, you can refresh that same page and the user module would start working as expected.
+
+
+=======================
+## Example
+=======================
+
+With future version releases of Dotz, more details will be added to the documentation. For now, you can take inspiration from: 
+	
+	vendor/dotz/framework/src/App/Controllers/UserController.php
+
+
+
+
+
