@@ -71,6 +71,10 @@ class Form {
 		return new Element($name, 'getTextarea', Dotz::grabKey($this->data, $name));
 	}
 
+	public function password($name){
+		return new Element($name, 'getPassword', null);
+	}
+
 	public function editor($name){
 		$editor = $this->hidden($name)->value('')->get();
 		return new Element($name, 'getWYSIWYG', Dotz::grabKey($this->data, $name), $editor);

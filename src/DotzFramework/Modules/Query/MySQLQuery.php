@@ -24,16 +24,8 @@ class MySQLQuery extends Query {
 		 * This would configure the right database to your Query module.
 		 */
 		
-		$c = Dotz::config('composer');
-		$v = (int)preg_replace('#[a-zA-Z\.]#', '', $c['dotz/framework']);
-
 		$db = new DB();
-
-		if($v > 21){
-			$this->pdo = $db->connection;
-		}else{
-			$this->connection = $db->connection;
-		}
+		$this->pdo = $db->connection;
 
 	}
 

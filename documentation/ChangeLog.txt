@@ -5,6 +5,26 @@ CHANGELOG
 ____________________________________________________________
 version | Details
 --------|---------------------------------------------------
+0.2.2   | - Please copy vendor/dotz/framework/index.php to 
+			your project root.
+		  - Please copy vendor/dotz/framework/src/App/Views
+		    /error.php -> to your Views directly. This is 
+		    required for Error handling.
+
+		  - Dotz::config() added
+		  - Migrations Module added
+		  - User Module added
+		  - Fixed Query::execute() & Query::raw() error 
+		    handling. Should return result set or number of
+		    rows affected. Should throw formatted SQL 
+		    exceptions.
+		  - Query::$connection property has been renamed
+		    to Query::$pdo.
+		  - ErrorHandler class added. All catchable errors
+		    and exceptions will now display appropriately
+		    in either HTML format or JSON format (for 
+		    Resource controller requests).
+--------|---------------------------------------------------
 0.2.0   | - Routing library modified.
 		  - Configurations.php now handles JSON formatting
 		    errors

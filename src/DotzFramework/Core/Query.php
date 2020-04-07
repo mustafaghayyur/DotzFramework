@@ -13,11 +13,6 @@ class Query {
 	public $pdo;
 	
 	/**
-	 * Deprecated.
-	 */
-	public $connection;
-
-	/**
 	 * Holds all Query Definition Classes' instances
 	 */
 	public $queryClass;
@@ -70,7 +65,13 @@ class Query {
 		$s = $this->pdo->prepare($query);
 		
 		if(false === $s->execute($data)){
+			
 			$e = $s->errorInfo();
+			
+			if($e[0] === '00000' || empty($e[2])){
+				$e = $this->pdo->errorInfo();
+			}
+
 			throw new \Exception('[SQL Error Code: '.$e[0].'] - '.$e[2]);
 		}
 
@@ -94,12 +95,23 @@ class Query {
 		$s = $this->pdo->query($query);
 
 		if($s === false){
-			$e = $s->errorInfo();
-			throw new \Exception('[SQL Error: Code: '.$e[0].'] - '.$e[2]);
+			
+			$e = $this->pdo->errorInfo();
+
+			if($e[0] === '00000' || empty($e[2])){
+				$e = $s->errorInfo();
+			}
+
+			throw new \Exception('[SQL Error Code: '.$e[0].'] - '.$e[2]);
 		}
 
-		$r = $s->fetchAll($flags);
-		return (count($r) > 0) ? $r : $s->rowCount();
+		if($s->columnCount() > 0){
+			// the result set can be empty but would still be an array
+			return $s->fetchAll($flags); // array
+		}else{
+			// the query has no result set. Return rows affected number.
+			return $s->rowCount(); // int
+		}
 	}
 
 	/**

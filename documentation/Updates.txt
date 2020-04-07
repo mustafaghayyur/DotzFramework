@@ -29,8 +29,10 @@ This is to protect you from loosing your valuable configurations.
 	This will update the documentation folder with the latest documentation.
 
 	
-	2) Do a quick test for any new exceptions thrown by the app. If the exception is in the following format:
+	2) Test for any new exceptions thrown in your existing app. If some used property or method has been renamed/removed an exception will be thrown with a key:
 
-		Update Error <number>
+		Update Error: <--explaination of how to fix the error-->
 
-	Search the documentaion/ChangeLog.txt file for that error number. It will explain how to remedy that error.
+	If you find some exception/error that has not been handled in this way, we might have missed it. Send us a new issue on github, and we will be happy to fix it.
+
+

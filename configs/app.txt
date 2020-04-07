@@ -17,6 +17,9 @@
 	"------------":"[on|off] Leave on to see time and memory usage stats.-------",
 	"profiler":"on",
 
+	"------------":"your app's timezone.-------",
+	"timezone":"America/Toronto",
+
 	"------------":"Path to Controllers directory from application root.------------",
 	"controllersDir":"src/App/Controllers",
 

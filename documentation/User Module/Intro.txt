@@ -66,5 +66,14 @@ With future version releases of Dotz, more details will be added to the document
 
 
 
+=======================================
+## Making it work with your project
+=======================================
+
+The User Module is meant to be minimal by intent. Every project has its own vision on user data management. The User Module is only meant to help you with authentication and protecting recourses that need access permissions.
+
+In the future we will likely add more features to this module, but you can begin using this.
+
+
 
 

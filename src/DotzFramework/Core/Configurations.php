@@ -30,9 +30,6 @@ class Configurations{
 				
 			}
 		}
-
-		$this->props->composer = $this->getComposerPackagesInfo();
-
 	}
 
 	public function loadFile($file){

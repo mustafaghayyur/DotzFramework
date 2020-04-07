@@ -55,6 +55,12 @@ class FormGenerator {
 		return self::getInput($attributes);
 	}
 
+	public static function getPassword($attributes = []){
+		
+		$attributes['type'] = 'password';
+		return self::getInput($attributes);
+	}
+
 	/**
 	 * Wrapper function to get the input field type="checkbox"
 	 */

@@ -14,7 +14,7 @@
 		<?php $form->textfield('username')->label('User Name:')->show();?>
 	</div>
 	<div class="row">
-		<?php $form->textfield('password')->label('Password:')->show();?>
+		<?php $form->password('password')->label('Password:')->show();?>
 	</div>
 
 	<div class="row">

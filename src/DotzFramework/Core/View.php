@@ -60,6 +60,7 @@ class View{
 
 		$dotz = new \stdClass();
 						
+		$dotz->appName = Dotz::config('app.name');
 		$dotz->url = Dotz::config('app.httpProtocol') .'://'. Dotz::config('app.url');
 		
 		$dotz->viewsUrl = $dotz->url .'/'. Dotz::config('app.viewsDir');

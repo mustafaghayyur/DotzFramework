@@ -3,20 +3,26 @@
 $m1 = memory_get_usage();
 $t1 = microtime(true);
 
-//error_reporting(E_ALL & ~E_NOTICE);
-
 require __DIR__ . '/vendor/autoload.php';
 
 use DotzFramework\Core\Dotz;
 use DotzFramework\Core\Router;
+use DotzFramework\Core\ErrorHandler;
+
+//error_reporting(E_ALL & ~E_NOTICE);
+$error = new ErrorHandler();
+set_error_handler([$error, "handle"]);
 
 try{
 
+	// set timezone property in configs/app.txt
+	date_default_timezone_set(Dotz::config('app.timezone'));
+	
 	// instantiate Router()
     $r = new Router();
-    
+
     // do the routing
-    $r->do();
+    $r->do(); 
     
     // run profiler based on configuration setting
 	$r->profiler(
@@ -26,6 +32,6 @@ try{
 
 }catch (Exception $e){
 
-    Dotz::get()->load('view')->json(["Exception:" => $e->getMessage()]);
+	$error->output($e);
 
 }

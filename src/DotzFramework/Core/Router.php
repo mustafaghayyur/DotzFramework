@@ -7,6 +7,8 @@ class Router {
 
 	public $configs;
 
+	public static $controllerUsed;
+
 	/**
 	* Sets the configs for this router.
 	*/
@@ -40,6 +42,7 @@ class Router {
 				throw new Exception('[ Router Error ] Could not load Default page.');
 			}
 
+			self::$controllerUsed = ($cObj) ? $h[1] : self::$controllerUsed;
 			$controller = [ $cObj, $h[0], [] ];
 
 		}
@@ -76,6 +79,9 @@ class Router {
 			if(!$cObj){
 				throw new Exception('[ Router Error ] Could not load Not Found page.');
 			}
+
+			self::$controllerUsed = ($cObj) ? $e[1] : self::$controllerUsed;
+
 			// Pass the $uri array to it as an argument.
 			call_user_func_array([$cObj, $e[0]], [$uri]);
 		}
@@ -179,6 +185,7 @@ class Router {
 			}
 		}
 
+		self::$controllerUsed = ($cObj) ? $c : self::$controllerUsed;
 		return ($cObj) ? [$cObj, $m, $args] : null;
 
 	}
@@ -202,6 +209,7 @@ class Router {
 			}
 		}
 
+		self::$controllerUsed = ($cObj) ? $c[1] : self::$controllerUsed;
 		return 	($cObj) ? [$cObj, $c[0], $args] : null;
 	}
 
@@ -224,6 +232,7 @@ class Router {
 
 		$method = (empty($uri[1])) ? 'index' : $uri[1];
 
+		self::$controllerUsed = ($cObj) ? $class : self::$controllerUsed;
 		return ($cObj) ? array($cObj, $method, $args) : null;
 	}
 

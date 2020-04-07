@@ -64,6 +64,15 @@ You could have replaced ->options() in the chain of calls with a series of ->opt
 
 
 =====================
+## Password field
+=====================
+
+	$form->password('password')
+		->label('Name:')
+		->show();
+
+
+=====================
 ## Radio buttons
 =====================
 
