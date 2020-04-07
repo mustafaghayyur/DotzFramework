@@ -5,10 +5,10 @@
 	"------------":"Only applies if you use the module.-------",
 	
 	"------------":"Which Auth method is being used on this app [session|token].-------",
-	"authMethod":"token",
+	"authMethod":"session",
 	
 	"------------":"If set to true, the email field will be used as the username-------",
-	"emailAsUser":true,
+	"emailAsUser":false,
 	
 	"------------":"Secret key for token based authentication.-------",	
 	"secretKey":"GHILIVYniio8uh778h7IJkhuogfuy78587697687",

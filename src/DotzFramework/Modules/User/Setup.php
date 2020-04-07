@@ -18,6 +18,8 @@ class Setup {
 					email VARCHAR(120) NOT NULL UNIQUE,
 					username VARCHAR(120) NOT NULL UNIQUE, 
 					password VARCHAR(255) NOT NULL, 
+					created_at DATETIME DEFAULT CURRENT_TIMESTAMP, 
+					updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
 					PRIMARY KEY(id)
 				);',
 		];
@@ -42,10 +44,10 @@ class Setup {
 	"authMethod":"session",
 	
 	"------------":"If set to true, the email field will be used as the username-------",
-	"emailAsUser":true,
+	"emailAsUser":false,
 	
 	"------------":"Secret key for token based authentication.-------",	
-	"secretKey":"GHILIVYIJkhuogfuy78587697687",
+	"secretKey":"GHILIVYniio8uh778h7IJkhuogfuy78587697687",
 	
 	"------------":"For Tokens: times-out in this many seconds.-------",	
 	"------------":"For Sessions: times-out in this many seconds of inactivity.-------",	

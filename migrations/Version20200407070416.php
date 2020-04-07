@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200405211458 extends AbstractMigration
+final class Version20200407070416 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,11 @@ final class Version20200405211458 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE user (
         					id INT AUTO_INCREMENT NOT NULL, 
-        					email VARCHAR(120) DEFAULT \'email\' NOT NULL UNIQUE,
-        					username VARCHAR(22) NOT NULL UNIQUE, 
+        					email VARCHAR(120) NOT NULL UNIQUE,
+        					username VARCHAR(120) NOT NULL UNIQUE, 
         					password VARCHAR(255) NOT NULL, 
+        					created_at DATETIME DEFAULT CURRENT_TIMESTAMP, 
+        					updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
         					PRIMARY KEY(id)
         				);');
     }
