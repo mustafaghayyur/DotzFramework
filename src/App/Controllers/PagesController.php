@@ -18,7 +18,14 @@ class PagesController extends Controller{
 	 * 404 Error Page. Could be a json response, or a HTML view.
 	 */
 	public function notFound($uriArray){
-		$this->view->json(['msg'=>'Page not found.', 'uri_array:'=>$uriArray]);
+		
+		$this->view->load(
+			'error', 
+			[
+				'msg' => 'Page not found', 
+				'data' => 'path: '. $uriArray[0] .'/...'
+			]
+		);
 	}
 
 	/**

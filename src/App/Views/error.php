@@ -74,14 +74,23 @@
 				}
 				
 				if(isset($msg)){?>
-					<p><strong>Message:</strong> <?php echo $msg;?>.</p>
-					<p><strong>In file:</strong> <?php echo $file;?>.</p>
-					<p><strong>On line #:</strong> <?php echo $line;?>.</p>
+					<p><strong>Message:</strong> <?php echo $msg;?></p>
+				<?php 
+				}
+
+				if(isset($file)){?>
+					<p><strong>In file:</strong> <?php echo $file;?></p>
+				<?php
+				}
+
+				if(isset($line)){?>
+					<p><strong>On line #:</strong> <?php echo $line;?></p>
 				<?php
 				}?>
 
-				
-
+				<?php
+				if(isset($data)){?>
+					<p><strong>Passed Data:</strong> <?php echo $data; }?></p>
 			</div>
 			<div class="menu">
 				<a href="<?php echo $dotz->url;?>" class="item">Home</a>

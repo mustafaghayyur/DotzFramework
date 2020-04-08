@@ -12,20 +12,23 @@ use DotzFramework\Modules\Form\Form;
  * activate the module.
  */
 class UserController extends Controller{
+
+	public $url;
+
+	public function __construct(){
+		parent::__construct();
+		$this->url = $this->configs->app->httpProtocol .'://'. $this->configs->app->url;
+	}
 	
 	/**
 	 * Members' area page
 	 */
 	public function index(){
-		
 		Auth::check();
-
+		
 		$packet = [];
-		$packet['msg'] = 'Logged in. | <a href="' .
-							$this->configs->app->httpProtocol .
-							'://'.$this->configs->app->url .
-							'/user/logout">Logout</a>';
-
+		$packet['msg'] = 'Logged in. | <a href="'.$this->url.'/user/logout">Logout</a>';
+		
 		$this->view->load('home', $packet);
 	}
 
@@ -37,10 +40,8 @@ class UserController extends Controller{
 	public function login(){
 		
 		if(Auth::check('allow') === true){
-			header('Location: ' .
-						$this->configs->app->httpProtocol .
-						'://' . $this->configs->app->url .
-						'/' . $this->configs->user->loggedInUri);
+			// if user is logged in already ... redirect them
+			header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
 			die();
 		}
 
@@ -48,21 +49,19 @@ class UserController extends Controller{
 		$packet = [];
 
 		if(!empty($this->input->post('submit', false))){
-			
+			// process form submission...
 			$u = $this->input->secure()->post('username');
 			$p = $this->input->secure()->post('password');
-
 			$a = new Auth();
 
 			if($a->login($u, $p)){
-				
-				header('Location: ' . $this->configs->app->httpProtocol . 
-							'://' . $this->configs->app->url . 
-							'/' . $this->configs->user->loggedInUri);
+				// redirect to memeber's area...
+				header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
 				die();
-			
 			}
 
+			// in case of am error,
+			// The $message var in the view can be used to give feedback.
 			$packet['message'] = $a->message;
 
 		}
@@ -79,9 +78,14 @@ class UserController extends Controller{
 	 * authentication.
 	 */
 	public function logout(){
-
-		Auth::logout();			
 		
+		$a = new Auth();
+
+		if($a->logout()){
+			// Auth::logout() returns a boolean true for session method...
+			header('Location: '.$this->url.'/'.$this->configs->user->loginUri);
+			die();
+		}			
 	}
 
 	/**
@@ -92,9 +96,8 @@ class UserController extends Controller{
 	public function signup(){
 
 		if(Auth::check('allow') === true){
-			header('Location: ' . $this->configs->app->httpProtocol .
-						'://' . $this->configs->app->url . 
-						'/' . $this->configs->user->loggedInUri);
+			// if the user is signed in, redirect to member's area...
+			header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
 			die();
 		}
 		
@@ -106,23 +109,24 @@ class UserController extends Controller{
 			$user = [
 				'username' => $this->input->secure()->post('username'),
 				'email' => $this->input->secure()->post('email'),
-				'password' => $this->input->secure()->post('password')
+				'password' => $this->input->secure()->post('password'),
+				'accessLevel' => 3
 			];
 	
 			$a = new Auth();
 			
 			if($a->register($user)){
-				
-				header('Location: ' . $this->configs->app->httpProtocol . 
-							'://' . $this->configs->app->url . 
-							'/' . $this->configs->user->loggedInUri);
-				
-				die();
-
+				// registration successful. 
+				// log user into system...
+				if($a->login($user['username'], $user['password'])){
+					header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
+					die();
+				}
 			}
 
+			// incase the process failed, $message in the view will hold
+			// feedback for the user.
 			$packet['message'] = $a->message;
-
 		}
 
 		$packet['form'] = new Form();
@@ -139,9 +143,18 @@ class UserController extends Controller{
 	 *  - http://yourappurl/user/api/exit
 	 *  - http://yourappurl/user/api/register
 	 *  - http://yourappurl/user/api/
+	 *
+	 * Requires Authorization http header:
+	 * 	Authorization: Bearer <valid token>
+	 * for successful passing of Auth::check()
 	 */
 	public function api($path = null){
-		
+
+		// since the app.txt file has authMethod set to 'session';
+		// you will need to pass in a custom $method value of 'token'
+		// for each new Auth() instance and Auth::check() call.
+		$a = new Auth('token'); 
+
 		switch($path){
 
 			case 'token':
@@ -151,8 +164,6 @@ class UserController extends Controller{
 				
 				if(!empty($u)){
 			
-					$a = new Auth();
-
 					if($a->login($u, $p)){
 						
 						$this->view->json([
@@ -174,37 +185,39 @@ class UserController extends Controller{
 				}
 
 			case 'exit':
-				Auth::logout();
+				
+				// Auth::logout() returns a status string for token method...
+				$status = $a->logout();
+
+				$this->view->json([
+					'status' => $status, 
+					'message' => $a->message
+				]);
 
 			case 'register':
 
 				if(!empty($this->input->post('username', false))){
-			
+					// data has been posted...
 					$user = [
 						'username' => $this->input->post('username'),
 						'email' => $this->input->post('email'),
 						'password' => $this->input->post('password')
 					];
-			
-					$a = new Auth();
-					
+								
 					if($a->register($user)){
-						
 						$this->view->json(['status' => 'success', 'message' => $a->message]);
-
 					}
 
 					$this->view->json(['status' => 'error', 'message' => $a->message]);
 
 				}else{
-
 					$this->view->json(['status' => 'error', 'message' => 'Post data missing.']);
-
 				}
 
 			default:
-				Auth::check();
-				$this->view->json(['message' => 'Logged in']);
+				// logged in page..
+				Auth::check('token');
+				$this->view->json(['status' => 'success', 'message' => 'Logged in']);
 
 		}
 		

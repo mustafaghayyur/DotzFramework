@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200407170512 extends AbstractMigration
+final class Version20200407175035 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -25,6 +25,7 @@ final class Version20200407170512 extends AbstractMigration
         					email VARCHAR(120) NOT NULL UNIQUE,
         					username VARCHAR(120) NOT NULL UNIQUE, 
         					password VARCHAR(255) NOT NULL, 
+        					access_level INT NOT NULL, 
         					created_at DATETIME DEFAULT CURRENT_TIMESTAMP, 
         					updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
         					PRIMARY KEY(id)

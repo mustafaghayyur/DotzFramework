@@ -68,7 +68,7 @@ class Validate {
 		
 		if(is_string($password) && !empty($password)){
 			
-			if(strlen($password) > 8 && strlen($password) < 31){
+			if(strlen($password) > 7 && strlen($password) < 31){
 				return true;
 			}else{
 				throw new \Exception('Password must be between 8 to 30 characters in length.');

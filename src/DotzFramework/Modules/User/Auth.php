@@ -24,19 +24,19 @@ class Auth {
 	 * The param $authMethod can have only one of two exact values:
 	 * $authMethod = ['session'|'token']
 	 */
-	public function __construct($authMethod = null){
-		$this->method = empty($authMethod) ? Dotz::config('user.authMethod') : $authMethod;
+	public function __construct($method = null){
+		$this->method = empty($method) ? Dotz::config('user.authMethod') : $method;
 	}
 
 	/**
 	 * Checks the supplied username/password combo against the database
 	 */
-	public function login($username, $password){
+	public function login($username, $password, $accessLevel = 3, $accessValidator = null){
 		
 		try{
 	
 			$q = Dotz::get()->load('query');
-			$record = $q->execute('SELECT * FROM user WHERE username = ?', [$username]);
+			$r = $q->execute('SELECT * FROM user WHERE username = ?', [$username]);
 
 		}catch(\Exception $e){
 
@@ -46,13 +46,21 @@ class Auth {
 
 		}
 
-		if(is_array($record) && count($record) > 0){
+		if(is_array($r) && count($r) > 0){
 
-			$hash = $record[0]['password'];
+			if($accessValidator === null || !is_object($accessValidator)){
+				$accessValidator = new AccessValidator();
+			}
+
+			if(!$accessValidator->check($r[0]['access_level'], $accessLevel)){
+				$this->message = 'Your account does not have the correct access level. Request denied.';
+				return false;
+			}
+			
+			$hash = $r[0]['password'];
 
 			if(true === password_verify($password, $hash)){
-
-				$this->{'_'.$this->method.'Generate'}($record[0]);
+				$this->{'_'.$this->method.'Generate'}($r[0]);
 				return true;
 
 			}else{
@@ -62,9 +70,7 @@ class Auth {
 		}else{
 			$this->message = 'Username not found.';
 		}
-
 		return false;
-
 	}
 
 	/**
@@ -86,6 +92,12 @@ class Auth {
 			$validator->username($user['username']);
 			$validator->password($user['password']);
 
+			if(isset($user['accessLevel'])){
+				$user['accessLevel'] = (int)$user['accessLevel'];
+			}else{
+				$user['accessLevel'] = 3;
+			}
+
 		} catch (\Exception $e) {
 
 			$this->message = $e->getMessage();
@@ -99,32 +111,22 @@ class Auth {
 	
 			$q = Dotz::get()->load('query');
 			$n = $q->execute(
-				'INSERT INTO user (email, username, password) VALUES (?, ?, ?);', 
-				[$user['email'], $user['username'], $passwordHash]
+				'INSERT INTO user (email, username, password, access_level) VALUES (?, ?, ?, ?);', 
+				[$user['email'], $user['username'], $passwordHash, $user['accessLevel']]
 			);
-
 			$id = (int)$q->pdo->lastInsertId();
 
 		}catch(\Exception $e){
 
 			preg_match('#^\[[^\]]*\] - (.*)#', $e->getMessage(), $m);
-			$this->message = $m[1];
+			$this->message = (isset($m[1]) && !empty($m[1])) ? $m[1] : $e->getMessage();
 			return false;
 
 		}
 
 		if($n == 1 && is_int($id) && $id > 0){
-
 			$this->message = 'Registration successful.';
-			$u = Dotz::config('user');
-
-			if($u->authMethod == 'session'){
-				return $this->login($user['username'], $user['password']);
-			}
-
-			if($u->authMethod == 'token'){
-				return true;
-			}
+			return true;
 		}
 
 		$this->message = 'Registration of account failed.';
@@ -140,20 +142,29 @@ class Auth {
 	 * Does not redirect the user (in session method) if the 
 	 * $redirect argument is set to anything other than boolean true.
 	 */
-	public static function check($redirect = true){
+	public static function check($method = null, $redirect = true, $accessLevel = 3, $accessValidator = null){
 		
 		$c = Dotz::config('app');
 		$u = Dotz::config('user');
+		$method = ($method === null) ? $u->authMethod : $method;
 
 		if($u === null){
 			// User module has not been activated yet. Setup...
 			Setup::install();
 		}
 
-		if($u->authMethod === 'session'){
+		if($accessValidator === null || !is_object($accessValidator)){
+			$accessValidator = new AccessValidator();
+		}
+
+		if($method === 'session'){
 			
 			$s = Dotz::get()->load('session');
 			$s->start();
+
+			if(!$accessValidator->check($s->get('accessLevel'), $accessLevel)){
+				throw new \Exception('Your account does not have the correct access level. Request denied.');
+			}
 			
 			if($s->get('lastActivity') !== null){
 				
@@ -161,10 +172,8 @@ class Auth {
 				$to = ((int)$u->timeout == 0) ? 86400 : (int)$u->timeout;
 
 				if($lastActivity < $to){
-					
 					$s->set('lastActivity', time());
 					return true;
-				
 				}
 			}
 	
@@ -178,24 +187,29 @@ class Auth {
 
 		}
 
-		if($u->authMethod === 'token'){
-
-			$payload = self::getTokenPayload($u->secretKey);
-
-			if(!empty($payload)){
-				Dotz::get()->load('view')->json([
-					'status' => 'success',
-					'message' => 'ok'
-				]);
-			}else{
+		if($method === 'token'){
+			
+			$payload = self::_getTokenPayload($u->secretKey);
+			
+			if(!is_object($payload)){
+				
 				Dotz::get()->load('view')->json([
 					'status' => 'error',
-					'message' => 'Could not authorize supplied token. Request failed.'
+					'message' => $payload // $payload now carries an error message
 				]);
+				
+				return false; 
 			}
 
+			if(!$accessValidator->check($payload->accessLevel, $accessLevel)){
+				throw new \Exception('Your account does not have the correct access level. Request denied.');
+			}
+
+			Dotz::get()->load('view')->json([
+				'status' => 'success',
+				'message' => 'ok'
+			]);
 		}
-		
 	}
 
 	/**
@@ -204,70 +218,68 @@ class Auth {
 	 *
 	 * logout() only applies to session based authentication
 	 */
-	public static function logout(){
+	public function logout(){
 		
 		$c = Dotz::config('app');
 		$u = Dotz::config('user');
 
-		if($u->authMethod === 'session'){
+		if($this->method === 'session'){
 			
 			$session = Dotz::get()->load('session');
 			$session->start();
 			$session->invalidate();
-
-			header('Location: '.$c->httpProtocol.'://'.$c->url.'/'.$u->loginUri);
-			die();
-
+			return true;
+		
 		}
 
-		if($u->authMethod === 'token'){
+		if($this->method === 'token'){
 			
-			$payload = self::getTokenPayload($u->secretKey);
+			$payload = self::_getTokenPayload($u->secretKey);
+
+			if(!is_object($payload)){
+				$this->message = $payload; // $payload now carries an error message
+				return 'error'; 
+			}
 
 			if(isset($payload->exp)){
 
 				$timeRemaining = (int)$payload->exp - (int)time();
 
 				if($timeRemaining < 0){
-					
-					$msg = 'Token has expired already.';
-				
+					$this->message = 'User Access Token has expired already.';
+					return 'notice'; 
 				}else{
 					
 					$timeRemaining = round(($timeRemaining / 60), 2);
-					$msg = 'Token will expire in '.$timeRemaining.' minutes from now.';
+					
+					$this->message = 'User Access Token will expire in '.$timeRemaining.' minutes from now.';
+					
+					return 'notice'; 
 				}
 				
 			}else{
-				
-				$msg = 'Your token cannot expire.';
-			
+				$this->message = 'User Access Token cannot expire.';
+				return 'notice'; 
 			}
-
-			Dotz::get()->load('view')->json([
-					'status' => 'notice',
-					'message' => $msg
-				]);
 		}
 
 	}
 
-	protected static function getTokenPayload($secretKey){
+	/**
+	 * Helper function decode User Access Token
+	 */
+	protected static function _getTokenPayload($secretKey){
 
 		$auth = Dotz::get()->load('input')->header('authorization');
 
 		if($auth === null || $auth === false){
-			throw new \Exception('Could not retrieve HTTP Authorization Header.');
+			return 'Could not retrieve HTTP Authorization Header.';
 		}
 
 		preg_match('#(Bearer )?(.*)#', $auth, $token);
 
 		if(empty($token[2])){
-			
-			Dotz::get()->load('view')->json([
-					'status' => 'error',
-					'message' => 'Token missing. Request failed.'
-				]);
+			return 'User Access Token missing. Request failed.';
 		}
 		
 		try{
@@ -276,11 +288,7 @@ class Auth {
 
 		}catch(\Exception $e){
 
-			Dotz::get()->load('view')->json([
-				'status' => 'error',
-				'message' => 'Could not recognize supplied token. Request failed.',
-				'error' => $e->getMessage()
-			]);
+			return 'Could not accept supplied User Access Token. Request failed. [JWT Error Message: '. $e->getMessage() .']';
 
 		}
 	}
@@ -296,10 +304,9 @@ class Auth {
 		$session->set('user', $user['username']);
 		$session->set('signInTime', time());
 		$session->set('lastActivity', time());
+		$session->set('accessLevel', $user['access_level']);
 
-		if(empty($this->message)){
-			$this->message = 'Login successful.';
-		}
+		$this->message = 'Login successful.';
 
 	}
 
@@ -313,6 +320,7 @@ class Auth {
 		$payload = array(
 		    "id" => $user['id'],
 		    "user" => $user['username'],
+		    "accessLevel" => $user['access_level'],
 		    "iat" => time()
 		);
 

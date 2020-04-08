@@ -19,6 +19,7 @@ class Setup {
 					username VARCHAR(120) NOT NULL UNIQUE, 
 					password VARCHAR(255) NOT NULL, 
 					access_level INT NOT NULL, 
+					status VARCHAR(15) NOT NULL, 
 					created_at DATETIME DEFAULT CURRENT_TIMESTAMP, 
 					updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
 					PRIMARY KEY(id)
