@@ -2,7 +2,8 @@
 
 use DotzFramework\Core\Controller;
 use DotzFramework\Core\Dotz;
-use DotzFramework\Modules\User\Auth;
+use DotzFramework\Modules\User\SessionAuth;
+use DotzFramework\Modules\User\TokenAuth;
 use DotzFramework\Modules\Form\Form;
 
 /**
@@ -24,7 +25,7 @@ class UserController extends Controller{
 	 * Members' area page
 	 */
 	public function index(){
-		Auth::check();
+		SessionAuth::check();
 		
 		$packet = [];
 		$packet['msg'] = 'Logged in. | <a href="'.$this->url.'/user/logout">Logout</a>';
@@ -39,7 +40,7 @@ class UserController extends Controller{
 	 */
 	public function login(){
 		
-		if(Auth::check('allow') === true){
+		if(SessionAuth::check('allow') === true){
 			// if user is logged in already ... redirect them
 			header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
 			die();
@@ -52,7 +53,7 @@ class UserController extends Controller{
 			// process form submission...
 			$u = $this->input->secure()->post('username');
 			$p = $this->input->secure()->post('password');
-			$a = new Auth();
+			$a = new SessionAuth();
 
 			if($a->login($u, $p)){
 				// redirect to memeber's area...
@@ -60,7 +61,7 @@ class UserController extends Controller{
 				die();
 			}
 
-			// in case of am error,
+			// in case of an error,
 			// The $message var in the view can be used to give feedback.
 			$packet['message'] = $a->message;
 
@@ -79,10 +80,10 @@ class UserController extends Controller{
 	 */
 	public function logout(){
 		
-		$a = new Auth();
+		$a = new SessionAuth();
 
 		if($a->logout()){
-			// Auth::logout() returns a boolean true for session method...
+			// SessionAuth::logout() returns a boolean true for session method...
 			header('Location: '.$this->url.'/'.$this->configs->user->loginUri);
 			die();
 		}			
@@ -95,7 +96,7 @@ class UserController extends Controller{
 	 */
 	public function signup(){
 
-		if(Auth::check('allow') === true){
+		if(SessionAuth::check('allow') === true){
 			// if the user is signed in, redirect to member's area...
 			header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
 			die();
@@ -113,7 +114,7 @@ class UserController extends Controller{
 				'accessLevel' => 3
 			];
 	
-			$a = new Auth();
+			$a = new SessionAuth();
 			
 			if($a->register($user)){
 				// registration successful. 
@@ -146,14 +147,14 @@ class UserController extends Controller{
 	 *
 	 * Requires Authorization http header:
 	 * 	Authorization: Bearer <valid token>
-	 * for successful passing of Auth::check()
+	 * for successful passing of TokenAuth::check()
 	 */
 	public function api($path = null){
 
 		// since the app.txt file has authMethod set to 'session';
 		// you will need to pass in a custom $method value of 'token'
-		// for each new Auth() instance and Auth::check() call.
-		$a = new Auth('token'); 
+		// for each new TokenAuth() instance and TokenAuth::check() call.
+		$a = new TokenAuth(); 
 
 		switch($path){
 
@@ -186,7 +187,7 @@ class UserController extends Controller{
 
 			case 'exit':
 				
-				// Auth::logout() returns a status string for token method...
+				// TokenAuth::logout() returns a status string for token method...
 				$status = $a->logout();
 
 				$this->view->json([
@@ -205,7 +206,11 @@ class UserController extends Controller{
 					];
 								
 					if($a->register($user)){
-						$this->view->json(['status' => 'success', 'message' => $a->message]);
+						
+						$this->view->json([
+								'status' => 'success', 
+								'message' => $a->message
+							]);
 					}
 
 					$this->view->json(['status' => 'error', 'message' => $a->message]);
@@ -216,7 +221,8 @@ class UserController extends Controller{
 
 			default:
 				// logged in page..
-				Auth::check('token');
+				TokenAuth::check();
+
 				$this->view->json(['status' => 'success', 'message' => 'Logged in']);
 
 		}

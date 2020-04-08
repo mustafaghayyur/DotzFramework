@@ -11,7 +11,7 @@ namespace DotzFramework\Modules\User;
  * to Auth::register() as the second paremter. Just make sure your
  * validation class also has these methods.
  */
-class Validate {
+class ValidateUserFields {
 
 	/**
 	 * validates the passed email.

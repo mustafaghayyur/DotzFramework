@@ -48,9 +48,20 @@ class Setup {
 	"------------":"Secret key for token based authentication.-------",	
 	"secretKey":"GHILIVYniio8uh778h7IJkhuogfuy78587697687",
 	
-	"------------":"For Tokens: times-out in this many seconds.-------",	
+	"------------":"For Tokens: times-out in this many seconds. Set to 0 for no expiry.-------",	
 	"------------":"For Sessions: times-out in this many seconds of inactivity.-------",	
 	"timeout":"1800",
+
+	"------------":"Tokens could last forever. tokenOkayTime helps give-------",	
+	"------------":"another buffer period after which the token would be-------",	
+	"------------":"routinely validated against the database to ensure-------",	
+	"------------":"no user gets a forever free pass to the system.-------",	
+	"tokenOkayTime":"1800",
+
+	"------------":"Array of string statuses a user account can have and be-------",	
+	"------------":"allowed access to system.-------",	
+	"okayStatus":["confirmed", "probation"],
+
 
 	"------------":"Used only in Session based logins-------",	
 	"------------":"Add the URI (excluding the App URL) for Login, Logout, Register and Logged-in pages below:-------",	

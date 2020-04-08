@@ -3,40 +3,57 @@ namespace DotzFramework\Modules\User;
 
 use DotzFramework\Core\Dotz;
 use \Firebase\JWT\JWT;
-use DotzFramework\Modules\User\Validate;
-use DotzFramework\Modules\User\Setup;
 
+/**
+ * Parent Auth Class
+ *
+ * All responses should be passed down in $message & $status props.
+ */
 class Auth {
 
 	/**
-	 * carries the authentication method
-	 * ['session' OR 'token']
+	 * Used to temporarily store a user record while completing a request.
 	 */
-	public $method;
+	public $userRecord;
 
 	/**
-	 * carries a message to be available in the $auth->message
-	 * property in the script you instantiate this class.
+	 * carries a message to be accessible in the 
+	 * script you instantiate this class with.
 	 */
 	public $message;
 
-	/**
-	 * The param $authMethod can have only one of two exact values:
-	 * $authMethod = ['session'|'token']
-	 */
-	public function __construct($method = null){
-		$this->method = empty($method) ? Dotz::config('user.authMethod') : $method;
+
+	public function __construct($ignoreSetup = false){
+		
+		if($ignoreSetup === true){
+			return true; // some internal function is calling this instance.
+		}
+
+		$u = Dotz::config('user');
+
+		if($u === null){
+			// User module has not been activated yet. Setup...
+			Setup::install();
+		}
 	}
 
 	/**
-	 * Checks the supplied username/password combo against the database
+	 * The core of the login function in both TokenAuth & SessionAuth classes.
+	 *
+	 * Validates the supplied username and password against the database.
+	 * 
+	 * @param $user - string [username]
+	 * @param $pass - string [password]
+	 * @param $level - int [access level required to pass check]
+	 * @param $validator - obj [holds a access-validation class instance]
+	 * @param $validatorCall - bool [only set to true if you know what it does!]
 	 */
-	public function login($username, $password, $accessLevel = 3, $accessValidator = null){
+	public function authenticateUser($user, $pass = null, $level = 3, $validator = null, $validatorCall = false){
 		
 		try{
 	
 			$q = Dotz::get()->load('query');
-			$r = $q->execute('SELECT * FROM user WHERE username = ?', [$username]);
+			$r = $q->execute('SELECT * FROM user WHERE username = ?', [$user]);
 
 		}catch(\Exception $e){
 
@@ -46,31 +63,44 @@ class Auth {
 
 		}
 
-		if(is_array($r) && count($r) > 0){
+		if(!is_array($r) || count($r) === 0){
+			$this->message = 'Username not found.';
+			return false;
+		}
 
-			if($accessValidator === null || !is_object($accessValidator)){
-				$accessValidator = new AccessValidator();
-			}
+		if($validatorCall === true){
+			// this is an internal, partial authentication check
+			// it does not need all the checks...
+			// just send the db record if the user is found.
+			return $r;
+		}
 
-			if(!$accessValidator->check($r[0]['access_level'], $accessLevel)){
-				$this->message = 'Your account does not have the correct access level. Request denied.';
-				return false;
-			}
+		if($validator === null || !is_object($validator)){
+			$validator = new ValidateAccess();
+		}
+
+		if($validator->checkStatus($r['status'])){
+			$this->message = 'Your account is not active. Cannot authenticate credentials.';
+			return false;
+		}
+
+		if(!$validator->checkAccessLevel($r[0]['access_level'], $level)){
+			$this->message = 'Your account does not have the correct access level. Cannot authenticate credentials.';
+			return false;
+		}
+		
+		$hash = $r[0]['password']; // db password value is in hash
+
+		if(true === password_verify($pass, $hash)){
 			
-			$hash = $r[0]['password'];
-
-			if(true === password_verify($password, $hash)){
-				$this->{'_'.$this->method.'Generate'}($r[0]);
-				return true;
-
-			}else{
-				$this->message = 'Password incorrect.';
-			}
+			$this->message = 'Authentication passed.';
+			$this->userRecord = $r;
+			return true;
 
 		}else{
-			$this->message = 'Username not found.';
+			$this->message = 'Password incorrect.';
+			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -79,24 +109,23 @@ class Auth {
 	 *
 	 * To collect additional user data, create your own additional
 	 * database tables and code to handle such data, seperately.
+	 * 
+	 * @param $u - array [user record]
+	 * @param $level - int [access level required to pass registration]
+	 * @param $status - string [status of this account]
+	 * @param $validator - obj [holds a user-fields-validation class instance]
 	 */
-	public function register(Array $user, $validator = null){
+	public function register(Array $u, $level = 3, $status = 'probation', $validator = null){
 
 		try {
 	
 			if($validator === null || !is_obj($validator)){
-				$validator = new Validate();
+				$validator = new ValidateUserFields();
 			}
 
-			$validator->email($user['email']);
-			$validator->username($user['username']);
-			$validator->password($user['password']);
-
-			if(isset($user['accessLevel'])){
-				$user['accessLevel'] = (int)$user['accessLevel'];
-			}else{
-				$user['accessLevel'] = 3;
-			}
+			$validator->email($u['email']);
+			$validator->username($u['username']);
+			$validator->password($u['password']);
 
 		} catch (\Exception $e) {
 
@@ -105,15 +134,17 @@ class Auth {
 		
 		}
 
-		$passwordHash = password_hash($user['password'], PASSWORD_BCRYPT);
+		$hash = password_hash($u['password'], PASSWORD_BCRYPT);
 
 		try{
 	
 			$q = Dotz::get()->load('query');
+			
 			$n = $q->execute(
-				'INSERT INTO user (email, username, password, access_level) VALUES (?, ?, ?, ?);', 
-				[$user['email'], $user['username'], $passwordHash, $user['accessLevel']]
+				'INSERT INTO user (email, username, password, access_level, status) VALUES (?, ?, ?, ?, ?);', 
+				[$u['email'], $u['username'], $hash, $level, $status ]
 			);
+			
 			$id = (int)$q->pdo->lastInsertId();
 
 		}catch(\Exception $e){
@@ -133,204 +164,5 @@ class Auth {
 		return false;
 
 	}
-
-	/**
-	 * Authorizes the request as legitimate. 
-	 * 
-	 * Redirects  to login if the session is not valid. 
-	 * 
-	 * Does not redirect the user (in session method) if the 
-	 * $redirect argument is set to anything other than boolean true.
-	 */
-	public static function check($method = null, $redirect = true, $accessLevel = 3, $accessValidator = null){
-		
-		$c = Dotz::config('app');
-		$u = Dotz::config('user');
-		$method = ($method === null) ? $u->authMethod : $method;
-
-		if($u === null){
-			// User module has not been activated yet. Setup...
-			Setup::install();
-		}
-
-		if($accessValidator === null || !is_object($accessValidator)){
-			$accessValidator = new AccessValidator();
-		}
-
-		if($method === 'session'){
-			
-			$s = Dotz::get()->load('session');
-			$s->start();
-
-			if(!$accessValidator->check($s->get('accessLevel'), $accessLevel)){
-				throw new \Exception('Your account does not have the correct access level. Request denied.');
-			}
-			
-			if($s->get('lastActivity') !== null){
-				
-				$lastActivity = (int)time() - (int)$s->get('lastActivity');
-				$to = ((int)$u->timeout == 0) ? 86400 : (int)$u->timeout;
-
-				if($lastActivity < $to){
-					$s->set('lastActivity', time());
-					return true;
-				}
-			}
-	
-			// destroy the session...
-			$s->invalidate();
-
-			if($redirect === true){
-				header('Location: '.$c->httpProtocol.'://'.$c->url.'/'.$u->loginUri);
-				die();	
-			}
-
-		}
-
-		if($method === 'token'){
-			
-			$payload = self::_getTokenPayload($u->secretKey);
-			
-			if(!is_object($payload)){
-				
-				Dotz::get()->load('view')->json([
-					'status' => 'error',
-					'message' => $payload // $payload now carries an error message
-				]);
-				
-				return false; 
-			}
-
-			if(!$accessValidator->check($payload->accessLevel, $accessLevel)){
-				throw new \Exception('Your account does not have the correct access level. Request denied.');
-			}
-
-			Dotz::get()->load('view')->json([
-				'status' => 'success',
-				'message' => 'ok'
-			]);
-		}
-	}
-
-	/**
-	 * Since JWT tokens cannot be destroyed
-	 * and would expire within the timeout time...
-	 *
-	 * logout() only applies to session based authentication
-	 */
-	public function logout(){
-		
-		$c = Dotz::config('app');
-		$u = Dotz::config('user');
-
-		if($this->method === 'session'){
-			
-			$session = Dotz::get()->load('session');
-			$session->start();
-			$session->invalidate();
-			return true;
-		
-		}
-
-		if($this->method === 'token'){
-			
-			$payload = self::_getTokenPayload($u->secretKey);
-
-			if(!is_object($payload)){
-				$this->message = $payload; // $payload now carries an error message
-				return 'error'; 
-			}
-
-			if(isset($payload->exp)){
-
-				$timeRemaining = (int)$payload->exp - (int)time();
-
-				if($timeRemaining < 0){
-					$this->message = 'User Access Token has expired already.';
-					return 'notice'; 
-				}else{
-					
-					$timeRemaining = round(($timeRemaining / 60), 2);
-					
-					$this->message = 'User Access Token will expire in '.$timeRemaining.' minutes from now.';
-					
-					return 'notice'; 
-				}
-				
-			}else{
-				$this->message = 'User Access Token cannot expire.';
-				return 'notice'; 
-			}
-		}
-
-	}
-
-	/**
-	 * Helper function decode User Access Token
-	 */
-	protected static function _getTokenPayload($secretKey){
-
-		$auth = Dotz::get()->load('input')->header('authorization');
-
-		if($auth === null || $auth === false){
-			return 'Could not retrieve HTTP Authorization Header.';
-		}
-
-		preg_match('#(Bearer )?(.*)#', $auth, $token);
-
-		if(empty($token[2])){
-			return 'User Access Token missing. Request failed.';
-		}
-		
-		try{
-
-			return JWT::decode($token[2], $secretKey, array('HS256'));
-
-		}catch(\Exception $e){
-
-			return 'Could not accept supplied User Access Token. Request failed. [JWT Error Message: '. $e->getMessage() .']';
-
-		}
-	}
-
-	/**
-	 * Helper function used by login()
-	 */
-	protected function _sessionGenerate($user){
-
-		$session = Dotz::get()->load('session');
-		$session->start();
-		$session->set('id', $user['id']);
-		$session->set('user', $user['username']);
-		$session->set('signInTime', time());
-		$session->set('lastActivity', time());
-		$session->set('accessLevel', $user['access_level']);
-
-		$this->message = 'Login successful.';
-
-	}
-
-	/**
-	 * Helper function used by login()
-	 */
-	protected function _tokenGenerate($user){
-		
-		$u = Dotz::config('user');
-
-		$payload = array(
-		    "id" => $user['id'],
-		    "user" => $user['username'],
-		    "accessLevel" => $user['access_level'],
-		    "iat" => time()
-		);
-
-		if((int)$u->timeout > 0) {
-			$payload['exp'] = (int)time() + (int)$u->timeout;
-		}
-
-		$this->message = JWT::encode($payload, $u->secretKey, 'HS256');
-
-	}
-
 
 }
