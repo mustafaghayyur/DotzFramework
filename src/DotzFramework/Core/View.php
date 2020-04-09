@@ -46,14 +46,45 @@ class View{
 	/**
 	 * Use for jSON outputs.
 	 */
-	public function json($data){
+	public function json($data, $httpStatusCode = null){
 		$o = json_encode($data);
 		
-		if($o){
+		if(json_last_error() === JSON_ERROR_NONE){
+			
+			http_response_code(
+				self::httpStatusCode($httpStatusCode, $data)
+			);
+
 			header('Content-Type: application/json');
+
 			echo $o;
 			die();
 		}
+	}
+
+	/**
+	 * Sets the appropriate HTTP status code
+	 */
+	protected static function httpStatusCode($code, $data){
+
+		if($code === null){
+			
+			$status = isset($data['status']) ? $data['status'] : null;
+			
+			if(isset($data->status)){
+				$status = empty($status) ? $data->status : null;
+			}
+
+			if($status === 'error'){
+				return 400;
+			}
+		}
+
+		if($code === null || !is_int($code)){
+			return 200;
+		}
+
+		return $code;
 	}
 
 	protected function generateSystemVars(){

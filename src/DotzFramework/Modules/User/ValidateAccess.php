@@ -1,6 +1,8 @@
 <?php
 namespace DotzFramework\Modules\User;
 
+use DotzFramework\Core\Dotz;
+
 /**
  * You can write your own Validation class, and pass its instance object
  * to Auth::login() and Auth::check() as the fourth parameter. 
@@ -54,7 +56,7 @@ class ValidateAccess {
 		
 		$okayStatusArray = Dotz::config('user.okayStatus');
 		
-		if(is_array($okaystatusArray)){
+		if(is_array($okayStatusArray)){
 			if(in_array($userStatus, $okayStatusArray)){
 				return true;
 			}
@@ -75,7 +77,7 @@ class ValidateAccess {
 
 		// perform this operation only if the token is older 
 		// than $okayTime seconds. This saves server resources.
-		$okayTime = (int)Dotz::config('app.tokenOkayTime');
+		$okayTime = (int)Dotz::config('user.tokenOkayTime');
 		$t = (int)$payload->iat;
 		if((time() - $t) < $okayTime){
 			return true;
@@ -84,7 +86,7 @@ class ValidateAccess {
 		$a = new Auth(true);
 		
 		$userRecord = $a->authenticateUser(
-			$payload->username, 
+			$payload->user, 
 			null, 
 			$requiredLevel, 
 			$this, 
@@ -95,7 +97,7 @@ class ValidateAccess {
 			
 			if($this->checkStatus($userRecord['status'])){
 				
-				if($this->checkAccessLevel($userRecord['accessLevel'], $requiredLevel)){
+				if($this->checkAccessLevel($userRecord['access_level'], $requiredLevel)){
 					return true;
 				}
 			}

@@ -27,6 +27,18 @@ class ErrorHandler {
 				$output['updateError'] = 'We have changed MySQLQuery::$connection to MySQLQuery::$pdo in v0.2.2 of Dotz. Please update your application code accordingly.';
 			}
 
+			if(strpos($output['msg'], 'FIleIO') !== false){
+				$output['updateError'] = 'We have changed the Utilities class FIleIO()) to FileIO()) in v0.2.2 of Dotz. Please update your application code accordingly.';
+			}
+
+			if(strpos($output['msg'], 'leIO::$fileName') !== false){
+				$output['updateError'] = 'We have changed FIleIO::$fileName to FileIO::$file in v0.2.2 of Dotz. Please update your application code accordingly.';
+			}
+
+			if(strpos($output['msg'], 'leIO::$fp') !== false){
+				$output['updateError'] = 'We have changed FIleIO::$fp to FileIO::$socket in v0.2.2 of Dotz. Please update your application code accordingly.';
+			}
+
 		}
 
 		if(strpos($output['msg'], '[Update Error] - ') !== false){

@@ -24,6 +24,12 @@ version | Details
 		    and exceptions will now display appropriately
 		    in either HTML format or JSON format (for 
 		    Resource controller requests).
+		  - $this->view->json() now accepts a second param
+		    for the http status code (integer).
+		  - FileIO() Utility class has been transformed. 
+		    Might cause some errors you need to fix. 
+		    FilterController.php (in vendor dir) has a cool
+		    example of the possibilities!
 --------|---------------------------------------------------
 0.2.0   | - Routing library modified.
 		  - Configurations.php now handles JSON formatting

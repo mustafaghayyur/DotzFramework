@@ -43,7 +43,6 @@ class TokenAuth extends Auth{
 		$u = Dotz::config('user');
 
 		$payload = array(
-		    "id" => $user['id'],
 		    "user" => $user['username'],
 		    "accessLevel" => $user['access_level'],
 		    "iat" => time()
@@ -66,7 +65,6 @@ class TokenAuth extends Auth{
 	 */
 	public function logout(){
 		
-		$c = Dotz::config('app');
 		$u = Dotz::config('user');
 
 		$payload = self::getTokenPayload($u->secretKey);
@@ -82,21 +80,11 @@ class TokenAuth extends Auth{
 		if(isset($payload->exp)){
 
 			$timeRemaining = (int)$payload->exp - (int)time();
+			$timeRemaining = round(($timeRemaining / 60), 2);
 
-			if($timeRemaining < 0){
-				
-				$this->status =  'notice'; 
-				$this->message = 'User Access Token has expired already.';
-				return true;
-
-			}else{
-				
-				$timeRemaining = round(($timeRemaining / 60), 2);
-				
-				$this->status =  'notice'; 
-				$this->message = 'User Access Token will expire in '.$timeRemaining.' minutes from now.';
-				return true;				
-			}
+			$this->status =  'notice'; 
+			$this->message = 'User Access Token will expire in '.$timeRemaining.' minutes from now.';
+			return true;
 			
 		}else{
 			
@@ -154,10 +142,7 @@ class TokenAuth extends Auth{
 			return false; 
 		}
 
-		Dotz::get()->load('view')->json([
-			'status' => 'success',
-			'message' => 'ok'
-		]);
+		return true;
 	}
 
 

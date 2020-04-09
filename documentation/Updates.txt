@@ -16,6 +16,15 @@ However, the files and folders that:
 This is to protect you from loosing your valuable configurations.
 
 
+	++++++++++++++++++++++++++++++++++++++
+	+
+	+	v0.2.2 has major changes!
+	+	========================
+	+	Please read ChangeLog.txt and
+	+	follow all the instructions!
+	+
+	++++++++++++++++++++++++++++++++++++++
+
 
 
 ## What you should do

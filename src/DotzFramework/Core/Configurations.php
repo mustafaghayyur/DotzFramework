@@ -30,12 +30,13 @@ class Configurations{
 				
 			}
 		}
+
 	}
 
 	public function loadFile($file){
 		
 		$c = new FileIO($file, 'r');
-		$contents = $c->readEntireFile();
+		$contents = $c->read();
 
 		if($contents){
 
@@ -50,25 +51,31 @@ class Configurations{
 
 	/**
 	 * Returns an array of 'package' => 'version' pairs.
+	 *
+	 * The version is made into an integer. Removing any
+	 * letters, -, _, . and the space character.
+	 *
+	 * @return array
 	 */
-	public function getComposerPackagesInfo(){
+	public function getComposerPackages(){
 
-		$packages = json_decode(
-			file_get_contents(
-				$this->props->app->systemPath . '/vendor/composer/installed.json'
-			)
-		);
+		$f = new FileIO($this->props->app->systemPath . '/vendor/composer/installed.json', 'r');
+
+		if(!$f->ok){ 
+			return false; 
+		}
+
+		$packages = json_decode( $f->read() );
 
 		$data = [];
 		foreach ($packages as $package) {
-		    $data[$package->name] = $package->version;
+		    $data[$package->name] = (int)preg_replace('#[\.\-\_a-zA-Z ]#', '', $package->version);
 		}
 
 		// incase you're running outside of composer...
 		$data['dotz/framework'] = isset($data['dotz/framework']) 
 			? $data['dotz/framework'] 
-			: '1000.1.1';
-
+			: 100011;
 
 		return $data;
 	}

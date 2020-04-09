@@ -2,8 +2,6 @@
 namespace DotzFramework\Modules\User;
 
 use DotzFramework\Core\Dotz;
-use \Firebase\JWT\JWT;
-
 
 /**
  * Authentication class for Session authentication
@@ -37,7 +35,6 @@ class SessionAuth extends Auth {
 
 		$session = Dotz::get()->load('session');
 		$session->start();
-		$session->set('id', $user['id']);
 		$session->set('user', $user['username']);
 		$session->set('signInTime', time());
 		$session->set('lastActivity', time());
@@ -50,10 +47,7 @@ class SessionAuth extends Auth {
 	}
 
 	/**
-	 * Since JWT tokens cannot be destroyed
-	 * and would expire within the timeout time...
-	 *
-	 * logout() only applies to session based authentication
+	 * Expires a user's sessions.
 	 */
 	public function logout(){
 		

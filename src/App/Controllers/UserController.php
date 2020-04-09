@@ -1,7 +1,6 @@
 <?php 
 
 use DotzFramework\Core\Controller;
-use DotzFramework\Core\Dotz;
 use DotzFramework\Modules\User\SessionAuth;
 use DotzFramework\Modules\User\TokenAuth;
 use DotzFramework\Modules\Form\Form;
@@ -25,6 +24,7 @@ class UserController extends Controller{
 	 * Members' area page
 	 */
 	public function index(){
+		
 		SessionAuth::check();
 		
 		$packet = [];
@@ -40,25 +40,21 @@ class UserController extends Controller{
 	 */
 	public function login(){
 		
-		if(SessionAuth::check('allow') === true){
-			// if user is logged in already ... redirect them
-			header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
-			die();
-		}
+		$this->redirect();
 
 		// setup $packet to send to the view.
 		$packet = [];
 
 		if(!empty($this->input->post('submit', false))){
+			
+			$a = new SessionAuth();
+
 			// process form submission...
 			$u = $this->input->secure()->post('username');
 			$p = $this->input->secure()->post('password');
-			$a = new SessionAuth();
 
 			if($a->login($u, $p)){
-				// redirect to memeber's area...
-				header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
-				die();
+				$this->redirect();
 			}
 
 			// in case of an error,
@@ -96,11 +92,7 @@ class UserController extends Controller{
 	 */
 	public function signup(){
 
-		if(SessionAuth::check('allow') === true){
-			// if the user is signed in, redirect to member's area...
-			header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
-			die();
-		}
+		$this->redirect();
 		
 		// setup $packet to send to the view.
 		$packet = [];
@@ -117,12 +109,12 @@ class UserController extends Controller{
 			$a = new SessionAuth();
 			
 			if($a->register($user)){
-				// registration successful. 
-				// log user into system...
+				
+				// Registration successful. Log user into system...
 				if($a->login($user['username'], $user['password'])){
-					header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
-					die();
+					$this->redirect();
 				}
+
 			}
 
 			// incase the process failed, $message in the view will hold
@@ -135,17 +127,28 @@ class UserController extends Controller{
 		
 	}
 
+	/**
+	 * Redirect's a user to member's area
+	 */
+	public function redirect(){
+		if(SessionAuth::check('allow') === true){
+			// if user is logged in already ... redirect them
+			header('Location: '.$this->url.'/'.$this->configs->user->loggedInUri);
+			die();
+		}
+	} 
+
 
 
 	/**
 	 * Token Based Auth Example:
 	 * Check out:
-	 *  - http://yourappurl/user/api/token
-	 *  - http://yourappurl/user/api/exit
-	 *  - http://yourappurl/user/api/register
 	 *  - http://yourappurl/user/api/
+	 *  - http://yourappurl/user/api/token
+	 *  - http://yourappurl/user/api/expiry
+	 *  - http://yourappurl/user/api/register
 	 *
-	 * Requires Authorization http header:
+	 * Requires HTTP header:
 	 * 	Authorization: Bearer <valid token>
 	 * for successful passing of TokenAuth::check()
 	 */
@@ -185,13 +188,13 @@ class UserController extends Controller{
 
 				}
 
-			case 'exit':
+			case 'expiry':
 				
 				// TokenAuth::logout() returns a status string for token method...
 				$status = $a->logout();
 
 				$this->view->json([
-					'status' => $status, 
+					'status' => $a->status, 
 					'message' => $a->message
 				]);
 

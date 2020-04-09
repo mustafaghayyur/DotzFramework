@@ -2,6 +2,7 @@
 
 use DotzFramework\Core\Controller;
 use DotzFramework\Modules\Form;
+use DotzFramework\Utilities\FileIO;
 
 /**
  * This controller shows the power of FilterText and Quill.js.
@@ -50,5 +51,52 @@ class FilterController extends Controller{
 		$this->view->load('wysiwyg', $packet);
 	}
 
+
+	/**
+	 * Shows the beauty of the new and improved
+	 * FilIO() utility class!
+	 */
+	public function fileio(){
+
+		// we take a sample file from our documentation
+		// READ ONLY! No need to harm the docs!
+		$f = new FileIO('./documentation/Views.txt', 'r');
+		
+		if($f->ok){
+			
+			$f->read(); // pointer has reached end of file.
+			
+			// we want to take a middle sentence...
+			$text = $f->seek(450)->read(69);
+
+			// create a new timestamped file...
+			$fileName = './FileIOExample-'.time().'.txt';
+
+			// ever had trouble remembering if the + comes before
+			// the letter or after? Now it doesn't matter!
+			$f2 = new FileIO($fileName, '+w');
+			
+			if($f2->ok){
+				// print above captured $text to screen
+				echo $text;
+				echo '<br/><br/>';
+
+				// write some things to the time-stamped file.
+				echo $f2->seek(0)
+						->write("This file will hold some file operation examples:\n\r\n")
+						->seek(0, 'end')
+						->write('Developed by Web Dotz.')
+						->seek(0, 'end of file')
+						->write("\n\r\n")
+						->seek(0, 'end')
+						->write($text)
+						->write("\n\r\n")
+						->write('Filename: '.$fileName)
+						->seek(0, 'beginning')
+						->read(); // and output the contents of the file :)
+			}
+		}
+
+	}
         
 }

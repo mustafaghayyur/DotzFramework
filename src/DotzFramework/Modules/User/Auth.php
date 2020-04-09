@@ -2,7 +2,6 @@
 namespace DotzFramework\Modules\User;
 
 use DotzFramework\Core\Dotz;
-use \Firebase\JWT\JWT;
 
 /**
  * Parent Auth Class
@@ -72,14 +71,14 @@ class Auth {
 			// this is an internal, partial authentication check
 			// it does not need all the checks...
 			// just send the db record if the user is found.
-			return $r;
+			return $r[0];
 		}
 
 		if($validator === null || !is_object($validator)){
 			$validator = new ValidateAccess();
 		}
 
-		if($validator->checkStatus($r['status'])){
+		if(!$validator->checkStatus($r[0]['status'])){
 			$this->message = 'Your account is not active. Cannot authenticate credentials.';
 			return false;
 		}
@@ -94,7 +93,7 @@ class Auth {
 		if(true === password_verify($pass, $hash)){
 			
 			$this->message = 'Authentication passed.';
-			$this->userRecord = $r;
+			$this->userRecord = $r[0];
 			return true;
 
 		}else{

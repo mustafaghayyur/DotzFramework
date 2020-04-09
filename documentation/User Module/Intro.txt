@@ -5,16 +5,23 @@
 ====================================================
 
 
-Authentication is vital in most web applications. Dotz will attempt to provide a basic out-of-the-box authentication and authorization module. Following with the theme of the framework; we have left out the bells and whistles for your project team to add on as needed.
+Authentication is vital in most web applications. Dotz provides a basic out-of-the-box authentication and authorization module. Following with the theme of the framework; we have left out the bells and whistles for your project team to add on as needed.
 
 The User module will add only one table to your configured database (upon activation):
 
 	`user table`
-	-------------------------------------------------------------------------------------
-	|	id		email		username		password		created_at		updated_at	|
-	|-----------------------------------------------------------------------------------|
-	|	<int>	<var(120)>	<var(120)>		<pass_hash>		<date_time>		<date_time>	|
-	-------------------------------------------------------------------------------------
+	---------------------------------------------------------------------------------
+	|	Field		|	Type 			|	Description								|
+	--------------------------------------------------------------------------------|
+	|	id			|	<int>			|	auto increment, primary key				|
+	|	email		|	<var(120)>		|	unique									|
+	|	username	|	<var(120)>		|	unique									|
+	|	password	|	<var(255)>		|	holds the password hash					|
+	|	access_level|	<int>			|	access levels to be numeric				|
+	|	status		|	<var(15)>		|	current status of account				|
+	|	created_at	|	<date_time>		|	auto inserts current time stamp			|
+	|	updated_at	|	<date_time>		|	auto inserts current time stamp			|
+	---------------------------------------------------------------------------------
 
 
 Any other user data can be configured and setup, along with application level code, by you in your src/App directory.
@@ -29,7 +36,7 @@ The User module allows you to securely manage two types of authentications:
 
 			- Please see `vendor/dotz/framework/modules.php` as inspiration.
 
-		- Upon successful registration and login, a session would be created with some relevent user details. Each Auth::check() protected page would require the existence of the user's 'lastActivity' session key to access the controller/resource.
+		- Upon successful registration and login, a session would be created with some relevent user details. Each SessionAuth::check() protected page would require the existence of the user's 'lastActivity' session key to access the controller/resource.
 
 
 	2) Token based authentication
@@ -40,7 +47,7 @@ The User module allows you to securely manage two types of authentications:
 
 			`Authorization: Bearer <jwt-token>`
 
-		If the token passed in the above format is valid, the Auth::check() directive would return true (and allow the script to continue). Otherwise an error message would be returned in JSON format.
+		If the token passed in the above format is valid, the TokenAuth::check() directive would return true (and allow the script to continue). Otherwise an error message would be returned in JSON format.
 
 
 
@@ -49,9 +56,9 @@ The User module allows you to securely manage two types of authentications:
 ## Setup
 ==================
 
-When you first access a controller that calls Auth::check() in a web browser; the User module's migrations and config files will be added to your project's root directories.
+When you first access a controller that calls any of the Auth() functions in a web browser; the User module's migrations and config files will be added to your project's root directories.
 
-Instructions will be provided on screen (in the web browser) on how to run the migration in the command line terminal and adjust the configs/user.txt configuration file to properly use the user module.
+Instructions will be provided on screen (in your web browser) on how to run the migration in the command line terminal and adjust the configs/user.txt configuration file to properly use the user module.
 
 Once you complete the instructions on screen, you can refresh that same page and the user module would start working as expected.
 
@@ -70,10 +77,49 @@ With future version releases of Dotz, more details will be added to the document
 ## Making it work with your project
 =======================================
 
-The User Module is meant to be minimal by intent. Every project has its own vision on user data management. The User Module is only meant to help you with authentication and protecting recourses that need access permissions.
+The User Module is meant to be minimal by intent. 
 
-In the future we will likely add more features to this module, but you can begin using this.
+Every project has its own vision for user management. The User Module is meant to help you with authentication only.
 
+We have added two fields to the user table:
+	- access_level
+	- status
+
+We have also added a class ValidateAccess() to the User Module, which can be over-written and injected back into the User Module functions. See the User Module code-base for further details.
+
+In theory you can apply a variety of permission models, simply converting them to numberic logic, and then applying filters in ValidateAccess::checkAccessLevel() method to achieve desired access levels model.
+
+Similarly, we have tried to make the status field open to re-interpretation. As we added the ValidateAccess::checkStatus() method which attempts to provide one way of looking at the status field. You may, however, be able to use the given parameters and come up with your own process of how users should be categorized.
+
+Be sure to look at:
+	- ValidateAccess class
+	- ValidateUserFields class
+
+Look at the comments, and study the User Module code base, you will be better prepared to use the user module to work for your needs.
+
+
+
+==============================
+## In a nut shell...
+==============================
+
+The User module provides four main operations:
+
+	1) login() - determines if the provided username and password are allowed to login and be provided a session or token to proceed.
+
+	2) register() - determines if the given user details (in array format) can be added to the user table as valid credentials for a new user record.
+
+	3) logout() - terminates a user session in Session auth. Provides expiry info to user in Token auth.
+
+	4) check() - TokenAuth::check() and SessionAuth:check() are meant to be calls you make on every protected controller. When you add:
+
+			TokenAuth::check();
+
+	...to a controller in your application. All users will be blocked from accessing that controller, unless they pass the check.
+
+	Token authentication would require a valid token to be passed in the Authorization HTTP header. While the Session based authentication would require a valid session.
+
+Now you can use the appropriate Auth class, and its four methods to run your authentication system. For advanced developers, you can take this module to the next level and play around with access_levels and status fields as elaborated above.
 
 
 

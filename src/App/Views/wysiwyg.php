@@ -19,4 +19,7 @@
 
 <h4><a href="<?php echo $dotz->url;?>/filter" class="item">Try filtering raw HTML here</a></h4>
 
+
+<h4><a href="<?php echo $dotz->url;?>/filter/fileio" class="item">Have some good file input/output fun!</a></h4>
+
 <?php include_once('_footer.php');?>
