@@ -10,7 +10,7 @@ namespace DotzFramework\Utilities;
  * We try to accomodate for some. 
  * 
  * However, incorrct use of certain operations in certain 
- * modes will still throws errors. 
+ * modes will still throw errors. 
  *
  * Please see: https://www.php.net/manual/en/function.fopen.php
  */
@@ -165,18 +165,18 @@ class FileIO {
 	 */
 
 	public function readEntireFile(){
-		throw new \Exception('[Update Error] - The FileIO::readEntireFile() method has been deprecated. Please use FileIO::read() instead.');
+		return $this->read(null);
 	}
 
-	public function readUpTo(){
-		throw new \Exception('[Update Error] - The FileIO::readUpTo() method has been deprecated. Please use FileIO::read() instead.');
+	public function readUpTo($byteLength = 25){
+		return $this->read($byteLength);
 	}
 
-	public function writeString(){
-		throw new \Exception('[Update Error] - The FileIO::writeString() method has been deprecated. Please use FileIO::write() instead.');
+	public function writeString($text, $length = null){
+		return $this->write($text, $length);
 	}
 
-	public function setFilePointer(){
-		throw new \Exception('[Update Error] - The FileIO::setFilePointer() method has been deprecated. Please use FileIO::seek() instead.');
+	public function setFilePointer($offsetBytes, $flag){
+		return $this->seek($offsetBytes, $flag);
 	}
 }

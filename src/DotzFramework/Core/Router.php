@@ -5,15 +5,23 @@ use \Exception;
 
 class Router {
 
+	/**
+	 * Stores application configs.
+	 */
 	public $configs;
 
-	public static $controllerUsed;
+	/**
+	 * static property used by ErrorHandler class;
+	 * determines wheather to output response
+	 * in html or json.
+	 */
+	public $controllerUsed;
 
 	/**
 	* Sets the configs for this router.
 	*/
 	public function __construct($c = null){
-		$this->configs = Dotz::get()->load('configs')->props;
+		$this->configs = Dotz::module('configs')->props;
 	}
 
 	/**
@@ -42,7 +50,7 @@ class Router {
 				throw new Exception('[ Router Error ] Could not load Default page.');
 			}
 
-			self::$controllerUsed = ($cObj) ? $h[1] : self::$controllerUsed;
+			$this->controllerUsed = ($cObj) ? $h[1] : $this->controllerUsed;
 			$controller = [ $cObj, $h[0], [] ];
 
 		}
@@ -80,7 +88,7 @@ class Router {
 				throw new Exception('[ Router Error ] Could not load Not Found page.');
 			}
 
-			self::$controllerUsed = ($cObj) ? $e[1] : self::$controllerUsed;
+			$this->controllerUsed = ($cObj) ? $e[1] : $this->controllerUsed;
 
 			// Pass the $uri array to it as an argument.
 			call_user_func_array([$cObj, $e[0]], [$uri]);
@@ -112,13 +120,12 @@ class Router {
 	*/
 	public function getUri(){
 
-		$dotz = Dotz::get();
 		$host = trim(
-			$dotz->load('request')->server->get('HTTP_HOST'), 
+			Dotz::module('request')->server->get('HTTP_HOST'), 
 			'www.'
 		);
 
-		$fullURI = $dotz->load('request')->server->get('REQUEST_URI');
+		$fullURI = Dotz::module('request')->server->get('REQUEST_URI');
 
 		if(strpos($this->configs->app->url, $host) !== 0){
 			throw new Exception('[ Router Error ] App URL defined in configs/app.txt does not match the HTTP Host this app is running on.');
@@ -170,7 +177,7 @@ class Router {
 
 		$c = $this->configs->router->rest->{$uri[0]};
 
-		$m = Dotz::get()->load('request')->getMethod();
+		$m = Dotz::module('request')->getMethod();
 
 		$httpMethodIssues = strpbrk($m, "#$%^&*()+=[]';,./{}|:<>?~");
 		$m = (!$httpMethodIssues) ? strtolower($m) . 'Resource' : null;
@@ -185,7 +192,7 @@ class Router {
 			}
 		}
 
-		self::$controllerUsed = ($cObj) ? $c : self::$controllerUsed;
+		$this->controllerUsed = ($cObj) ? $c : $this->controllerUsed;
 		return ($cObj) ? [$cObj, $m, $args] : null;
 
 	}
@@ -209,7 +216,7 @@ class Router {
 			}
 		}
 
-		self::$controllerUsed = ($cObj) ? $c[1] : self::$controllerUsed;
+		$this->controllerUsed = ($cObj) ? $c[1] : $this->controllerUsed;
 		return 	($cObj) ? [$cObj, $c[0], $args] : null;
 	}
 
@@ -232,7 +239,7 @@ class Router {
 
 		$method = (empty($uri[1])) ? 'index' : $uri[1];
 
-		self::$controllerUsed = ($cObj) ? $class : self::$controllerUsed;
+		$this->controllerUsed = ($cObj) ? $class : $this->controllerUsed;
 		return ($cObj) ? array($cObj, $method, $args) : null;
 	}
 
@@ -270,6 +277,9 @@ class Router {
 		return false;
 	}
 
+	/**
+	 * Profiler for the app.
+	 */
 	public function profiler($status = 'off', $m1 = null, $t1 = null){
 		
 		if($status == 'on'){

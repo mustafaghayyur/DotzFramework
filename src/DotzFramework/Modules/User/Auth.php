@@ -51,7 +51,7 @@ class Auth {
 		
 		try{
 	
-			$q = Dotz::get()->load('query');
+			$q = Dotz::module('query');
 			$r = $q->execute('SELECT * FROM user WHERE username = ?', [$user]);
 
 		}catch(\Exception $e){
@@ -137,7 +137,7 @@ class Auth {
 
 		try{
 	
-			$q = Dotz::get()->load('query');
+			$q = Dotz::module('query');
 			
 			$n = $q->execute(
 				'INSERT INTO user (email, username, password, access_level, status) VALUES (?, ?, ?, ?, ?);', 

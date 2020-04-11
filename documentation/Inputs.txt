@@ -65,13 +65,13 @@ When xssCheck is disabled, you can still retrieve filtered values for specific G
 ## CSRF Protection
 ==============================================
 
-CSRF protection is enabled/disabled with the configs/app.txt setting called 'csrfCheck'.
+CSRF protection is enabled/disabled with the configs/app.txt setting called 'csrf.check'.
 
-When csrfCheck = true, all GET and POST retrievals from $this->input->secure() call check for a match between the Origin/Referer HTTP Header and the Host HTTP Header. Only if these values match, is the requested variable fetched, other wise an exception is thrown.
+When csrf.check = true, all GET and POST retrievals from $this->input->secure() call check for a match between the Origin/Referer HTTP Header and the Host HTTP Header. Only if these values match, is the requested variable fetched, other wise an exception is thrown.
 
-When csrfCheck = true, all GET and POST retrievals from $this->input property remain without a CSRF check! Please keep this in mind.
+When csrf.check = true, all GET and POST retrievals from $this->input property remain without a CSRF check! Please keep this in mind.
 
-When csrfCheck = true and formTokenization = true (both found in configs/app.txt); a further check of a valid JWT token is performed on all POST retrievals in the $this->input->secure() call: 
+When csrf.check = true and csrf.tokenization = true (both found in configs/app.txt); a further check of a valid JWT token is performed on all POST retrievals in the $this->input->secure() call: 
 
 	$this->input->secure()->post('someKey');
 
@@ -80,7 +80,7 @@ To perform the same stringent check on GET retrievals use the $this->input->very
 	$this->input->verySecure()->get('someKey'); // checks for a valid token
 
 
-When formTokenization is enabled, it is good to set your own secret key in the 'secretKey' property in configs/app.txt.
+When csrf.tokenization is enabled, it is good to set your own secret key in the 'csrf.secretKey' property in configs/app.txt.
 
 
 
@@ -92,5 +92,5 @@ The Input class that holds the get() and post() methods can be found in DotzFram
 
 	// The ‘input’ service was defined in the modules.php file 
 	// found in the root of the application.
-	$inputObj = Dotz::get()->load(‘input’);
+	$inputObj = Dotz::module(‘input’);
 

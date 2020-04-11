@@ -1,0 +1,63 @@
+====================================================
+====================================================
+	> The Dotz Class
+====================================================
+====================================================
+
+
+As you explore the source-code for Dotz; you'll notice a continuous reference to the Dotz class for fetching config properties and loading modules defined in modules.php.
+
+The Dotz class is located in vendor/dotz/framework/src/DotzFramework/Core/Dotz.php. Its namespace is the same as most core Dotz classes:
+
+	DotzFramework\Core\Dotz
+
+The Dotz class is a singleton pattern, though slightly evolved as of v0.2.3. It stores an instance of itself in Dotz::$instance static property; and uses that property to fetch the Dotz::$container (non-static) property. 
+
+The Dotz::$container holds an array of modules that are formed with Pimple, a light-weight PHP contianer.
+
+All of Dotz::$container modules are defined in modules.php (a file located at the root directory of your application). 
+
+You can add more modules - as you develop libraries - to the container for easy reference in your app, within modules.php. Just read carefully the comments within modules.php before you do so.
+
+
+
+========================================
+## Using Dotz()
+========================================
+
+There are three static methods in particular that you should memorize and be ready to use while developing in the framework:
+
+
+	1) Dotz::config('file.property.child');
+
+		- Dotz::config() is a static method that allows for quick and intuitive fetching of configuration properties you define in your configs/ directory. If you have a config file named 'app.txt' within configs/ that holds a property named 'url'. You could retrieve its value (if one exists) like so:
+
+			$url = Dotz::config('app.url');
+
+		Please note you could have more levels to these properties, therefore the call could also look like this:
+
+			$prop = Dotz::config('app.csrf.token.timeout'); // not a real prop
+
+		If a config property does not exist, null is returned.
+
+	2) Dotz::module('module_name');
+
+		- Dotz::module() is a static method that allows for quick retrieval of a module defined in modules.php. Remember that the container holds a single instance of a class (unless you use factories), so you could repeatedly call
+
+			Dotz::module('module_name')->someMethod();
+
+		And Dotz would reference the same instance of the class!
+
+
+	3) Dotz::grabKey($someVariable, 'some_key');
+
+		- Dotz::grabKey() is a static function that correctly references a property or key of an object or array, respectively. 
+
+		If the property/index does not exist, null is returned, without a PHP notice-error being thrown.
+
+		This is useful while developing, and intuitive enough to use frequently.
+
+
+We hope Dotz() is as fun for you in development, as it was in developing, for us! In essence, Dotz() is Dotz, the framework!
+
+

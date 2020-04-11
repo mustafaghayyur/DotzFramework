@@ -1,8 +1,6 @@
 <?php
 namespace DotzFramework\Core;
 
-use DotzFramework\Core\Dotz;
-
 /**
  * As things stand, DotzFramework only supports PDO.
  * We have tried to accomodate MySQL, PostgreSQL and MSSQL below.
@@ -17,13 +15,12 @@ class DB {
 
 	public function __construct($overwite = false){
 		
-		// overwrite allows you to instantiate PDO directly into DB::$connection.
+		// $overwrite allows you to instantiate PDO directly into DB::$connection.
 		// with your own configurations.
 		if($overwite){
 			return true;
 		}
 
-		$dotz = Dotz::get();
 		$c = Dotz::config('db');
 
 		$dsn = $this->getDataSourceName($c);

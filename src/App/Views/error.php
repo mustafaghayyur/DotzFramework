@@ -42,6 +42,24 @@
 				border-bottom: 1px dashed #666;
 			}
 
+			.trace{
+				display: block;
+				margin: 10px 5% 10px;
+				padding: 10px 10px 20px;
+				font-size: 14px;
+				line-height: 100%;
+			}
+
+			.notices{
+				padding: 20px;
+				font-size: 18px;
+				margin: 20px;
+				border-top: 1px solid rgba(247, 210, 22,1);
+				background-color: #666;
+				color: #fff;
+				font-family: 'Arial';
+			}
+
 			.menu {
 				display: block;
 				margin: 55px 5% 0px 5%;
@@ -64,6 +82,15 @@
 		<div class="page">
 
 			<div class="content">
+				
+				<?php
+				/**
+				 * Don't remove this snippet of code.
+				 */
+				if(isset($html)){
+					echo $html; die();
+				}
+				?>
 
 				<h1>Error Occurred:</h1>
 				
@@ -85,6 +112,12 @@
 
 				if(isset($line)){?>
 					<p><strong>On line #:</strong> <?php echo $line;?></p>
+				<?php
+				}
+
+				if(isset($trace)){?>
+					<p><strong>Trace:</strong> below trace may be helpful...</p> 
+					<div class="trace"><?php echo $trace;?></div>
 				<?php
 				}?>
 

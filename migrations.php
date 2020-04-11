@@ -13,8 +13,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use DotzFramework\Core\Dotz;
 
-$dotz = Dotz::get(__DIR__ . '/configs');
-$conf = $dotz->load('configs')->props;
+$conf = Dotz::module('configs')->props;
 
 return [
     'name' => $conf->app->name,

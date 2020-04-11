@@ -5,8 +5,17 @@ use DotzFramework\Utilities\FileIO;
 
 class Configurations{
 
+	/**
+	 * Holds the props for the framework.
+	 * Though it can be accessed directy; it is recommended 
+	 * to use Dotz::config() instead.
+	 */
 	public $props;
 	
+	/**
+	 * The constructor handles the loading of all configs
+	 * found in the configs/ directory.
+	 */
 	public function __construct($path){
 
 		$this->props = new \stdClass();
@@ -33,6 +42,9 @@ class Configurations{
 
 	}
 
+	/**
+	 * helper function used by the constructor
+	 */
 	public function loadFile($file){
 		
 		$c = new FileIO($file, 'r');
@@ -54,6 +66,9 @@ class Configurations{
 	 *
 	 * The version is made into an integer. Removing any
 	 * letters, -, _, . and the space character.
+	 *
+	 * Useful for making decisons based on package/version
+	 * installed.
 	 *
 	 * @return array
 	 */

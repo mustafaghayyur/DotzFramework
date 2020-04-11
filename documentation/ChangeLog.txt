@@ -5,6 +5,16 @@ CHANGELOG
 ____________________________________________________________
 version | Details
 --------|---------------------------------------------------
+0.2.3   | - Query::generatePlaceHolders() has been changed 
+			to a static function: Query::fillers()
+		  - Input::get() - exception messages modified
+		  - Input::post() - exception messages modified
+		  - ErrorHandler has matured quite a bit. Now 
+		    handles PHP non-terminating errors as notices
+		    to be displayed at the end of executing the 
+		    script.
+		  - Dotz::module() added
+--------|---------------------------------------------------
 0.2.2   | - Please copy vendor/dotz/framework/index.php to 
 			your project root.
 		  - Please copy vendor/dotz/framework/src/App/Views

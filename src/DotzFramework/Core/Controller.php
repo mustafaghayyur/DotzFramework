@@ -1,6 +1,14 @@
 <?php
 namespace DotzFramework\Core;
 
+/**
+ * Base controller class.
+ *
+ * Provides useful properties for ease of coding.
+ *
+ * Can be extended in your app, and the extension can be used
+ * as your new base for all controllers.
+ */
 class Controller{
 
 	public $input;
@@ -12,10 +20,10 @@ class Controller{
 	public $configs;
 
 	public function __construct(){
-		$this->input = Dotz::get()->load('input');
-		$this->view = Dotz::get()->load('view');
-		$this->query = Dotz::get()->load('query');
-		$this->configs = Dotz::get()->load('configs')->props;
+		$this->input = Dotz::module('input');
+		$this->view = Dotz::module('view');
+		$this->query = Dotz::module('query');
+		$this->configs = Dotz::module('configs')->props;
 	}
 
 }

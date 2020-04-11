@@ -159,7 +159,7 @@ You can then adjust the height and width of the editor box by defining the CSS s
 ## JWT Token Hidden Field
 ==============================
 
-The JWT token hidden field is automatically added to each form generated with DotzFramework\Modules\Form library; when 'csrfCheck' & 'formTokenization' settings are set to true in the configs/app.txt file.
+The JWT token hidden field is automatically added to each form generated with DotzFramework\Modules\Form library; when 'csrf.check' & 'csrf.tokenization' settings are set to true in the configs/app.txt file.
 
 See the Security.txt documentation file for more details on how the JWT hidden field works. And why it is added.
 

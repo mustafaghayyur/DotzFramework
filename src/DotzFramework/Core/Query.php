@@ -2,7 +2,9 @@
 namespace DotzFramework\Core;
 
 /**
- * A wrapper for PDO. Each database type will have its own
+ * Dotz's core queries formulating library. 
+ * 
+ * Each database type will have its own
  * extension to this class.  
  */
 class Query {
@@ -13,13 +15,14 @@ class Query {
 	public $pdo;
 	
 	/**
-	 * Holds all Query Definition Classes' instances
+	 * Holds all Query Definition Classes' instances.
+	 * Those classes typically found in src/App/Queries.
 	 */
 	public $queryClass;
 
 	/**
 	 * To be extended in children classes.
-	 * $this->connection would have to be defined.
+	 * $this->pdo would have to be defined.
 	 */
 	public function __construct(){
 
@@ -28,7 +31,10 @@ class Query {
 	}
 
 	/**
-	 * Fetches query from application's defined Queries.
+	 * Fetches a query string from your application's defined Queries.
+	 * Typically defined in src/App/Queries/*.
+	 *
+	 * @return string|bool returns query string on success | false on failiure
 	 */
 	public function fetchQuery($class, $property) {
 
@@ -58,7 +64,9 @@ class Query {
 	 * Processes a query string as a prepared statement. All values must be 
 	 * extrapulated from the query string and passed seperately as an array of inputs.
 	 *
-	 * Returns an array of results | # of Rows affected
+	 * @return  array | int 
+	 *          - Returns an array of results 
+	 *          - or # of Rows affected on insert/update/delete operations.
 	 */
 	public function execute($query, $data = [], $flags = \PDO::FETCH_ASSOC){
 
@@ -88,8 +96,10 @@ class Query {
 	/**
 	 * Executes an un-preprared query, carrying raw parameters, directly injected
 	 * into the query string.
-
-	 * Returns an array of results | # of Rows affected
+	 * 
+	 * @return  array | int 
+	 *          - Returns an array of results 
+	 *          - or # of Rows affected on insert/update/delete operations.
 	 */
 	public function raw($query, $flags = \PDO::FETCH_ASSOC){
 		$s = $this->pdo->query($query);
@@ -124,8 +134,11 @@ class Query {
 	/**
 	 * Good for generating a string of '?' placeholders for prepared statements.
 	 * Useful for queries like SELECT * ... WHERE col1 IN ([array]);
+	 *
+	 * Call like so:
+	 * 	$placeholders = Query::fillers($array);
 	 */
-	public function generatePlaceHolders($array){
+	public static function fillers($array){
 	
 		return  implode(',', array_fill(0, count($array), '?'));
 

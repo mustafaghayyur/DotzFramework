@@ -4,108 +4,132 @@ namespace DotzFramework\Core;
 use DotzFramework\Utilities\CSRF;
 
 /**
- * This is not a traditional singleton class.
- * It however uses the static instance of itself to hold
- * settings used for secure retrieval of GET and POST variables.
+ * The Input class provides more secure alternatives to
+ * $_GET and $_POST global variables.
+ *
+ * It also has the ability to grab HTTP headers.
  */
 class Input {
 
 	/**
 	 * Holds an instance of itself.
+	 * This is not a traditional singleton class.
+	 * It however uses the static instance of itself to hold
+	 * settings used for secure retrieval of GET and POST variables.
 	 */
-	protected static $secureInstance;
+	protected static $secure;
 
 	/**
-	 * If set to true POST values cannot be retrieved under the
-	 * secure instance of this object.
-	 * 
-	 * Post values are blocked due to a missing CSRF token.
+	 * Security level:
+	 *  - 0 = no CSRF token check
+	 *  - 1 = CSRF token check only for POST
+	 *  - 2 = CSRF token check for GET & POST both
 	 */
-	protected $onlySecureGetAllowed;
+	protected $level;
 
 	/**
-	 * If set to true the $onlySecureGetAllowed option cannot be used.
-	 * GET variables would also require a valid CSRF token.
+	 * Stores the JWT token
 	 */
-	protected $tokenRequiredForSecureInstance;
+	protected $jwt;
 
-	public function __construct($onlySecureGetAllowed = false, $tokenRequiredForSecureInstance = false){
+	public function __construct($level = 0, $jwt = null){
 		
-		$this->onlySecureGetAllowed = $onlySecureGetAllowed;
-		$this->tokenRequiredForSecureInstance = $tokenRequiredForSecureInstance;
+		$this->level = $level;
+		$this->jwt = $jwt;
 
 	}
 
 	/**
-	 * Wrapper function for setting $tokenRequiredForSecureInstance to true
+	 * Wrapper function for setting $secureGetNotAllowed to true
 	 * in the secure method. Useful for ensuring a get variable
 	 * is only retrieved if a valid token exists.
 	 */
 	public function verySecure(){
 
-		return $this->secure(true);
+		return $this->secure(2);
 
 	}
 
 	/**
 	 * Adds a CSRF check.
-	 * If tokenized forms are enabled then that check is also
-	 * performed here.
+	 * If tokenized forms are enabled then information and settings
+	 * are applied for that as well.
 	 */
-	public function secure($tokenRequiredForSecureInstance = false){
+	public function secure($level = 1){
 
-		$storedTokenRequiredValue = (empty(self::$secureInstance)) ? false : self::$secureInstance->tokenRequiredForSecureInstance;
+		if(!is_int($level) || $level < 1){
+			throw new \Exception("Security level cannot be set to lower than 1 in Input::secure(). Exiting.");
+		}
 
-		if(empty(self::$secureInstance) || $storedTokenRequiredValue !== $tokenRequiredForSecureInstance){
+		$stored = empty(self::$secure) ? false : self::$secure->level;
 
-			$csrf = Dotz::config('app.csrfCheck');
-			$formTokenization = Dotz::config('app.formTokenization');
+		if(empty(self::$secure) || $level !== $stored){
+
+			$csrf = Dotz::config('app.csrf.check');
+			$tokenization = Dotz::config('app.csrf.tokenization');
+
+			// we made a few mods to the configs/app.txt settings structure:
+			if($csrf === null || $tokenization === null){
+				throw new \Exception(ErrorHandler::ERROR1);
+			}
+
 
 			if($csrf === true || $csrf === 'true'){
 				if(CSRF::checkOrigin() === false){
-					throw new \Exception('Could not pass CSRF security check. Exiting.');
+					throw new \Exception('Could not pass Same-Origins CSRF security check. Exiting.');
 				}
 			}
 
-			$jwt = $this->post('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$jwtG = $this->get('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			if($tokenization === true || $tokenization === 'true'){
+				
+				if(empty(self::$secure->jwt)){
+					
+					$jwt = $this->post('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+				
+					if(empty($jwt)){
+						$jwt = $this->get('jwt', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+					}
 
-			// Below we create logic similar to bitwise logic,
-			// to determine value of $onlySecureGetAllowed.
-			$onlySecureGetAllowed = false;
-			$a = ($tokenRequiredForSecureInstance === false) ? 0 : 1;
-			$b = (empty($jwt) && empty($jwtG)) ? 0 : 2;
-
-			if($b == 2){
-				$jwt = (empty($jwt)) ? $jwtG : $jwt;
-			}
-
-			if($formTokenization === true || $formTokenization === 'true'){
-
-				if(($a + $b) === 0){
-					$onlySecureGetAllowed = true;
 				}else{
+					$jwt = self::$secure->jwt;
+				}
+
+				if($level === 2 || !empty($jwt)){
 					if(!CSRF::validateToken($jwt)){
-						throw new \Exception('Invalid CSRF token passed. Exiting.');
+						throw new \Exception('Invalid CSRF token passed; cannot retrieve HTTP request data securely. Exiting.');
 					}
 				}
+				
+				$jwt = empty($jwt) ? null : $jwt;
 
+			}else{
+				$level = 0;
+				$jwt = null;
 			}
 
-			return self::$secureInstance = new Input($onlySecureGetAllowed, $tokenRequiredForSecureInstance);
+			return self::$secure = new Input($level, $jwt);
 
 		}else{
-			return self::$secureInstance;
+			return self::$secure;
 		}
 		
 	}
 
 	/**
-	 * A shorthand for the Symfony HTTP Foundation's filter() method.
+	 * Retrieves the requested $_GET value.
+	 * 
+	 * Note: you probably would want to use try{}catch{} with this!
+	 * Throws exceptions!
+	 * 
+	 * Uses Symfony's HTTP Foundation's filter() method.
 	 * Filters can be referenced from:
 	 * https://www.php.net/manual/en/filter.filters.php
 	 */
 	public function get($key, $filter = null, $options = []){
+
+		if(!$this->ok('get')){
+			throw new \Exception('Cannot retrieve a GET value without a valid CSRF token.');
+		}
 
 		if($filter === null){
 			$xss = Dotz::config('app.xssCheck');
@@ -120,45 +144,47 @@ class Input {
 			$filter = FILTER_DEFAULT; // don't filter
 		}
 
-		return Dotz::get()->load('request')->query->filter($key, '', $filter, $options);
+		return Dotz::module('request')->query->filter($key, '', $filter, $options);
 	}
 
 	/**
-	 * A shorthand for the Symfony HTTP Foundation's filter() method.
+	 * Retrieves the requested $_POST value.
+	 * 
+	 * Note: you probably would want to use try{}catch{} with this!
+	 * Throws exceptions!
+	 * 
+	 * Uses Symfony's HTTP Foundation's filter() method.
 	 * Filters can be referenced from:
 	 * https://www.php.net/manual/en/filter.filters.php
 	 */
 	public function post($key, $filter = null, $options = []){
 
-		if($this->onlySecureGetAllowed === false){
-			
-			if(is_object($filter) && method_exists($filter, 'process')){
-				
-				$v = Dotz::get()->load('request')->request
-						->filter($key, '', FILTER_DEFAULT, $options);
-						
-				return $filter->process($key, $v);
-			}
-
-			if($filter === null){
-				$xss = Dotz::config('app.xssCheck');
-
-				if($xss === true || $xss === 'true'){
-					$filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS;
-				}
-			}
-
-			// if $filter is still null or false...
-			if($filter === false || $filter === null){
-				$filter = FILTER_DEFAULT; // don't filter
-			}
-
-			return Dotz::get()->load('request')->request->filter($key, '', $filter, $options);
-		
-		}else{
-			
+		if(!$this->ok('post')){
 			throw new \Exception('Cannot retrieve a POST value without a valid CSRF token.');
 		}
+			
+		if(is_object($filter) && method_exists($filter, 'process')){
+			
+			$v = Dotz::module('request')->request
+					->filter($key, '', FILTER_DEFAULT, $options);
+					
+			return $filter->process($key, $v);
+		}
+
+		if($filter === null){
+			$xss = Dotz::config('app.xssCheck');
+
+			if($xss === true || $xss === 'true'){
+				$filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS;
+			}
+		}
+
+		// if $filter is still null or false...
+		if($filter === false || $filter === null){
+			$filter = FILTER_DEFAULT; // don't filter
+		}
+
+		return Dotz::module('request')->request->filter($key, '', $filter, $options);
 		
 	}
 
@@ -167,11 +193,49 @@ class Input {
 	 * 
 	 * Note: the Authorization header is not included
 	 * in the PHP global variable $_SERVER. 
-	 * 
 	 * Requires some re-configuration to access.
+	 *
+	 * Uses Symfony's HTTP Foundation.
 	 */
 	public function header($key = ''){
-		return Dotz::get()->load('request')->headers->get($key);
+		return Dotz::module('request')->headers->get($key);
+	}
+
+	/**
+	 * Is it okay to retrieve this value given all the
+	 * security circumtances?
+	 *
+	 * That is what this method determines.
+	 */
+	protected function ok($method){
+		if($this->ignoreToken($method)){
+			return true;
+		}else{
+			return empty($this->jwt) ? false : true;
+		}
+	}
+
+	/**
+	 * Should we ignore the CSRF Token given all
+	 * the settings passed down to us?
+	 *
+	 * That is what this method determines.
+	 */
+	protected function ignoreToken($method = 'get'){
+		if($this->level === 0){
+			return true;
+		}
+
+		if($this->level === 1){
+			if($method === 'get'){
+				return true;
+			}
+			if($method === 'post'){
+				return false;
+			}
+		}
+
+		return false;
 	}
 
 }

@@ -2,12 +2,11 @@
 use DotzFramework\Core;
 use DotzFramework\Utilities;
 use DotzFramework\Modules;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation;
 
 /**
  * Define over here any app-wide modules you wish to 
- * make available to $dotz->load();
+ * make available to Dotz::module();
  *   
  * Below you can define your own modules to mount to 
  * the container. Follow the below pattern to define 
@@ -26,8 +25,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
  *
  *
  * You can then load a module anywhere in your application, using:
- *   $dotz = Dotz::get();
- *   $dotz->load('uniqueKey')->someMyClassMethod();
+ * 
+ *   Dotz::module('uniqueKey')->someMyClassMethod();
+ *
+ * ...where someMyClassMethod() is a method of MyClass().
  * 
  */
 class ModulesDefinitions {
@@ -41,7 +42,15 @@ class ModulesDefinitions {
 		};
 
 		$mods['request'] = function($c){
-			return new Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
+			return new HttpFoundation\Request($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
+		};
+
+		$mods['error'] = function($c){
+			return new Core\ErrorHandler();
+		};
+
+		$mods['router'] = function($c){
+			return new Core\Router();
 		};
 
 		$mods['input'] = function($c){
@@ -57,7 +66,7 @@ class ModulesDefinitions {
 		};
 
 		$mods['session'] = function($c){
-			return new Session();
+			return new HttpFoundation\Session\Session();
 		};
 
 		/**

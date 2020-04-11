@@ -3,7 +3,22 @@ namespace DotzFramework\Core;
 
 class View{
 
+	/**
+	 * App's configs
+	 */
 	public $configs;
+
+	/**
+	 * Bool to store if the View::load() method
+	 * has already been called. Used by ErrorHandler().
+	 */
+	public $loadCalled = false;
+
+	/**
+	 * Bool to store if the View::json() method
+	 * has already been called. Used by ErrorHandler().
+	 */
+	public $jsonCalled = false;
 
 	/**
 	 * Use for HTML outputs.
@@ -39,18 +54,34 @@ class View{
 		}
 
 		$dotz = $this->generateSystemVars();
+
+		$this->loadCalled = true;
 		
 		include_once($dotzViewFile);
 	}
 
 	/**
-	 * Use for jSON outputs.
+	 * Used for jSON outputs.
 	 */
 	public function json($data, $httpStatusCode = null){
+		
+		// add PHP error notices (if any) to the response...
+		if(isset(Dotz::module('error')->notices) && is_array(Dotz::module('error')->notices)){
+			if(is_array($data)){
+				$data['serverMessages'] = Dotz::module('error')->notices;
+			}
+			if(is_object($data)){
+				$data->serverMessages = Dotz::module('error')->notices;
+			}
+		}
+
 		$o = json_encode($data);
 		
 		if(json_last_error() === JSON_ERROR_NONE){
 			
+			$this->jsonCalled = true;
+
+
 			http_response_code(
 				self::httpStatusCode($httpStatusCode, $data)
 			);
@@ -87,6 +118,9 @@ class View{
 		return $code;
 	}
 
+	/**
+	 * Generates the $dotz variable used in html view files.
+	 */
 	protected function generateSystemVars(){
 
 		$dotz = new \stdClass();
@@ -96,7 +130,7 @@ class View{
 		
 		$dotz->viewsUrl = $dotz->url .'/'. Dotz::config('app.viewsDir');
 
-		$js = Dotz::get()->load('js');
+		$js = Dotz::module('js');
 		$js->add(
 			'configs-for-js', 
 			'var dotz = '. json_encode(Dotz::config('js')) .';'
@@ -107,6 +141,9 @@ class View{
 		return $dotz;
 	}
 
+	/**
+	 * Ensures minimum $config settings are available.
+	 */
 	protected function viewsConfigsOk(){
 		if(isset($this->configs->viewsDir)){
 

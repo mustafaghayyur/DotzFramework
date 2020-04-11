@@ -16,18 +16,7 @@ However, the files and folders that:
 This is to protect you from loosing your valuable configurations.
 
 
-	++++++++++++++++++++++++++++++++++++++
-	+
-	+	v0.2.2 has major changes!
-	+	========================
-	+	Please read ChangeLog.txt and
-	+	follow all the instructions!
-	+
-	++++++++++++++++++++++++++++++++++++++
-
-
-
-## What you should do
+## What you should do:
 ===================================================
 
 
@@ -38,10 +27,16 @@ This is to protect you from loosing your valuable configurations.
 	This will update the documentation folder with the latest documentation.
 
 	
-	2) Test for any new exceptions thrown in your existing app. If some used property or method has been renamed/removed an exception will be thrown with a key:
+	2) Test for any new exceptions thrown in your existing app. If some used property or method has been renamed/removed an exception will be thrown with some message declaring an Update Error and providing guidance on how to remedy the problem:
 
+		Notice:
 		Update Error: <--explaination of how to fix the error-->
 
-	If you find some exception/error that has not been handled in this way, we might have missed it. Send us a new issue on github, and we will be happy to fix it.
+	When you find an error/exception/systemMessage that declares an Update Error, follow the instructions to fix the problem and get rid of the issue.
 
+	Please note there are times, when an update modification simply cannot be handled by Dotz Framework's Error Handling logic, and a raw PHP Error is thrown. We are cautious to make sure that does not happen often. 
+
+	Please also read the documentation/ChangeLog.txt file for instructions when you update dotz/framework. 
+
+	If you get stuck after an update, feel free to reach us at info@web-dotz.com with a screen shot of your error message, and some basic server environment details, and we would love to help if we can.
 

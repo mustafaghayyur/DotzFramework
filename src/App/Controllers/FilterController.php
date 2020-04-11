@@ -33,7 +33,7 @@ class FilterController extends Controller{
 
 		$packet = [];
 		$packet['form'] = new Form\Form();
-		$packet['text'] = $this->input->post('text', $filter);
+		$packet['text'] = $this->input->secure()->post('text', $filter);
 
 		$this->view->load('filter', $packet);
 	}
@@ -61,7 +61,7 @@ class FilterController extends Controller{
 		// we take a sample file from our documentation
 		// READ ONLY! No need to harm the docs!
 		$f = new FileIO('./documentation/Views.txt', 'r');
-		
+
 		if($f->ok){
 			
 			$f->read(); // pointer has reached end of file.

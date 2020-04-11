@@ -1,8 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Dotz setup script.
- * Could later be used for handling updates.
+ * Dotz setup/update handling script.
  */
 
 require 'vendor/autoload.php';

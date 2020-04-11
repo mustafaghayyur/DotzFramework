@@ -1,6 +1,7 @@
 <?php 
 
 use DotzFramework\Core\Controller;
+use DotzFramework\Core\Dotz;
 use DotzFramework\Modules\User\SessionAuth;
 use DotzFramework\Modules\User\TokenAuth;
 use DotzFramework\Modules\Form\Form;
@@ -25,7 +26,7 @@ class UserController extends Controller{
 	 */
 	public function index(){
 		
-		SessionAuth::check();
+		SessionAuth::check(); //if not logged in ... user would get kicked out here.
 		
 		$packet = [];
 		$packet['msg'] = 'Logged in. | <a href="'.$this->url.'/user/logout">Logout</a>';
@@ -79,7 +80,6 @@ class UserController extends Controller{
 		$a = new SessionAuth();
 
 		if($a->logout()){
-			// SessionAuth::logout() returns a boolean true for session method...
 			header('Location: '.$this->url.'/'.$this->configs->user->loginUri);
 			die();
 		}			
@@ -158,13 +158,14 @@ class UserController extends Controller{
 		// you will need to pass in a custom $method value of 'token'
 		// for each new TokenAuth() instance and TokenAuth::check() call.
 		$a = new TokenAuth(); 
+		Dotz::module('router')->controllerUsed = 'dqwwResource';
 
 		switch($path){
 
 			case 'token':
 
-				$u = $this->input->post('username');
-				$p = $this->input->post('password');
+				$u = $this->input->secure()->post('username');
+				$p = $this->input->secure()->post('password');
 				
 				if(!empty($u)){
 			
@@ -184,14 +185,16 @@ class UserController extends Controller{
 
 				}else{
 
-					$this->view->json(['status' => 'error', 'message' => 'Post data missing.']);
+					$this->view->json([
+						'status' => 'error', 
+						'message' => 'Post data missing.'
+					]);
 
 				}
 
 			case 'expiry':
 				
-				// TokenAuth::logout() returns a status string for token method...
-				$status = $a->logout();
+				$a->logout();
 
 				$this->view->json([
 					'status' => $a->status, 
@@ -201,32 +204,43 @@ class UserController extends Controller{
 			case 'register':
 
 				if(!empty($this->input->post('username', false))){
-					// data has been posted...
+
+					// data has been posted...process:
 					$user = [
-						'username' => $this->input->post('username'),
-						'email' => $this->input->post('email'),
-						'password' => $this->input->post('password')
+						'username' => $this->input->secure()->post('username'),
+						'email' => $this->input->secure()->post('email'),
+						'password' => $this->input->secure()->post('password')
 					];
 								
 					if($a->register($user)){
 						
 						$this->view->json([
-								'status' => 'success', 
-								'message' => $a->message
-							]);
+							'status' => 'success', 
+							'message' => $a->message
+						]);
 					}
 
-					$this->view->json(['status' => 'error', 'message' => $a->message]);
+					$this->view->json([
+						'status' => 'error', 
+						'message' => $a->message
+					]);
 
 				}else{
-					$this->view->json(['status' => 'error', 'message' => 'Post data missing.']);
+					$this->view->json([
+						'status' => 'error', 
+						'message' => 'Post data missing.'
+					]);
 				}
 
 			default:
-				// logged in page..
-				TokenAuth::check();
+				
+				TokenAuth::check(); //if no valid token ... user would get kicked out here.
 
-				$this->view->json(['status' => 'success', 'message' => 'Logged in']);
+				// logged in page..
+				$this->view->json([
+					'status' => 'success', 
+					'message' => 'Logged in'
+				]);
 
 		}
 		

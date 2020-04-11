@@ -124,7 +124,7 @@ class TokenAuth extends Auth{
 		
 		if(!is_object($payload)){
 			
-			Dotz::get()->load('view')->json([
+			Dotz::module('view')->json([
 				'status' => 'error',
 				'message' => $payload // $payload now carries an error message
 			]);
@@ -134,7 +134,7 @@ class TokenAuth extends Auth{
 
 		if(!$validator->checkTokenAgainstDB($payload, $level)){
 			
-			Dotz::get()->load('view')->json([
+			Dotz::module('view')->json([
 				'status' => 'error',
 				'message' => 'Your account lacks proper permissions to access this resource. Request denied.'
 			]);
@@ -155,7 +155,7 @@ class TokenAuth extends Auth{
 	 */
 	public static function getTokenPayload($secretKey){
 
-		$auth = Dotz::get()->load('input')->header('authorization');
+		$auth = Dotz::module('input')->header('authorization');
 
 		if($auth === null || $auth === false){
 			return 'Could not retrieve HTTP Authorization Header.';

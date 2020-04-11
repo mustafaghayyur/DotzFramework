@@ -6,11 +6,9 @@ $t1 = microtime(true);
 require __DIR__ . '/vendor/autoload.php';
 
 use DotzFramework\Core\Dotz;
-use DotzFramework\Core\Router;
-use DotzFramework\Core\ErrorHandler;
 
 //error_reporting(E_ALL & ~E_NOTICE);
-$error = new ErrorHandler();
+$error = Dotz::module('error');
 set_error_handler([$error, "handle"]);
 
 try{
@@ -19,7 +17,7 @@ try{
 	date_default_timezone_set(Dotz::config('app.timezone'));
 	
 	// instantiate Router()
-    $r = new Router();
+    $r = Dotz::module('router');
 
     // do the routing
     $r->do(); 
@@ -35,3 +33,5 @@ try{
 	$error->output($e);
 
 }
+
+$error->notices();

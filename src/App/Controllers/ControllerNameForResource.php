@@ -4,7 +4,7 @@ use DotzFramework\Core\Controller;
 class ControllerNameForResource extends Controller {
 
 	public function getResource($arg1 = null, $arg2 = null, $arg3 = null){
-		$this->view->json(['msg'=>'This is a get request: '. $arg1]);
+		$this->view->json(['msg'=>'This is a get request.'. $arg1]);
 	}
         
     public function postResource(){

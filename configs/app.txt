@@ -33,17 +33,23 @@
 
 	"------------":"Enable XSS security check? Recommended.------",
 	"xssCheck":true,
-
-	"------------":"Enable CSRF checks? Recommended.------",
-	"csrfCheck":true,
-
-	"------------":"Enable tokenizition on forms? Ensures better protection against CSRF attacks.------",
-	"formTokenization":true,
-
-	"------------":"CSRF Token generated in a form will expire in this many seconds.------",
-	"tokenLife":"1200",
-
-	"------------":"Used by CSRF tokens.------",
-	"secretKey":"jkasdh89q8nkskjdha89789yhas"
+	
+	"csrf":{
+		"-------":"[true|false] Enable CSRF checks? Recommended.------",
+		"check":true,
+		
+		"-------":"[allowed|no] Null origins allowed in CSRF checks?------",
+		"nullOrigins":"allowed",
+		
+		"-------":"Enable tokenizition on forms? Better protects against attacks.------",
+		"tokenization":true,
+		
+		"-------":"CSRF Tokens generated in a form will expire in this many seconds.------",
+		"-------":"A value of 0 (zero) will make the token last forever.------",
+		"tokenLife":"36000",
+		
+		"-------":"Used by CSRF tokens.------",
+		"secretKey":"jkasdh89q8nkskjdha89789yhas"
+	}
 
 }

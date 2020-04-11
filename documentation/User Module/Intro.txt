@@ -111,7 +111,7 @@ The User module provides four main operations:
 
 	3) logout() - terminates a user session in Session auth. Provides expiry info to user in Token auth.
 
-	4) check() - TokenAuth::check() and SessionAuth:check() are meant to be calls you make on every protected controller. When you add:
+	4) check() - TokenAuth::check() and SessionAuth:check() are static methods meant to be called on every protected controller. When you add:
 
 			TokenAuth::check();
 
@@ -122,4 +122,31 @@ The User module provides four main operations:
 Now you can use the appropriate Auth class, and its four methods to run your authentication system. For advanced developers, you can take this module to the next level and play around with access_levels and status fields as elaborated above.
 
 
+
+====================================
+## $auth->message
+====================================
+
+Several of the above mentioned operations might throw back feedback in the form of an error message or success notification. Such string messages are held in the TokenAuth::$message and SessionAuth::$message properties. 
+
+So when you perform a login operation like so:
+
+	$auth = new SessionAuth();
+
+	if($auth->login()){
+		// you can print a success message like so:
+		echo $auth->message; 
+	}
+
+
+For TokenAuth, the logout() method additionally uses the TokenAuth::$status property to return a status string (usually error, notice or success). This can be useful for some applications.
+
+
+The use of:
+	
+	$auth->message
+	and
+	$auth->status
+
+...is illustrated in vendor/dotz/framework/src/App/Controllers/UserController.php.
 

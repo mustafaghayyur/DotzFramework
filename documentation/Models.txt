@@ -76,15 +76,17 @@ Returns: quoted input string. False on unsupported feature (in some drivers).
 
 
 ===============================================================
-## $this->query->generatePlaceHolders($array)
+## Query::fillers($array)
 ===============================================================
 
-generatePlaceHolders() generates '?' place holders for the size of the passed array. Useful for prepared statements.
+Query::fillers() generates '?' place holders for the size of the passed array. Useful for prepared statements.
 
 	Arguments accepted:
 		- $array: array of inputs to be passed to execute() method
 
-Returns: string of '?' place holders.
+Returns: string of '?' place holders to be inserted in the prepared-statement query string.
+
+Note: in Dotz < 0.2.4 - Query::fillers() used to be a non-static method named 'generatePlaceHolders()'. 
 
 
 ==================================================================================

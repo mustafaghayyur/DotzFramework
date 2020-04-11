@@ -172,3 +172,13 @@ input[type="submit"].button {
 	font-size: 18px;
 	line-height: 130%;
 }
+
+.notices{
+	padding: 20px;
+	font-size: 18px;
+	margin: 20px;
+	border-top: 1px solid rgba(247, 210, 22,1);
+	background-color: #666;
+	color: #fff;
+	font-family: 'Arial';
+}

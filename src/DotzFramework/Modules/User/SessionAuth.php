@@ -33,7 +33,7 @@ class SessionAuth extends Auth {
 	 */
 	public function sessionGenerate($user){
 
-		$session = Dotz::get()->load('session');
+		$session = Dotz::module('session');
 		$session->start();
 		$session->set('user', $user['username']);
 		$session->set('signInTime', time());
@@ -51,7 +51,7 @@ class SessionAuth extends Auth {
 	 */
 	public function logout(){
 		
-		$session = Dotz::get()->load('session');
+		$session = Dotz::module('session');
 		$session->start();
 		$session->invalidate();
 		return true;		
@@ -84,7 +84,7 @@ class SessionAuth extends Auth {
 			$validator = new ValidateAccess();
 		}
 			
-		$s = Dotz::get()->load('session');
+		$s = Dotz::module('session');
 		$s->start();
 
 		if(!$validator->checkAccessLevel($s->get('accessLevel'), $level)){

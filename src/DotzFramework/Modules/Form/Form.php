@@ -17,10 +17,10 @@ class Form {
 		$c = Dotz::config('app');
 		$this->jwt = null;
 
-		if(($c->csrfCheck === true || $c->csrfCheck === 'true')
-			&& ($c->formTokenization === true || $c->formTokenization === 'true')){
-
-			$this->jwt = $this->hidden('jwt')->value(CSRF::generateToken())->get();
+		if($c->csrf->check === true || $c->csrf->check === 'true'){
+			if($c->csrf->tokenization === true || $c->csrf->tokenization === 'true'){
+				$this->jwt = $this->hidden('jwt')->value(CSRF::generateToken())->get();
+			}
 		}
 	}
 
