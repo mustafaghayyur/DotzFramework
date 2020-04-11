@@ -57,6 +57,14 @@ class Input {
 	 */
 	public function secure($level = 1){
 
+		if($level === false){
+			$level = 1;
+		}
+
+		if($level === true){
+			$level = 2;
+		}
+
 		if(!is_int($level) || $level < 1){
 			throw new \Exception("Security level cannot be set to lower than 1 in Input::secure(). Exiting.");
 		}

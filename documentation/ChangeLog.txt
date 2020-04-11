@@ -5,6 +5,10 @@ CHANGELOG
 ____________________________________________________________
 version | Details
 --------|---------------------------------------------------
+0.2.4   | - Input::secure() now accomodates for older true/
+			false $level values, and appropriately converts
+			them to newer integer values.
+--------|---------------------------------------------------
 0.2.3   | - Query::generatePlaceHolders() has been changed 
 			to a static function: Query::fillers()
 		  - Input::get() - exception messages modified
